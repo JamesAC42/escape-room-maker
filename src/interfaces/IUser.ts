@@ -1,12 +1,13 @@
+type timestamp = number;
 export interface IUser {
 
   uid: string,
   email: string,
   password: string,
   username: string,
-  dob: Date,
-  creation_date: Date,
-  display_name: string,
+  dob: timestamp,
+  creationDate: timestamp,
+  displayName: string,
   admin: boolean,
   verified: boolean,
   favorites: Array<string>,
