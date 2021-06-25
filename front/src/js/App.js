@@ -8,7 +8,8 @@ import {
 } from 'react-router-dom';
 
 import Home from './components/Home';
-import Create from './components/create/Create';
+import Create from './components/Create';
+import Window from './components/Window';
 
 function App() {
   return (
@@ -24,6 +25,11 @@ function App() {
           exact
           path="/create"
           component={Create} />
+        
+        <Route
+          exact
+          path="/window"
+          component={Window} />
           
       </Switch>
     </div>
