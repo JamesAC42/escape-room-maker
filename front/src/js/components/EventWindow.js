@@ -1,39 +1,44 @@
 import React, { Component } from 'react';
 import '../../css/EventWindow.scss';
 
+class EventWindowState {
+  constructor(pr, et, ir, q, is) {
+    this.props = pr;
+    this.event_type = et;
+    this.item_req = ir;
+    this.question = q;
+    this.item_solve = is;
+  }
+}
+
 class EventWindow extends Component {
   constructor(props){
     super(props);
-    this.state = {
-      event_type: "No Event",
-      item_req: false,
-      question: true,
-      item_solve: false
-    }
+    this.state = new EventWindowState(props, "No Event", false, true, false);
   }
   
   eventChoose = (e) => {
     this.setState({
       event_type: e.target.value
-    })
+    });
   }
   
   onItemReq = () => {
     this.setState({
       item_req: !this.state.item_req
-    })
+    });
   }
   
   onQuestion = () => {
     this.setState({
       question: !this.state.question
-    })
+    });
   }
   
   onItemSolve = () => {
     this.setState({
       item_solve: !this.state.item_solve
-    })
+    });
   }
   
   style_hidden = {
@@ -46,11 +51,11 @@ class EventWindow extends Component {
   
   render() {
     return(
-      <div id="ew">
+      <div id="ew" style={this.props.style}>
         <h1>Room: {this.props.room}</h1>
         
         <h4>Choose event type:</h4>
-        <select id="event-select" onChange={this.eventChoose} value={this.state.event_type}>
+        <select id="event-select" onChange={this.eventChoose}>
           <option val="None">No Event</option>
           <option val="Door">Door Event</option>
           <option val="Room">Room Event</option>
