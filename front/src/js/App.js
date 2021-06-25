@@ -1,14 +1,14 @@
 import React from 'react';
 import '../css/fonts.scss';
 import '../css/App.scss';
+import '../css/master.scss';
 import {
   Switch,
   Route
 } from 'react-router-dom';
 
 import Home from './components/Home';
-import Create from './components/Create';
-import Play from './components/Play';
+import Create from './components/create/Create';
 
 function App() {
   return (
@@ -24,12 +24,6 @@ function App() {
           exact
           path="/create"
           component={Create} />
-
-        <Route
-          exact
-          path="/play"
-          component={Play} />
-        
           
       </Switch>
     </div>
