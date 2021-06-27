@@ -10,6 +10,7 @@ import {
 import Home from './components/Home';
 import Create from './components/create/Create';
 import Window from './components/Window';
+import Login from './components/login/Login';
 
 function App() {
   return (
@@ -30,6 +31,11 @@ function App() {
           exact
           path="/window"
           component={Window} />
+
+        <Route
+          exact
+          path="/login"
+          component={Login} />
           
       </Switch>
     </div>

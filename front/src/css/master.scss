@@ -5,3 +5,26 @@
     position:relative;
     margin:0;padding:0;
 }
+
+.center-child {
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content: center;
+}
+
+.flex {
+    display:flex;
+    &.flex-row {
+        flex-direction: row;
+    }
+    &.flex-col {
+        flex-direction: column;
+    }
+    &.just-center {
+        justify-content: center;
+    }
+    &.align-center {
+        align-items: center;
+    }
+}

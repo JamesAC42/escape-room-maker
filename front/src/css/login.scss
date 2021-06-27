@@ -1,0 +1,84 @@
+@import "settings.scss";
+
+.login-outer {
+    position:fixed;
+    left:0;bottom:0;
+    height:calc(100vh - #{$nav-height});
+    width:100vw;
+
+    display:flex;
+    flex-direction:row;
+    align-items:stretch;
+
+    .maze-image {
+        flex:1;
+        img {
+            width:35vw;
+        }
+    }  
+
+    .form-input-outer {
+        width:35vw;
+        background:$ui-light;
+        padding:50px 0;
+        box-shadow: 0px 10px 21px -12px rgba(0,0,0,0.75);
+        .form-input-inner {
+            position:relative;
+            width:70%;
+            align-items:stretch;
+            padding:20px 0;
+            border-top: 2px solid rgb(160, 160, 160);
+            border-bottom: 2px solid rgb(160, 160, 160);
+            .toggle-mode {
+                position:absolute;
+                top:0;right:0;
+                margin:10px;
+                text-decoration:underline;
+                color:rgb(96, 86, 236);
+                cursor:pointer;
+            }
+            .login-header {
+                padding:10px 0;
+                font-size:30px;
+            }
+            .input-item {
+                margin:10px 0;
+                label {
+                    display:block;
+                    font-size:16px;
+                    color:$text-subtle;
+                }
+                input {
+                    width:50%;
+                    height:30px;
+                    line-height:30px;
+                    border:1px solid rgb(133, 133, 133);
+                    border-radius:6px;
+                    font-size:18px;
+                    padding:5px 10px;
+                    &:focus {
+                        outline:2px solid rgb(113, 139, 255);
+                        border-color:rgb(113, 139, 255);
+                    }
+                }
+            }
+            .submit-login {
+                margin:10px 0;
+                .submit-button {
+                    display:inline-block;
+                    padding:5px 10px;
+                    text-align:center;
+                    background:rgb(106, 96, 255);
+                    color:#fff;
+                    border-radius:6px;
+                    font-size:18px;
+                    cursor:pointer;
+                    transition:transform 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
+                    &:hover {
+                        transform:translate(0, -3px);
+                    }
+                }
+            }
+        }
+    }
+}
