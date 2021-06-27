@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import '../../css/EventWindow.scss';
+import '../../../css/EventWindow.scss';
+
+import { connect } from 'react-redux';
+import store from "../../store";
+
+const mapStateToProps = (store) => ({
+  create: store.create
+})
 
 class EventWindowState {
   constructor(pr, et, ir, q, is) {
@@ -11,10 +18,12 @@ class EventWindowState {
   }
 }
 
-class EventWindow extends Component {
+class EventWindowBind extends Component {
   constructor(props){
     super(props);
     this.state = new EventWindowState(props, "No Event", false, true, false);
+    console.log("this tisdh thj st stoesrsjhrkjhe");
+    console.log(store.getState());
   }
   
   eventChoose = (e) => {
@@ -51,8 +60,8 @@ class EventWindow extends Component {
   
   render() {
     return(
-      <div id="ew" style={this.props.style}>
-        <h1>Room: {this.props.room}</h1>
+      <div id="ew" style={this.props.create.activeRoom == undefined ? this.style_hidden : this.props.style}>
+        <h1>Room: <span style={{color: "aliceblue"}}>{this.props.create.activeRoom}</span></h1>
         
         <h4>Choose event type:</h4>
         <select id="event-select" onChange={this.eventChoose}>
@@ -103,5 +112,9 @@ class EventWindow extends Component {
     );
   }
 }
+
+const EventWindow = connect(
+  mapStateToProps
+)(EventWindowBind);
 
 export default EventWindow;
