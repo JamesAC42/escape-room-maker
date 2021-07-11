@@ -1,0 +1,42 @@
+.map-item {
+    border-bottom:1px solid rgb(180, 180, 180);
+    &:last-child {
+        border:none;
+    }
+    padding:10px;
+    .map-meta,
+    .map-stats {
+        display:flex;
+        flex-direction: row;
+        gap:15px;
+        align-items:baseline;
+    }
+    .map-meta {
+        .map-title {
+            font-size:18px;
+            a {
+                color:rgb(45, 77, 255);
+                text-decoration: none;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        .map-author,
+        .map-creation-date {
+            font-size:14px;
+            color:rgb(61, 61, 61);
+        }
+        .rating-container {
+            margin-left:auto;
+        }
+    }
+    .map-stats {
+        color:rgb(36, 36, 36);
+        font-size:14px;
+    }
+    .map-description {
+        margin:10px 0;
+        font-size:14px;
+    }
+}
