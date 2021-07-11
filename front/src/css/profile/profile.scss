@@ -1,0 +1,85 @@
+@import '../settings.scss';
+
+.card {
+    background:rgba(255, 255, 255, 0.90);
+    padding:15px;
+    border-radius:8px;
+    box-shadow: 0px 10px 21px -12px rgba(0,0,0,0.75);
+    border:2px solid rgba(139, 107, 255, 0.719);
+}
+
+.profile-row {
+    width:100%;
+    display:flex;
+    flex-direction:row;
+    align-items:stretch;
+    gap:10px;
+    .profile-card {
+        position:relative;
+        display:flex;
+        flex-direction: column;
+        justify-content:center;
+        align-items:center;
+        gap:3px;
+    }
+}
+
+.profile-card.user-header {
+    width:200px;
+    img.profile-img {
+        height:70px;
+    }
+}
+.profile-card.user-info {
+    flex:1;
+    align-items:stretch;
+    text-align:left;
+    font-size:14px;
+    span.user-info-label {
+        display:inline-block;
+        min-width:110px;
+        color:rgb(88, 110, 182);
+        font-family:PoppinsBold;
+    }
+
+    .logout {
+        position:absolute;
+        top:0;right:0;
+        margin:10px;
+        $logout-color: #ff5e5e;
+        border:1px solid $logout-color;
+        border-radius:6px;
+        padding:5px 10px;
+        a {
+            font-size:14px;
+            color:rgb(77, 74, 255);
+            color:$logout-color;
+            text-decoration: none;
+        }
+        &:hover {
+            background:$logout-color;
+            a {
+                color:#fff;
+            }
+        }
+    }
+}
+
+.spacer {height:25px;}
+
+.profile-header {
+    display:flex;
+    flex-direction: row;
+    justify-content: left;
+    padding:10px 0;
+    font-size:18px;
+}
+
+.map-list {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    overflow:hidden;
+    padding:5px;
+}

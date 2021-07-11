@@ -1,0 +1,11 @@
+@import "settings.scss";
+
+.rating-container {
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    font-size:24px;
+    color:rgb(255, 174, 81);
+    gap:5px;
+    svg {transform:translateY(2px)}
+}

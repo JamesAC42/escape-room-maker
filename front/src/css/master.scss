@@ -1,9 +1,20 @@
+@import "settings.scss";
+
 .container {
     z-index:1000;
-    height:100vh;
+    top:$nav-height;
+    height:calc(100vh - #{$nav-height});
     width:100vw;
     position:relative;
     margin:0;padding:0;
+    overflow-y:scroll;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    .bumpered-container {
+        width:70vw;
+        padding:10px;
+    }
 }
 
 .center-child {
@@ -27,4 +38,40 @@
     &.align-center {
         align-items: center;
     }
+}
+
+.button {
+    height:50px;
+    padding:0 20px;
+    border-radius: 5px;
+    text-align: center;
+    line-height:50px;
+    font-size:14px;
+    transition:all .1s ease-in-out;
+    cursor:pointer;
+    box-shadow: 0px 10px 19px -7px rgba(0,0,0,0.75);
+    color:$text-light;
+
+    & a {
+        color:$ui-light;
+        text-decoration:none;
+    }
+
+    &.button-blue {
+        background:$blue;
+    }
+    &.button-red {
+        background:$red;
+    }
+    &.button-green {
+        background:$green; 
+    }
+    &.button-purple {
+        background:$purple;
+    }
+
+    &:hover {
+        transform:translateY(-5px);
+    }
+    
 }
