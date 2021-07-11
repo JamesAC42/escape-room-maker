@@ -1,0 +1,15 @@
+@import '../settings.scss';
+
+.mapinfo-container {
+    flex-direction: column;
+    overflow-y:scroll;
+    justify-content:initial;
+    align-items:center;
+    pre {
+        background:black;
+        color:rgb(95, 218, 95);
+        padding:20px;
+        padding-right:30px;
+        font-size:16px;
+    }
+}
