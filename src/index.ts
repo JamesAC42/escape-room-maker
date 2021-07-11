@@ -22,7 +22,12 @@ const server = require('http').createServer(app);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-import testReq from './controllers/test';
+import login from './controllers/login';
+import register from './controllers/register';
+import getUserInfo from './controllers/getUserInfo';
+import destroySession from './controllers/destroySession';
+import createMap from './controllers/createMap';
+import getMap from './controllers/getMap';
 
 app.set('trust proxy', 1);
 app.use(session({
@@ -35,8 +40,27 @@ app.use(session({
     store: new RedisStore({ client: redisClient })
 }));
 
-app.get('/api/testReq', (req:any, res:any) => {
-    testReq(req, res);
+app.get('/api/destroySession', destroySession);
+
+app.get('/api/getUserInfo', (req:any, res:any) => {
+    getUserInfo(req, res, client);
+});
+
+app.get('/api/getMap', (req:any, res:any) => {
+    getMap(req, res, client);
+});
+
+app.post('/api/login', (req: any, res: any) => {
+    console.log("testing");
+    login(req, res, client);
+});
+
+app.post('/api/register', (req: any, res: any) => {
+    register(req, res, client, redisClient);
+});
+
+app.post('/api/createMap', (req: any, res: any) => {
+    createMap(req, res, client);
 });
 
 server.listen(_PORT, () => {

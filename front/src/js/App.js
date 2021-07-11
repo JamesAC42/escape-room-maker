@@ -7,14 +7,22 @@ import {
   Route
 } from 'react-router-dom';
 
+import SessionHandler from './components/SessionHandler';
+
 import Home from './components/Home';
 import Create from './components/create/Create';
 import Window from './components/Window';
+import Profile from './components/profile/Profile';
 import Login from './components/login/Login';
+import Logout from './components/Logout';
+import MapInfo from './components/mapinfo/MapInfo';
 
 function App() {
   return (
     <div>
+
+      <SessionHandler/>
+
       <div className="stripe"></div>
       <Switch>
         <Route
@@ -34,8 +42,23 @@ function App() {
 
         <Route
           exact
-          path="/login"
+          path="/login/:from?"
           component={Login} />
+
+        <Route
+          exact
+          path="/profile"
+          component={Profile} />
+
+        <Route
+          exact
+          path="/logout"
+          component={Logout} />
+
+        <Route
+          exact
+          path="/map/:id?"
+          component={MapInfo} />
           
       </Switch>
     </div>

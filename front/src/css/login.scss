@@ -62,6 +62,9 @@
                     }
                 }
             }
+            .form-error {
+                color:$error;
+            }
             .submit-login {
                 margin:10px 0;
                 .submit-button {
@@ -75,7 +78,17 @@
                     cursor:pointer;
                     transition:transform 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
                     &:hover {
-                        transform:translate(0, -3px);
+                        background:rgb(64, 56, 184);
+                    }
+                }
+            }
+            .react-date-picker__wrapper {
+                border-radius:6px;
+                width:50%;
+                .react-date-picker__inputGroup__input {
+                    border:none;
+                    .react-calendar {
+                        border-radius:6px;
                     }
                 }
             }
