@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS public."Maps"
+CREATE TABLE IF NOT EXISTS public."maps"
 (
     uid uuid NOT NULL,
     creator uuid NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public."Maps"
     explicit boolean NOT NULL,
     times_completed integer NOT NULL DEFAULT 0,
     graph text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Maps_pkey" PRIMARY KEY (uid)
+    CONSTRAINT "maps_pkey" PRIMARY KEY (uid)
 )
 WITH (
     OIDS = FALSE
