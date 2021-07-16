@@ -1,7 +1,9 @@
 import React, { Component} from 'react';
-import { Redirect } from 'react-router';
+import { matchPath, Redirect } from 'react-router';
 
 import '../../../css/mapinfo/mapinfo.scss';
+
+import GridBase from '../GridBase';
 
 class MapInfoState {
     constructor() {
@@ -57,6 +59,9 @@ class MapInfo extends Component {
                 <div>explicit: {JSON.stringify(map.explicit)}</div>
                 <div>timesCompleted: {map.timesCompleted}</div>
                 <div>graph:</div>
+                <GridBase 
+                    graph={map.graph} 
+                    className={""}/>
                 <pre>
                     {
                         JSON.stringify(map.graph, null, '    ')

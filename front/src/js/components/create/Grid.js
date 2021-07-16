@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
-import "../../../css/create/grid.scss";
-
+import "../../../css/grid.scss";
 import tileImage from '../../../images/woodtile.png';
 import plusImage from '../../../images/plus.png';
 import { nanoid } from 'nanoid';
@@ -15,24 +14,16 @@ import {
   Coordinates
 } from './MapClasses';
 
-const mapStateToProps = (store) => ({
-  create: store.create
-})
+import GridBase, { GridBaseState } from '../GridBase';
 
 const mapDispatchToProps = {
   setActiveRoom: createPageActions.setActiveRoom,
   setGraph: createPageActions.setGraph
 }
 
-class GridState {
-  cellSize;
-  height;
-  width;
+class GridState extends GridBaseState {
   constructor() {
-    this.cellSize = 60;
-    this.height = this.cellSize * 12;
-    this.width = this.cellSize * 12;
-
+    super();
     this.activeAddButton = {
       room:null,
       direction:0
@@ -40,7 +31,8 @@ class GridState {
   }
 }
 
-class GridBind extends Component {
+class GridBind extends GridBase {
+
   constructor(props) {
     super(props);
     this.state = new GridState();
@@ -60,7 +52,7 @@ class GridBind extends Component {
       const y = e.clientY - rect.top;
       const room = this.getRoomFromCoordinates(x, y);
       if(room !== null) {
-        if(room !== this.props.create.activeRoom) {
+        if(room !== this.props.activeRoom) {
           this.props.setActiveRoom(room);
         }
       }
@@ -81,9 +73,9 @@ class GridBind extends Component {
 
   coordsExist(destCoords) {
     let exists = false;
-    Object.keys(this.props.create.graph.coordinates)
+    Object.keys(this.props.graph.coordinates)
     .forEach(c => {
-      let iCoords = this.props.create.graph.coordinates[c];
+      let iCoords = this.props.graph.coordinates[c];
       if(destCoords.x === iCoords.x && destCoords.y === iCoords.y) {
         exists = true;
       }
@@ -97,7 +89,7 @@ class GridBind extends Component {
     const cY = e.clientY - rect.top;
     const room = this.getRoomFromCoordinates(cX, cY);
     if(room !== null) {
-      let {x, y} = this.props.create.graph.graph[room].coordinates;
+      let {x, y} = this.props.graph.graph[room].coordinates;
       const {topLeftX, topLeftY} = this.topLeftFromBase(x, y);
       const minDir = this.minWallDir(cX, cY, topLeftX, topLeftY);
       let closestRoom = minDir === null ? null : room;
@@ -158,7 +150,7 @@ class GridBind extends Component {
 
   addNewRoom() {
     let room = this.state.activeAddButton.room;
-    let graph = {...this.props.create.graph};
+    let graph = {...this.props.graph};
     let coords = graph.graph[room].coordinates;
     
     let direction = this.state.activeAddButton.direction;
@@ -189,21 +181,8 @@ class GridBind extends Component {
     })
   }
 
-  topLeftFromBase(x, y) {
-    const centerX = this.state.width / 2;
-    const centerY = this.state.height / 2;
-
-    let gridX = centerX + x * this.state.cellSize;
-    let gridY = centerY - y * this.state.cellSize;
-
-    let topLeftX = gridX - this.state.cellSize / 2;
-    let topLeftY = gridY - this.state.cellSize / 2;
-
-    return { topLeftX, topLeftY };
-  }
-
   getRoomFromCoordinates(targetX, targetY) {
-    const graph = {...this.props.create.graph};
+    const graph = {...this.props.graph};
     let activeRoom = null;
     const rooms = Object.keys(graph.coordinates);
     for(let i = 0; i < rooms.length; i++) {
@@ -228,7 +207,7 @@ class GridBind extends Component {
     const { topLeftX, topLeftY } = this.topLeftFromBase(x, y);
     this.ctx.drawImage(tile, topLeftX, topLeftY, this.state.cellSize, this.state.cellSize);
 
-    if(id === this.props.create.activeRoom) {
+    if(id === this.props.activeRoom) {
       this.ctx.fillStyle = "rgba(66, 194, 219, 0.5)";
       this.ctx.fillRect(topLeftX, topLeftY, this.state.cellSize, this.state.cellSize);
     }
@@ -238,19 +217,11 @@ class GridBind extends Component {
     this.ctx.stroke();
   }
 
-  drawGridCells() {
-    this.ctx.lineWidth = 3;
-    Object.keys(this.props.create.graph.coordinates).forEach((roomid) => {
-      const { x, y } = this.props.create.graph.coordinates[roomid];
-      this.drawCell(roomid, x, y, this.tile);
-    })
-  }
-
   drawAddButton() {
     if(this.state.activeAddButton.room !== null) {
 
       let room = this.state.activeAddButton.room;
-      let coords = this.props.create.graph.graph[room].coordinates;
+      let coords = this.props.graph.graph[room].coordinates;
       let {topLeftX, topLeftY} = this.topLeftFromBase(coords.x, coords.y);
       let direction = this.state.activeAddButton.direction;
 
@@ -280,7 +251,7 @@ class GridBind extends Component {
   }
 
   renderGrid() {
-    if(this.props.create.graph === undefined) return;
+    if(this.props.graph === undefined) return;
     requestAnimationFrame(() => {
       this.ctx.clearRect(0, 0, this.state.width, this.state.height);
       this.ctx.fillStyle = "#2a324d";
@@ -292,12 +263,12 @@ class GridBind extends Component {
 
   componentDidUpdate(prevProps, prevState) {
 
-    if(prevProps.create.graph === undefined &&
-      this.props.create.graph !== undefined) {
+    if(prevProps.graph === undefined &&
+      this.props.graph !== undefined) {
         this.renderGrid();
     }
 
-    if(prevProps.create.activeRoom !== this.props.create.activeRoom) {
+    if(prevProps.activeRoom !== this.props.activeRoom) {
       this.renderGrid();
     }
 
@@ -305,35 +276,11 @@ class GridBind extends Component {
       || prevState.activeAddButton.direction !== this.state.activeAddButton.direction) {
         this.renderGrid();
     }
-
-  }
-
-  componentDidMount() {
-    this.ctx = this.canvas.current.getContext("2d");
-    this.renderGrid();
-  }
-
-  render() {
-    let gridClass = this.props.hide ? "canvas-hide" : "";
-    return (
-      <div> 
-        activeRoom: {this.props.create.activeRoom}
-        <canvas
-          className={gridClass}
-          ref={this.canvas}
-          height={this.state.height}
-          width={this.state.width}
-          onClick={(e) => this.handleClick(e)}
-          onMouseMove={(e) => this.handleHover(e)}
-          onMouseLeave={(e) => this.handleMouseLeave(e)}
-        ></canvas>
-      </div>
-    );
   }
 }
 
 const Grid = connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(GridBind);
 

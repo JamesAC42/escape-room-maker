@@ -72,9 +72,15 @@ class CreateBind extends Component {
     if (!this.props.session.loggedin) {
       return <Redirect to="/login/create" />;
     }
+    let gridClass = "create-grid";
+    if(this.state.publishWindowVisible)
+      gridClass += " canvas-hide";
     return (
       <div className="container create-container">
-        <Grid hide={this.state.publishWindowVisible}/>
+        <Grid 
+          className={gridClass}
+          activeRoom={this.props.create.activeRoom}
+          graph={this.props.create.graph}/>
         <div style={{position: "absolute", left: "67%", width: "30%"}}>
         </div>
         {

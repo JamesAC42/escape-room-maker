@@ -30,6 +30,15 @@
     background:none;
 }
 
+@keyframes slide-in {
+    0% {
+        transform:translate(-50%, -100vh);
+    }
+    100% {
+        transform:translate(-50%, -50%);
+    }
+}
+
 .publish-window-modal {
     top:50%;left:50%;
     transform:translate(-50%,-50%);
@@ -39,15 +48,8 @@
     border:2px solid rgb(68, 86, 255);
     border-radius:8px;
     padding:10px;
-    @keyframes slide-in {
-        0% {
-            transform:translate(-50%, -100vh);
-        }
-        100% {
-            transform:translate(-50%, -50%);
-        }
-    }
-    animation: slide-in .2s cubic-bezier(0.075, 0.82, 0.165, 1) 1;
+    //animation: slide-in .2s cubic-bezier(0.075, 0.82, 0.165, 1) 1;
+    animation: slide-in .1s ease-in-out 1;
 
     .window-header {
         text-align:center;
