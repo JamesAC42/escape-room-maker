@@ -40,15 +40,15 @@ class EventWindowBind extends Component {
     });
   }
   
-  onReqItem = () => {
+  onReqItem = (checked) => {
     this.setState({
-      item_req: !this.state.item_req
+      item_req: checked
     });
   }
   
-  onSolveItem = () => {
+  onSolveItem = (checked) => {
     this.setState({
-      item_solve: !this.state.item_solve
+      item_solve: checked
     });
   }
   
@@ -92,9 +92,11 @@ class EventWindowBind extends Component {
     console.log("roomVals: ", this.state.roomVals);
   }
   
-  setEventType = () => {
+  setInitRenderVals = () => {
     if(this.state.roomVals !== null && this.props.create.activeRoom) {
       this.state.event_type = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventType;
+      this.state.item_req = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).requireItem;
+      this.state.item_solve = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).solveItem;
     }
   }
   
@@ -108,49 +110,26 @@ class EventWindowBind extends Component {
       document.getElementById("solve-item-choice").checked = currRoom.solveItem;
       document.getElementById("solve-item-name").value = currRoom.solveItemName;
       document.getElementById("solve-item-desc").value = currRoom.solveItemDesc;
-      
-      this.state.item_req = currRoom.requireItem;
-      this.state.item_solve = currRoom.solveItem;
     }
   }
   
-  onChangeRequireItem = () => {
-    console.log("document.getElementById(\"req-item-choice\").value",document.getElementById("req-item-choice").checked);
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).requireItem = document.getElementById("req-item-choice").checked;
-    this.onReqItem();
-  }
-  
-  onChangeRequireItemName = () => {
-    console.log("document.getElementById(\"req-item-name\").value",document.getElementById("req-item-name").value);
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).requireItemName = document.getElementById("req-item-name").value;
-  }
-  
-  onChangeEventDesc = () => {
-    console.log("document.getElementById(\"event-desc\").value",document.getElementById("event-desc").value);
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventDesc = document.getElementById("event-desc").value;
-  }
-  
-  onChangeSolveItem = () => {
-    console.log("document.getElementById(\"solve-item-choice\").value",document.getElementById("solve-item-choice").checked);
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).solveItem = document.getElementById("solve-item-choice").checked;
-    this.onSolveItem();
-  }
-  
-  onChangeSolveItemName = () => {
-    console.log("document.getElementById(\"solve-item-name\").value",document.getElementById("solve-item-name").value);
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).solveItemName = document.getElementById("solve-item-name").value;
-  }
-  
-  onChangeSolveItemDesc = () => {
-    console.log("document.getElementById(\"solve-item-desc\").value",document.getElementById("solve-item-desc").value);
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).solveItemDesc = document.getElementById("solve-item-desc").value;
+  onChangeStateVal = (e) => {
+    var valType = e.target.type == "checkbox" ? "checked" : "value";
+    this.state.roomVals.find(x => x.room == this.props.create.activeRoom)[e.target.attributes.name.value] = e.target[valType];
+    if(e.target.attributes.name.value == "requireItem") {
+      console.log()
+      this.onReqItem(e.target[valType]);
+    }
+    else if(e.target.attributes.name.value == "solveItem") {
+      this.onSolveItem(e.target[valType]);
+    }
   }
   
   render() {
     return(
       <div id="ew" style={this.props.create.activeRoom == undefined ? this.style_hidden : this.props.style}>
         {this.mapGraph()}
-        {this.setEventType()}
+        {this.setInitRenderVals()}
         <h1>
           Room: <span style={{color: "aliceblue"}}>{this.props.create.activeRoom}</span>
           <div style={{float: "right"}}>
@@ -173,30 +152,30 @@ class EventWindowBind extends Component {
           
           <div>
             <h4>Event description:</h4>
-            <input id="event-desc" type="text" placeholder="Question" onChange={this.onChangeEventDesc}></input>
+            <input id="event-desc" type="text" placeholder="Question" name="eventDesc" onChange={this.onChangeStateVal.bind(this)}></input>
           </div>
           
           <h4>
-            Require Item to Trigger Event: <input type="checkbox" id="req-item-choice"
-              onChange={this.onChangeRequireItem}></input>
+            Require Item to Trigger Event: <input type="checkbox" id="req-item-choice" name="requireItem"
+              onChange={this.onChangeStateVal.bind(this)}></input>
           </h4>
           
           {/* This is rendered if the event requires an item to be triggered */}
           <div style={this.state.item_req && this.state.event_type != "No Event" ? this.style_visible : this.style_hidden}>
             <h4>Item Name:</h4>
-            <input id="req-item-name" type="text" placeholder="Name" onChange={this.onChangeRequireItemName}></input>
+            <input id="req-item-name" type="text" placeholder="Name" name="requireItemName" onChange={this.onChangeStateVal.bind(this)}></input>
           </div>
           
           <h4>
-            Item received upon solving: <input type="checkbox" id="solve-item-choice" onChange={this.onChangeSolveItem}></input>
+            Item received upon solving: <input type="checkbox" id="solve-item-choice" name="solveItem" onChange={this.onChangeStateVal.bind(this)}></input>
           </h4>
           
           {/* This is rendered if an item will be awarded when completing the event */}
           <div style={this.state.item_solve && this.state.event_type != "No Event" ? this.style_visible : this.style_hidden}>
             <h4>Item Name:</h4>
-            <input id="solve-item-name" type="text" placeholder="Name" onChange={this.onChangeSolveItemName}></input>
+            <input id="solve-item-name" type="text" placeholder="Name" name="solveItemName" onChange={this.onChangeStateVal.bind(this)}></input>
             <h4>Item Description:</h4>
-            <input id="solve-item-desc" type="text" placeholder="Description" onChange={this.onChangeSolveItemDesc}></input>
+            <input id="solve-item-desc" type="text" placeholder="Description" name="solveItemDesc" onChange={this.onChangeStateVal.bind(this)}></input>
           </div>
         </div>
         
