@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import '../../../css/MapOverview.scss';
+import '../../../css/MapCard.scss';
 
-class MapOverviewState {
+class MapCardState {
   constructor() {
-    console.log("MapOverviewState created");
+    console.log("MapCardState created");
   }
 }
 
-class MapOverview extends Component {
+class MapCard extends Component {
   constructor(props){
     super(props);
-    this.state = new MapOverviewState();
+    this.state = new MapCardState();
   }
   
   style_hidden = {
@@ -67,4 +67,4 @@ class MapOverview extends Component {
   }
 }
 
-export default MapOverview;
+export default MapCard;
