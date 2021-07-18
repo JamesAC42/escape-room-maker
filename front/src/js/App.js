@@ -11,6 +11,7 @@ import SessionHandler from './components/SessionHandler';
 
 import Home from './components/Home';
 import Create from './components/create/Create';
+import Library from './components/library/Library';
 import Window from './components/Window';
 import Profile from './components/profile/Profile';
 import Login from './components/login/Login';
@@ -34,6 +35,11 @@ function App() {
           exact
           path="/create"
           component={Create} />
+          
+        <Route
+          exact
+          path="/library"
+          component={Library} />
         
         <Route
           exact
