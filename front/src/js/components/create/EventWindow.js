@@ -3,17 +3,23 @@ import '../../../css/EventWindow.scss';
 
 import { connect } from 'react-redux';
 import store from "../../store";
+import { createPageActions } from '../../actions/actions';
+import { eventWindowActions } from '../../actions/eventWindowActions';
 
 const mapStateToProps = (store) => ({
   create: store.create
 })
 
+const mapDispatchToProps = {
+  setRoomVals: eventWindowActions.setRoomVals
+}
+
 class EventWindowState {
-  constructor(pr, et, ir, q, is) {
+  constructor(pr, et, ir, d, is) {
     this.props = pr;
     this.event_type = et;
     this.item_req = ir;
-    this.question = q;
+    this.desc = d;
     this.item_solve = is;
     this.roomVals = null;
   }
@@ -23,11 +29,12 @@ class EventWindowBind extends Component {
   constructor(props){
     super(props);
     this.state = new EventWindowState(props, "No Event", false, true, false);
-    console.log("this tisdh thj st stoesrsjhrkjhe");
+    console.log("this is the store");
     console.log(store.getState());
   }
   
   eventChoose = (e) => {
+    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventType = e.target.value;
     this.setState({
       event_type: e.target.value
     });
@@ -36,12 +43,6 @@ class EventWindowBind extends Component {
   onReqItem = () => {
     this.setState({
       item_req: !this.state.item_req
-    });
-  }
-  
-  onReqQuestion = () => {
-    this.setState({
-      question: !this.state.question
     });
   }
   
@@ -60,39 +61,55 @@ class EventWindowBind extends Component {
   }
   
   mapGraph = () => {
-    console.log("graph")
-    console.log(this.props.create.graph == undefined ? "graph und" : Object.keys(this.props.create.graph.graph));
+    console.log(this.props.create.graph == undefined ? "graph und" : "rooms: " + Object.keys(this.props.create.graph.graph));
     if(this.props.create.graph && this.state.roomVals == null) {
       console.log("typeof", typeof this.props.create.graph.coordinates);
       this.state.roomVals = Object.keys(this.props.create.graph.coordinates).map(x => ({
         room: x,
+        eventType: "No Event",
         requireItem: false,
         requireItemName: "req item name" + x,
         requireQuestion: true,
-        eventQuestion: "event question" + x,
+        eventDesc: "event desc" + x,
         eventAnswer: "event answer" + x,
         solveItem: false,
         solveItemName: "solve item name" + x,
         solveItemDesc: "solve item desc" + x,
+        doorVals: ["N", "S", "W", "E"].map(dir => ({
+          room: x,
+          eventType: "No Event",
+          requireItem: false,
+          requireItemName: dir + " - req item name" + x,
+          requireQuestion: true,
+          eventDesc: dir + " - event desc" + x,
+          eventAnswer: dir + " - event answer" + x,
+          solveItem: false,
+          solveItemName: dir + " - solve item name" + x,
+          solveItemDesc: dir + " - solve item desc" + x,
+        }))
       }));
     }
     console.log("roomVals: ", this.state.roomVals);
   }
   
+  setEventType = () => {
+    if(this.state.roomVals !== null && this.props.create.activeRoom) {
+      this.state.event_type = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventType;
+    }
+  }
+  
   setEWInputs = () => {
     if(this.state.roomVals !== null && this.props.create.activeRoom) {
       var currRoom = this.state.roomVals.find(x => x.room == this.props.create.activeRoom);
+      document.getElementById("event-select").value = currRoom.eventType;
       document.getElementById("req-item-choice").checked = currRoom.requireItem;
       document.getElementById("req-item-name").value = currRoom.requireItemName;
-      document.getElementById("question-choice").checked = currRoom.requireQuestion;
-      document.getElementById("event-q").value = currRoom.eventQuestion;
-      document.getElementById("event-a").value = currRoom.eventAnswer;
+      document.getElementById("event-desc").value = currRoom.eventDesc;
       document.getElementById("solve-item-choice").checked = currRoom.solveItem;
       document.getElementById("solve-item-name").value = currRoom.solveItemName;
       document.getElementById("solve-item-desc").value = currRoom.solveItemDesc;
       
       this.state.item_req = currRoom.requireItem;
-      this.state.question = currRoom.requireQuestion;
       this.state.item_solve = currRoom.solveItem;
     }
   }
@@ -108,20 +125,9 @@ class EventWindowBind extends Component {
     this.state.roomVals.find(x => x.room == this.props.create.activeRoom).requireItemName = document.getElementById("req-item-name").value;
   }
   
-  onChangeRequireQuestion = () => {
-    console.log("document.getElementById(\"question-choice\").value",document.getElementById("question-choice").checked);
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).requireQuestion = document.getElementById("question-choice").checked;
-    this.onReqQuestion();
-  }
-  
-  onChangeEventQuestion = () => {
-    console.log("document.getElementById(\"event-q\").value",document.getElementById("event-q").value);
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventQuestion = document.getElementById("event-q").value;
-  }
-  
-  onChangeEventAnswer = () => {
-    console.log("document.getElementById(\"event-a\").value",document.getElementById("event-a").value);
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventAnswer = document.getElementById("event-a").value;
+  onChangeEventDesc = () => {
+    console.log("document.getElementById(\"event-desc\").value",document.getElementById("event-desc").value);
+    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventDesc = document.getElementById("event-desc").value;
   }
   
   onChangeSolveItem = () => {
@@ -143,38 +149,42 @@ class EventWindowBind extends Component {
   render() {
     return(
       <div id="ew" style={this.props.create.activeRoom == undefined ? this.style_hidden : this.props.style}>
-        <h1>Room: <span style={{color: "aliceblue"}}>{this.props.create.activeRoom}</span></h1>
         {this.mapGraph()}
+        {this.setEventType()}
+        <h1>
+          Room: <span style={{color: "aliceblue"}}>{this.props.create.activeRoom}</span>
+          <div style={{float: "right"}}>
+            <input class="direction-button" type="button" id="room-btn" value="Room" style={{width: "6rem"}}/>
+            <input class="direction-button" type="button" id="n-btn" value="N"/>
+            <input class="direction-button" type="button" id="s-btn" value="S"/>
+            <input class="direction-button" type="button" id="w-btn" value="W"/>
+            <input class="direction-button" type="button" id="e-btn" value="E"/>
+          </div>
+        </h1>
+        
         <h4>Choose event type:</h4>
         <select id="event-select" onChange={this.eventChoose}>
           <option val="None">No Event</option>
-          <option val="Door">Door Event</option>
-          <option val="Room">Room Event</option>
+          <option val="Question">Question</option>
         </select>
         
         {/* This is rendered if the room has an event attached to it */}
         <div style={this.state.event_type != "No Event" ? this.style_visible : this.style_hidden}>
           
+          <div>
+            <h4>Event description:</h4>
+            <input id="event-desc" type="text" placeholder="Question" onChange={this.onChangeEventDesc}></input>
+          </div>
+          
           <h4>
-            Require Item to Trigger Event: <input type="checkbox" id="req-item-choice" onChange={this.onChangeRequireItem}></input>
+            Require Item to Trigger Event: <input type="checkbox" id="req-item-choice"
+              onChange={this.onChangeRequireItem}></input>
           </h4>
           
           {/* This is rendered if the event requires an item to be triggered */}
           <div style={this.state.item_req && this.state.event_type != "No Event" ? this.style_visible : this.style_hidden}>
             <h4>Item Name:</h4>
             <input id="req-item-name" type="text" placeholder="Name" onChange={this.onChangeRequireItemName}></input>
-          </div>
-          
-          <h4>
-            Require Question: <input type="checkbox" id="question-choice" onChange={this.onChangeRequireQuestion}></input>
-          </h4>
-          
-          {/* This is rendered if the event has a question attached to it */}
-          <div style={this.state.question && this.state.event_type != "No Event" ? this.style_visible : this.style_hidden}>
-            <h4>Event question:</h4>
-            <input id="event-q" type="text" placeholder="Question" onChange={this.onChangeEventQuestion}></input>
-            <h4>Event answer:</h4>
-            <input id="event-a" type="text" placeholder="Answer" onChange={this.onChangeEventAnswer}></input>
           </div>
           
           <h4>
@@ -198,7 +208,8 @@ class EventWindowBind extends Component {
 }
 
 const EventWindow = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(EventWindowBind);
 
 export default EventWindow;

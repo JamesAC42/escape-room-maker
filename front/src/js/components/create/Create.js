@@ -8,7 +8,7 @@ class Create extends Component {
     return (
       <div className="container">
         <Grid />
-        <div style={{position: "absolute", left: "67%", width: "30%"}}>
+        <div style={{position: "absolute", left: "40%", width: "55%"}}>
           <EventWindow />
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { createStore, combineReducers } from "redux";
 
 import create from './reducers/create';
+import eventWindow from './reducers/eventWindow';
 
 let initState = {
   create: {
@@ -11,7 +12,8 @@ let initState = {
 };
 
 const escapeRoomReducer = combineReducers({
-  create
+  create,
+  eventWindow
 });
 
 const configureStore = (reducer, initState) => {
