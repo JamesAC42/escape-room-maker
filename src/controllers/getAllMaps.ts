@@ -10,13 +10,13 @@ const getAllMaps = (req:any, res:any, db:any) => {
 
   db.query(query)
     .then((r:any) => {
-        if(r.rows.length === 0) {
-            res.send({success:false, prompt:'Map does not exist.'});
-            return;
-        } else {
-            res.send({success:true,maps:r.rows});
-            return;
-        }
+      res.send({success:true,maps:r.rows});
+      return;
+    })
+    .catch((Error:any) => {
+      console.error(Error);
+      res.send({success:false,message:"error reading database"});
+      return;
     })
 
 }
