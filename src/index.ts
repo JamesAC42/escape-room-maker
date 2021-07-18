@@ -28,6 +28,7 @@ import getUserInfo from './controllers/getUserInfo';
 import destroySession from './controllers/destroySession';
 import createMap from './controllers/createMap';
 import getMap from './controllers/getMap';
+import getAllMaps from './controllers/getAllMaps';
 
 app.set('trust proxy', 1);
 app.use(session({
@@ -48,6 +49,10 @@ app.get('/api/getUserInfo', (req:any, res:any) => {
 
 app.get('/api/getMap', (req:any, res:any) => {
     getMap(req, res, client);
+});
+
+app.get('/api/getAllMaps', (req:any, res:any) => {
+    getAllMaps(req, res, client);
 });
 
 app.post('/api/login', (req: any, res: any) => {
