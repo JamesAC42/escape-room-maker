@@ -7,7 +7,8 @@ import { createPageActions } from '../../actions/actions';
 import { eventWindowActions } from '../../actions/eventWindowActions';
 
 const mapStateToProps = (store) => ({
-  create: store.create
+  create: store.create,
+  eventWindow: store.eventWindow
 })
 
 const mapDispatchToProps = {
@@ -31,6 +32,8 @@ class EventWindowBind extends Component {
     this.state = new EventWindowState(props, "No Event", false, true, false);
     console.log("this is the store");
     console.log(store.getState());
+    console.log("these are the props");
+    console.log(props);
   }
   
   eventChoose = (e) => {
@@ -61,6 +64,10 @@ class EventWindowBind extends Component {
   }
   
   mapGraph = () => {
+    console.log("the props");
+    console.log(this.props);
+    
+    
     console.log(this.props.create.graph == undefined ? "graph und" : "rooms: " + Object.keys(this.props.create.graph.graph));
     if(this.props.create.graph && this.state.roomVals == null) {
       console.log("typeof", typeof this.props.create.graph.coordinates);
@@ -116,6 +123,7 @@ class EventWindowBind extends Component {
   onChangeStateVal = (e) => {
     var valType = e.target.type == "checkbox" ? "checked" : "value";
     this.state.roomVals.find(x => x.room == this.props.create.activeRoom)[e.target.attributes.name.value] = e.target[valType];
+    this.props.setRoomVals(this.state.roomVals);
     if(e.target.attributes.name.value == "requireItem") {
       console.log()
       this.onReqItem(e.target[valType]);
