@@ -69,38 +69,74 @@ class EventWindowBind extends Component {
     
     
     console.log(this.props.create.graph == undefined ? "graph und" : "rooms: " + Object.keys(this.props.create.graph.graph));
-    if(this.props.create.graph && this.state.roomVals == null) {
-      console.log("typeof", typeof this.props.create.graph.coordinates);
-      this.state.roomVals = Object.keys(this.props.create.graph.coordinates).map(x => ({
-        room: x,
-        eventType: "No Event",
-        requireItem: false,
-        requireItemName: "req item name" + x,
-        requireQuestion: true,
-        eventDesc: "event desc" + x,
-        eventAnswer: "event answer" + x,
-        solveItem: false,
-        solveItemName: "solve item name" + x,
-        solveItemDesc: "solve item desc" + x,
-        doorVals: ["N", "S", "W", "E"].map(dir => ({
+    if(this.props.create.graph) {
+      if(this.state.roomVals == null) {
+        console.log("typeof", typeof this.props.create.graph.graph);
+        this.state.roomVals = Object.keys(this.props.create.graph.graph).map(x => ({
           room: x,
           eventType: "No Event",
           requireItem: false,
-          requireItemName: dir + " - req item name" + x,
+          requireItemName: "req item name" + x,
           requireQuestion: true,
-          eventDesc: dir + " - event desc" + x,
-          eventAnswer: dir + " - event answer" + x,
+          eventDesc: "event desc" + x,
+          eventAnswer: "event answer" + x,
           solveItem: false,
-          solveItemName: dir + " - solve item name" + x,
-          solveItemDesc: dir + " - solve item desc" + x,
-        }))
-      }));
+          solveItemName: "solve item name" + x,
+          solveItemDesc: "solve item desc" + x,
+          doorVals: ["N", "S", "W", "E"].map(dir => ({
+            room: x,
+            eventType: "No Event",
+            requireItem: false,
+            requireItemName: dir + " - req item name" + x,
+            requireQuestion: true,
+            eventDesc: dir + " - event desc" + x,
+            eventAnswer: dir + " - event answer" + x,
+            solveItem: false,
+            solveItemName: dir + " - solve item name" + x,
+            solveItemDesc: dir + " - solve item desc" + x,
+          }))
+        }));
+      }
+      else {
+        if(this.state.roomVals.length != Object.keys(this.props.create.graph.graph).length){
+          Object.keys(this.props.create.graph.graph).forEach(x => {
+            if(!this.state.roomVals.find(r => r.room == x)) {
+              this.state.roomVals.push({
+                room: x,
+                eventType: "No Event",
+                requireItem: false,
+                requireItemName: "req item name" + x,
+                requireQuestion: true,
+                eventDesc: "event desc" + x,
+                eventAnswer: "event answer" + x,
+                solveItem: false,
+                solveItemName: "solve item name" + x,
+                solveItemDesc: "solve item desc" + x,
+                doorVals: ["N", "S", "W", "E"].map(dir => ({
+                  room: x,
+                  eventType: "No Event",
+                  requireItem: false,
+                  requireItemName: dir + " - req item name" + x,
+                  requireQuestion: true,
+                  eventDesc: dir + " - event desc" + x,
+                  eventAnswer: dir + " - event answer" + x,
+                  solveItem: false,
+                  solveItemName: dir + " - solve item name" + x,
+                  solveItemDesc: dir + " - solve item desc" + x,
+                }))
+              });
+            }
+          });
+        }
+      }
     }
     console.log("roomVals: ", this.state.roomVals);
   }
   
   setInitRenderVals = () => {
     if(this.state.roomVals !== null && this.props.create.activeRoom) {
+      console.log("fgfgffgfgfggfgfgfggf graph", this.props.create.graph);
+      console.log("fgfgffgfgfggfgfgfggf roomVals", this.state.roomVals);
       this.state.event_type = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventType;
       this.state.item_req = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).requireItem;
       this.state.item_solve = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).solveItem;
@@ -141,11 +177,11 @@ class EventWindowBind extends Component {
         <h1>
           Room: <span style={{color: "aliceblue"}}>{this.props.create.activeRoom}</span>
           <div style={{float: "right"}}>
-            <input class="direction-button" type="button" id="room-btn" value="Room" style={{width: "6rem"}}/>
-            <input class="direction-button" type="button" id="n-btn" value="N"/>
-            <input class="direction-button" type="button" id="s-btn" value="S"/>
-            <input class="direction-button" type="button" id="w-btn" value="W"/>
-            <input class="direction-button" type="button" id="e-btn" value="E"/>
+            <input className="direction-button" type="button" id="room-btn" value="Room" style={{width: "6rem"}}/>
+            <input className="direction-button" type="button" id="n-btn" value="N"/>
+            <input className="direction-button" type="button" id="s-btn" value="S"/>
+            <input className="direction-button" type="button" id="w-btn" value="W"/>
+            <input className="direction-button" type="button" id="e-btn" value="E"/>
           </div>
         </h1>
         

@@ -13,4 +13,8 @@ canvas.grid.create-grid {
     &.canvas-hide {
         transform: translate(-50%, 100vh);
     }
+    &.canvas-left {
+        transform: translate(0%, -50%);
+        left: 5%;
+    }
 }

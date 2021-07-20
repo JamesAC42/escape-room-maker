@@ -10,7 +10,7 @@ import {
 import SessionHandler from './components/SessionHandler';
 
 import Home from './components/Home';
-import Create from './components/create/Create';
+import Create from './components/create/Create.jsx';
 import Window from './components/Window';
 import Profile from './components/profile/Profile';
 import Login from './components/login/Login';
