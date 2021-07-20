@@ -4,3 +4,11 @@ $bg-color: #b59774;
     background-color: $bg-color;
     padding: 1rem;
 }
+
+$dir-btn-size: 3rem;
+
+.direction-button {
+    width: $dir-btn-size;
+    height: $dir-btn-size;
+    font-size: 1.5rem;
+}

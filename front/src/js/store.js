@@ -4,6 +4,7 @@ import create from './reducers/create';
 import settings from './reducers/settings';
 import session from './reducers/session';
 import userinfo from './reducers/userinfo';
+import eventWindow from './reducers/eventWindow';
 
 let initState = {
   settings: {
@@ -38,7 +39,8 @@ const escapeRoomReducer = combineReducers({
   settings,
   session,
   userinfo,
-  create
+  create,
+  eventWindow
 });
 
 const configureStore = (reducer, initState) => {
