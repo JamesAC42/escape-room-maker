@@ -1,8 +1,11 @@
-$bg-color: #b59774;
+$bg-color: #998a78;
 
 #ew {
     background-color: $bg-color;
     padding: 1rem;
+    border:2px solid rgb(231, 231, 255);
+    border-radius:15px;
+    box-shadow: 0px 5px 9px -3px #494949;
 }
 
 $dir-btn-size: 3rem;
@@ -11,4 +14,7 @@ $dir-btn-size: 3rem;
     width: $dir-btn-size;
     height: $dir-btn-size;
     font-size: 1.5rem;
+    border: 1px lightgray solid;
+    border-radius: 5px;
+    margin-left: 2px;
 }

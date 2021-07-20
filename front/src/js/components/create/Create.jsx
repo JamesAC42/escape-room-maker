@@ -75,13 +75,16 @@ class CreateBind extends Component {
     let gridClass = "create-grid";
     if(this.state.publishWindowVisible)
       gridClass += " canvas-hide";
+    else if(this.props.create.activeRoom)
+      gridClass += " canvas-left";
     return (
       <div className="container create-container">
         <Grid 
           className={gridClass}
           activeRoom={this.props.create.activeRoom}
           graph={this.props.create.graph}/>
-        <div style={{position: "absolute", left: "67%", width: "30%"}}>
+        <div style={{position: "absolute", top: "5%", left: "50%", width: "45%", zIndex: -1}}>
+          <EventWindow />
         </div>
         {
           this.state.publishWindowVisible ?

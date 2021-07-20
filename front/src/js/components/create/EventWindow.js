@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../../../css/EventWindow.scss';
+import '../../../css/grid.scss';
 
 import { connect } from 'react-redux';
 import store from "../../store";
@@ -23,6 +24,7 @@ class EventWindowState {
     this.desc = d;
     this.item_solve = is;
     this.roomVals = null;
+    this.currentSelected = "Room";
   }
 }
 
@@ -40,6 +42,13 @@ class EventWindowBind extends Component {
     this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventType = e.target.value;
     this.setState({
       event_type: e.target.value
+    });
+  }
+  
+  selectForEvent = (e) => {
+    console.log("\n\n\ncurrentSelected is about to be", e.target.value, "\n\n\n")
+    this.setState({
+      currentSelected: e.target.value
     });
   }
   
@@ -69,63 +78,111 @@ class EventWindowBind extends Component {
     
     
     console.log(this.props.create.graph == undefined ? "graph und" : "rooms: " + Object.keys(this.props.create.graph.graph));
-    if(this.props.create.graph && this.state.roomVals == null) {
-      console.log("typeof", typeof this.props.create.graph.coordinates);
-      this.state.roomVals = Object.keys(this.props.create.graph.coordinates).map(x => ({
-        room: x,
-        eventType: "No Event",
-        requireItem: false,
-        requireItemName: "req item name" + x,
-        requireQuestion: true,
-        eventDesc: "event desc" + x,
-        eventAnswer: "event answer" + x,
-        solveItem: false,
-        solveItemName: "solve item name" + x,
-        solveItemDesc: "solve item desc" + x,
-        doorVals: ["N", "S", "W", "E"].map(dir => ({
+    if(this.props.create.graph) {
+      if(this.state.roomVals == null) {
+        console.log("typeof", typeof this.props.create.graph.graph);
+        this.state.roomVals = Object.keys(this.props.create.graph.graph).map(x => ({
           room: x,
           eventType: "No Event",
           requireItem: false,
-          requireItemName: dir + " - req item name" + x,
+          requireItemName: "req item name" + x,
           requireQuestion: true,
-          eventDesc: dir + " - event desc" + x,
-          eventAnswer: dir + " - event answer" + x,
+          eventDesc: "event desc" + x,
           solveItem: false,
-          solveItemName: dir + " - solve item name" + x,
-          solveItemDesc: dir + " - solve item desc" + x,
-        }))
-      }));
+          solveItemName: "solve item name" + x,
+          solveItemDesc: "solve item desc" + x,
+          doorVals: ["N", "S", "W", "E"].map(dir => ({
+            dir: dir,
+            room: x,
+            eventType: "No Event",
+            requireItem: false,
+            requireItemName: dir + " - req item name" + x,
+            requireQuestion: true,
+            eventDesc: dir + " - event desc" + x,
+            solveItem: false,
+            solveItemName: dir + " - solve item name" + x,
+            solveItemDesc: dir + " - solve item desc" + x,
+          }))
+        }));
+      }
+      else {
+        if(this.state.roomVals.length != Object.keys(this.props.create.graph.graph).length){
+          Object.keys(this.props.create.graph.graph).forEach(x => {
+            if(!this.state.roomVals.find(r => r.room == x)) {
+              this.state.roomVals.push({
+                room: x,
+                eventType: "No Event",
+                requireItem: false,
+                requireItemName: "req item name - " + x,
+                requireQuestion: true,
+                eventDesc: "event desc - " + x,
+                solveItem: false,
+                solveItemName: "solve item name - " + x,
+                solveItemDesc: "solve item desc - " + x,
+                doorVals: ["N", "S", "W", "E"].map(dir => ({
+                  dir: dir,
+                  room: x,
+                  eventType: "No Event",
+                  requireItem: false,
+                  requireItemName: dir + " - req item name - " + x,
+                  requireQuestion: true,
+                  eventDesc: dir + " - event desc - " + x,
+                  solveItem: false,
+                  solveItemName: dir + " - solve item name - " + x,
+                  solveItemDesc: dir + " - solve item desc - " + x,
+                }))
+              });
+            }
+          });
+        }
+      }
     }
     console.log("roomVals: ", this.state.roomVals);
   }
   
   setInitRenderVals = () => {
     if(this.state.roomVals !== null && this.props.create.activeRoom) {
-      this.state.event_type = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventType;
-      this.state.item_req = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).requireItem;
-      this.state.item_solve = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).solveItem;
+      if(this.state.currentSelected == "Room") {
+        var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom);
+      }
+      else {
+        var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).doorVals.find(y => y.dir == this.state.currentSelected);
+      }
+      this.state.event_type = currSelect.eventType;
+      this.state.item_req = currSelect.requireItem;
+      this.state.item_solve = currSelect.solveItem;
     }
   }
   
   setEWInputs = () => {
     if(this.state.roomVals !== null && this.props.create.activeRoom) {
-      var currRoom = this.state.roomVals.find(x => x.room == this.props.create.activeRoom);
-      document.getElementById("event-select").value = currRoom.eventType;
-      document.getElementById("req-item-choice").checked = currRoom.requireItem;
-      document.getElementById("req-item-name").value = currRoom.requireItemName;
-      document.getElementById("event-desc").value = currRoom.eventDesc;
-      document.getElementById("solve-item-choice").checked = currRoom.solveItem;
-      document.getElementById("solve-item-name").value = currRoom.solveItemName;
-      document.getElementById("solve-item-desc").value = currRoom.solveItemDesc;
+      if(this.state.currentSelected == "Room") {
+        var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom);
+      }
+      else {
+        var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).doorVals.find(y => y.dir == this.state.currentSelected);
+      }
+      document.getElementById("event-select").value = currSelect.eventType;
+      document.getElementById("req-item-choice").checked = currSelect.requireItem;
+      document.getElementById("req-item-name").value = currSelect.requireItemName;
+      document.getElementById("event-desc").value = currSelect.eventDesc;
+      document.getElementById("solve-item-choice").checked = currSelect.solveItem;
+      document.getElementById("solve-item-name").value = currSelect.solveItemName;
+      document.getElementById("solve-item-desc").value = currSelect.solveItemDesc;
     }
   }
   
   onChangeStateVal = (e) => {
     var valType = e.target.type == "checkbox" ? "checked" : "value";
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom)[e.target.attributes.name.value] = e.target[valType];
+    if(this.state.currentSelected == "Room") {
+      this.state.roomVals.find(x => x.room == this.props.create.activeRoom)[e.target.attributes.name.value] = e.target[valType];
+    }
+    else {
+      this.state.roomVals.find(x => x.room == this.props.create.activeRoom)
+                .doorVals.find(y => y.dir == this.state.currentSelected)[e.target.attributes.name.value] = e.target[valType];
+    }
     this.props.setRoomVals(this.state.roomVals);
     if(e.target.attributes.name.value == "requireItem") {
-      console.log()
       this.onReqItem(e.target[valType]);
     }
     else if(e.target.attributes.name.value == "solveItem") {
@@ -135,22 +192,22 @@ class EventWindowBind extends Component {
   
   render() {
     return(
-      <div id="ew" style={this.props.create.activeRoom == undefined ? this.style_hidden : this.props.style}>
+      <div id="ew" className="canvas grid" style={this.props.create.activeRoom == undefined ? this.style_hidden : this.props.style}>
         {this.mapGraph()}
         {this.setInitRenderVals()}
         <h1>
-          Room: <span style={{color: "aliceblue"}}>{this.props.create.activeRoom}</span>
+          Room ID: <span style={{color: "#8ffad1"}}>{this.props.create.activeRoom}</span>
           <div style={{float: "right"}}>
-            <input class="direction-button" type="button" id="room-btn" value="Room" style={{width: "6rem"}}/>
-            <input class="direction-button" type="button" id="n-btn" value="N"/>
-            <input class="direction-button" type="button" id="s-btn" value="S"/>
-            <input class="direction-button" type="button" id="w-btn" value="W"/>
-            <input class="direction-button" type="button" id="e-btn" value="E"/>
+            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="room-btn" value="Room" style={{width: "6rem", backgroundColor: (this.state.currentSelected == "Room" ? "#8ffad1" : ""), borderColor: (this.state.currentSelected == "Room" ? "#6fdab1" : "")}}/>
+            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="n-btn" value="N"  style={{backgroundColor: (this.state.currentSelected == "N" ? "#8ffad1" : ""), borderColor: (this.state.currentSelected == "N" ? "#6fdab1" : "")}}/>
+            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="s-btn" value="S"  style={{backgroundColor: (this.state.currentSelected == "S" ? "#8ffad1" : ""), borderColor: (this.state.currentSelected == "S" ? "#6fdab1" : "")}}/>
+            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="w-btn" value="W"  style={{backgroundColor: (this.state.currentSelected == "W" ? "#8ffad1" : ""), borderColor: (this.state.currentSelected == "W" ? "#6fdab1" : "")}}/>
+            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="e-btn" value="E"  style={{backgroundColor: (this.state.currentSelected == "E" ? "#8ffad1" : ""), borderColor: (this.state.currentSelected == "E" ? "#6fdab1" : "")}}/>
           </div>
         </h1>
         
         <h4>Choose event type:</h4>
-        <select id="event-select" onChange={this.eventChoose}>
+        <select id="event-select" name="eventType" onChange={this.onChangeStateVal.bind(this)}>
           <option val="None">No Event</option>
           <option val="Question">Question</option>
         </select>
