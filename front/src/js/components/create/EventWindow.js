@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../../../css/EventWindow.scss';
+import '../../../css/grid.scss';
 
 import { connect } from 'react-redux';
 import store from "../../store";
@@ -171,11 +172,11 @@ class EventWindowBind extends Component {
   
   render() {
     return(
-      <div id="ew" style={this.props.create.activeRoom == undefined ? this.style_hidden : this.props.style}>
+      <div id="ew" className="canvas grid" style={this.props.create.activeRoom == undefined ? this.style_hidden : this.props.style}>
         {this.mapGraph()}
         {this.setInitRenderVals()}
         <h1>
-          Room: <span style={{color: "aliceblue"}}>{this.props.create.activeRoom}</span>
+          Room ID: <span style={{color: "#8ffad1"}}>{this.props.create.activeRoom}</span>
           <div style={{float: "right"}}>
             <input className="direction-button" type="button" id="room-btn" value="Room" style={{width: "6rem"}}/>
             <input className="direction-button" type="button" id="n-btn" value="N"/>
