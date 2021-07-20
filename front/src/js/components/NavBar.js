@@ -15,20 +15,20 @@ class NavBarBind extends Component {
       return (
         <div className="outer-navbar">
           <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/Profile">Profile</Link></li>
-            <li><Link to="/Create">Create</Link></li>
-            <li class="navbar-right-item"><Link to="/Logout">Logout</Link></li>
+            <li className="flex flex-row"><Link to="/">EscapeRoom</Link></li>
+            <li className="flex flex-row"><Link to="/Profile">Profile</Link></li>
+            <li className="flex flex-row"><Link to="/Create">Create</Link></li>
+            <li className="flex flex-row right-link"><Link to="/Logout">Logout</Link></li>
           </ul>
         </div>
       )
     } else {
       return (
         <div className="outer-navbar">
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/Create">Create</Link></li>
-            <li class="navbar-right-item"><Link to="/Login">Login</Link></li>
+          <ul className>
+            <li className="flex flex-row"><Link to="/">EscapeRoom</Link></li>
+            <li className="flex flex-row"><Link to="/Create">Create</Link></li>
+            <li className="flex flex-row right-link"><Link to="/Login">Login</Link></li>
           </ul>
         </div>
       )

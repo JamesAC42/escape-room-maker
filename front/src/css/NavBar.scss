@@ -9,17 +9,20 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 
 li {
   float: left;
+  display: block;
+  height: 100%;
+  padding: 0 15px;
 }
 
 li a {
   color: $text-light;
-  display: block;
+  line-height: $nav-height;
   text-align: center;
-  padding: 14px 16px;
   text-decoration: none;
 }
 
@@ -27,6 +30,6 @@ li a:hover {
   background-color: gray;
 }
 
-.navbar-right-item {
+.right-link {
   float: right;
 }

@@ -16,6 +16,7 @@ import Profile from './components/profile/Profile';
 import Login from './components/login/Login';
 import Logout from './components/Logout';
 import MapInfo from './components/mapinfo/MapInfo';
+import NavBar from './components/NavBar';
 
 function App() {
   return (
@@ -23,18 +24,20 @@ function App() {
 
       <SessionHandler/>
 
+      <NavBar/>
+
       <div className="stripe"></div>
       <Switch>
         <Route
           exact
           path="/"
           component={Home} />
-          
+
         <Route
           exact
           path="/create"
           component={Create} />
-        
+
         <Route
           exact
           path="/window"
@@ -59,7 +62,7 @@ function App() {
           exact
           path="/map/:id?"
           component={MapInfo} />
-          
+
       </Switch>
     </div>
   );
