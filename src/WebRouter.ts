@@ -6,16 +6,20 @@ import createMap from './controllers/createMap';
 import getMap from './controllers/getMap';
 import getAllMaps from './controllers/getAllMaps';
 
+const http = require('http');
+
 class WebRouter {
 
     app:any;
     database:any;
     cache:any;
+    port:number;
 
-    constructor(a:any, db:any, c:any) {
-        this.app = a;
+    constructor(app:any, db:any, c:any, port:number = 3501) {
+        this.app = app;
         this.database = db;
         this.cache = c;
+        this.port = port;
 
         this.routeControllers();
     }
@@ -51,11 +55,10 @@ class WebRouter {
 
     listen() {
         
-        const _PORT = 3501;
-        const server = require('http').createServer(this.app);
+        const server = http.createServer(this.app);
 
-        server.listen(_PORT, () => {
-            console.log(`Web server listening at port ${_PORT}...`);
+        server.listen(this.port, () => {
+            console.log(`Web server listening at port ${this.port}...`);
         });
     }
 
