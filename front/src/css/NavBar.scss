@@ -1,0 +1,32 @@
+@import "settings.scss";
+
+.outer-navbar {
+  background-color: $ui-dark;
+  height: $nav-height;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  color: $text-light;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: gray;
+}
+
+.navbar-right-item {
+  float: right;
+}
