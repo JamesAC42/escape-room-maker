@@ -69,7 +69,7 @@ class CreateBind extends Component {
   }
 
   render() {
-    if (this.props.session.loggedin) {
+    if (!this.props.session.loggedin) {
       return <Redirect to="/login/create" />;
     }
     let gridClass = "create-grid";
