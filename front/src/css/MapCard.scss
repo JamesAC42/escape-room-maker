@@ -1,0 +1,58 @@
+$mo-height: 250px;
+$mo-width: 1000px;
+$mo-padding: 15px;
+
+.map-overview {
+    background-color: white;
+    border: 2px solid darkblue;
+    border-radius: 10px;
+    min-height: $mo-height;
+    width: $mo-width;
+    margin: auto;
+    margin-top: $mo-padding;
+    padding: $mo-padding 0px $mo-padding $mo-padding;
+}
+
+.mo-info {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    & > * {
+        display: inline-block;
+        margin-bottom: auto;
+    }
+    margin-right: $mo-padding;
+}
+
+$thumbnail-dims: $mo-height - $mo-padding;
+$thumbnail-mr: $mo-padding * 1.5;
+
+.thumbnail {
+    background-color: black;
+    min-width: $thumbnail-dims;
+    min-height: $thumbnail-dims;
+    float: left;
+    margin: $mo-padding * 0.5;
+    margin-right: $thumbnail-mr;
+}
+
+.mo-data {
+    margin-left: $thumbnail-dims + $thumbnail-mr;
+}
+
+.mo-title, .mo-rating {
+    font-size: 1.5rem;
+}
+
+.mo-tag-section {
+    margin-top: auto;
+    left: 30px;
+}
+
+.mo-tag-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: fit-content;
+    margin-right: calc(#{$mo-padding} - 10px);
+}

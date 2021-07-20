@@ -37,7 +37,12 @@ function App() {
           exact
           path="/create"
           component={Create} />
-
+          
+        <Route
+          exact
+          path="/library"
+          component={Library} />
+        
         <Route
           exact
           path="/window"
