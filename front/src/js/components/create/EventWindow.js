@@ -142,11 +142,15 @@ class EventWindowBind extends Component {
   
   setInitRenderVals = () => {
     if(this.state.roomVals !== null && this.props.create.activeRoom) {
-      console.log("fgfgffgfgfggfgfgfggf graph", this.props.create.graph);
-      console.log("asasasasasasasasasa roomVals", this.state.roomVals);
-      this.state.event_type = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventType;
-      this.state.item_req = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).requireItem;
-      this.state.item_solve = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).solveItem;
+      if(this.state.currentSelected == "Room") {
+        var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom);
+      }
+      else {
+        var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).doorVals.find(y => y.dir == this.state.currentSelected);
+      }
+      this.state.event_type = currSelect.eventType;
+      this.state.item_req = currSelect.requireItem;
+      this.state.item_solve = currSelect.solveItem;
     }
   }
   
@@ -179,7 +183,6 @@ class EventWindowBind extends Component {
     }
     this.props.setRoomVals(this.state.roomVals);
     if(e.target.attributes.name.value == "requireItem") {
-      console.log()
       this.onReqItem(e.target[valType]);
     }
     else if(e.target.attributes.name.value == "solveItem") {
@@ -204,7 +207,7 @@ class EventWindowBind extends Component {
         </h1>
         
         <h4>Choose event type:</h4>
-        <select id="event-select" onChange={this.eventChoose}>
+        <select id="event-select" name="eventType" onChange={this.onChangeStateVal.bind(this)}>
           <option val="None">No Event</option>
           <option val="Question">Question</option>
         </select>
