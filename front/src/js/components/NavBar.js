@@ -11,28 +11,21 @@ const mapStateToProps = (state, props) => ({
 
 class NavBarBind extends Component {
   render() {
-    if (this.props.session.loggedin) {
-      return (
-        <div className="outer-navbar">
-          <ul>
-            <li className="flex flex-row"><Link to="/">EscapeRoom</Link></li>
-            <li className="flex flex-row"><Link to="/Profile">Profile</Link></li>
-            <li className="flex flex-row"><Link to="/Create">Create</Link></li>
-            <li className="flex flex-row right-link"><Link to="/Logout">Logout</Link></li>
-          </ul>
-        </div>
-      )
-    } else {
-      return (
-        <div className="outer-navbar">
-          <ul className>
-            <li className="flex flex-row"><Link to="/">EscapeRoom</Link></li>
-            <li className="flex flex-row"><Link to="/Create">Create</Link></li>
+    return (
+      <div className="outer-navbar">
+        <ul>
+          <li className="flex flex-row"><Link to="/">EscapeRoom</Link></li>
+          <li className="flex flex-row"><Link to="/Create">Create</Link></li>
+          <li className="flex flex-row"><Link to="/Library">Library</Link></li>
+          {
+            this.props.session.loggedin ?
+            <li className="flex flex-row right-link"><Link to="/Profile">Profile</Link></li>
+            :
             <li className="flex flex-row right-link"><Link to="/Login">Login</Link></li>
-          </ul>
-        </div>
-      )
-    }
+          }
+        </ul>
+      </div>
+    )
   }
 }
 

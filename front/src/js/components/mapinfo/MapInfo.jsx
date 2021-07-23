@@ -49,7 +49,7 @@ class MapInfo extends Component {
         if(this.state.map.uid === undefined) return null;
         let map = {...this.state.map};
         return(
-            <div className="container">
+            <div className="container mapinfo-container">
                 <div className="bumpered-container mapinfo-container card">
                     <div className="mapinfo-row">
                         <div className="mapinfo-col mapinfo-meta">
