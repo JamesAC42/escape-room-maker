@@ -4,7 +4,37 @@ import MapCard from './MapCard';
 import libData from "../../mock-data/libData";
 import tagData from "../../mock-data/tagData";
 
+class LibraryState {
+    constructor() {
+        this.maps = [];
+    }
+}
+
 class Library extends Component {
+    constructor(props) {
+        super(props);
+        this.state = new LibraryState();
+    }
+    componentDidMount() {
+        fetch('/api/getAllMaps', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'withCredentials':'true'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                this.setState({
+                    maps:data.maps
+                })
+            }
+        })
+        .catch(error => {
+            console.error('Error: ' +  error);
+        })
+    }
     render() {
         return(
             <div className="library-container">
@@ -20,7 +50,7 @@ class Library extends Component {
                     <input type="text" placeholder="Search"></input>
                     <h1 style={{"text-align": "center"}}>Popular Maps</h1>
                     {
-                        libData.rooms.map(x => <MapCard title={x.title} desc={x.description} rating={x.rating} roomCount={x.roomCount} creator={x.creator} totalPlays={x.totalPlays} difficulty={x.difficulty} tags={x.tags}/>)
+                        this.state.maps.map(x => <MapCard title={x.title} desc={x.description} rating={5} roomCount={10} creator={x.creator} totalPlays={x.totalPlays} difficulty={"Medium"} tags={JSON.parse(x.tags)}/>)
                     }
                 </div>
             </div>
