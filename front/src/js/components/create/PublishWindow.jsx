@@ -1,10 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
+import { createPageActions } from "../../actions/actions";
 
 const mapStateToProps = (state, props) => ({
   create: state.create
 });
+
+const mapDispatchToProps = {
+  setActiveRoom: createPageActions.setActiveRoom,
+  setMap: createPageActions.setMap,
+  setGraph: createPageActions.setGraph
+}
 
 class PublishWindowState {
   constructor() {
@@ -47,6 +54,9 @@ class PublishWindowBind extends Component {
     .then(data => {
       if(data.success) {
         this.setState({redirect:data.id});
+        this.props.setActiveRoom(undefined);
+        this.props.setGraph(undefined);
+        this.props.setMap(undefined);
       } else {
         console.log(data);
       }
@@ -117,7 +127,8 @@ class PublishWindowBind extends Component {
 }
 
 const PublishWindow = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(PublishWindowBind);
 
 export default PublishWindow;
