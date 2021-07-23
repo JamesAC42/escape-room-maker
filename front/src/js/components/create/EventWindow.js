@@ -7,6 +7,16 @@ import store from "../../store";
 import { createPageActions } from '../../actions/actions';
 import { eventWindowActions } from '../../actions/eventWindowActions';
 
+const styles  = {
+  styleHidden: {
+    "visibility": "hidden"
+  },
+  
+  styleVisible: {
+    "visibility": "visible"
+  }
+}
+
 const mapStateToProps = (store) => ({
   create: store.create,
   eventWindow: store.eventWindow
@@ -64,13 +74,7 @@ class EventWindowBind extends Component {
     });
   }
   
-  style_hidden = {
-    "visibility": "hidden"
-  }
   
-  style_visible = {
-    "visibility": "visible"
-  }
   
   mapGraph = () => {
     console.log("the props");
@@ -192,7 +196,7 @@ class EventWindowBind extends Component {
   
   render() {
     return(
-      <div id="ew" className="canvas grid" style={this.props.create.activeRoom == undefined ? this.style_hidden : this.props.style}>
+      <div id="ew" className="canvas grid" style={this.props.create.activeRoom == undefined ? styles.styleHidden : this.props.style}>
         {this.mapGraph()}
         {this.setInitRenderVals()}
         <h1>
@@ -213,7 +217,7 @@ class EventWindowBind extends Component {
         </select>
         
         {/* This is rendered if the room has an event attached to it */}
-        <div style={this.state.event_type !== "No Event" ? this.style_visible : this.style_hidden}>
+        <div style={this.state.event_type !== "No Event" ? styles.styleVisible : styles.styleHidden}>
           
           <div>
             <h4>Event description:</h4>
@@ -226,7 +230,7 @@ class EventWindowBind extends Component {
           </h4>
           
           {/* This is rendered if the event requires an item to be triggered */}
-          <div style={this.state.item_req && this.state.event_type !== "No Event" ? this.style_visible : this.style_hidden}>
+          <div style={this.state.item_req && this.state.event_type !== "No Event" ? styles.styleVisible : styles.styleHidden}>
             <h4>Item Name:</h4>
             <input id="req-item-name" type="text" placeholder="Name" name="requireItemName" onChange={this.onChangeStateVal.bind(this)}></input>
           </div>
@@ -236,7 +240,7 @@ class EventWindowBind extends Component {
           </h4>
           
           {/* This is rendered if an item will be awarded when completing the event */}
-          <div style={this.state.item_solve && this.state.event_type !== "No Event" ? this.style_visible : this.style_hidden}>
+          <div style={this.state.item_solve && this.state.event_type !== "No Event" ? styles.styleVisible : styles.styleHidden}>
             <h4>Item Name:</h4>
             <input id="solve-item-name" type="text" placeholder="Name" name="solveItemName" onChange={this.onChangeStateVal.bind(this)}></input>
             <h4>Item Description:</h4>
