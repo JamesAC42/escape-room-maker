@@ -31,10 +31,13 @@
     }
 }
 
-input {
-    width: 100%;
-    font-size: 2rem;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 5px 0px;
+.whole-map-section {
+    input.searchbar {
+        width: 100%;
+        font-size: 2rem;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 5px 0px;
+    }
 }
+

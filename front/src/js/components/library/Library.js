@@ -47,7 +47,7 @@ class Library extends Component {
                     </div>
                 </div>
                 <div className="whole-map-section">
-                    <input type="text" placeholder="Search"></input>
+                    <input type="text" placeholder="Search" className="searchbar"></input>
                     <h1 style={{"text-align": "center"}}>Popular Maps</h1>
                     {
                         this.state.maps.map(x => <MapCard title={x.title} desc={x.description} rating={5} roomCount={10} creator={x.creator} totalPlays={x.totalPlays} difficulty={"Medium"} tags={JSON.parse(x.tags)}/>)
