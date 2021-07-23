@@ -73,9 +73,11 @@ class CreateBind extends Component {
       return <Redirect to="/login/create" />;
     }
     let gridClass = "create-grid";
+    /*
     if(this.state.publishWindowVisible)
       gridClass += " canvas-hide";
-    else if(this.props.create.activeRoom)
+    */
+    if(this.props.create.activeRoom)
       gridClass += " canvas-left";
     return (
       <div className="container create-container">
