@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import '../../../css/MapCard.scss';
 
+import {Link} from 'react-router-dom';
+
 class MapCardState {
   constructor() {
     console.log("MapCardState created");
@@ -30,6 +32,7 @@ class MapCard extends Component {
   }
   
   render() {
+    console.log(this.props);
     return(
       <div className="map-overview" style={this.props.style ? this.props.style : this.style_visible}>
         
@@ -55,6 +58,8 @@ class MapCard extends Component {
                 <h3 className="mo-total-plays">Total plays: {this.props.totalPlays}</h3>
                 <h3 className="mo-difficulty">Difficulty: {this.props.difficulty}</h3>
             </div>
+
+            <Link to={"/map/" + this.props.id}>View</Link>
             
             <div className="mo-tag-section">
                 <div className="mo-tag-list">{this.props.tags.map(tag => <span style={this.style_tag}>{tag}</span>)}</div>
