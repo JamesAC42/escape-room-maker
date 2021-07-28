@@ -1,6 +1,12 @@
+@import "settings.scss";
+
 .library-container {
-    height: 100vh;
+    position:fixed;
+    top:$nav-height;
+    width:100vw;
+    height: calc(100vh - #{$nav-height});
     overflow: scroll;
+    overflow-x:hidden;
     display: flex;
 }
 
