@@ -5,29 +5,29 @@ import "../../css/mapitem.scss";
 import Rating from './Rating';
 
 class MapItem extends Component {
+  plural(text, amt) {
+    return `${text}${amt === 1 ? "" : "s"}`;
+  }
   render() {
     return (
       <div className="map-item">
         <div className="map-meta">
           <div className="map-title">
-              <Link to="/">Test Title</Link>
+              <Link to={"/map/" + this.props.id}>{this.props.title}</Link>
           </div>
-          <div className="map-author">Creator: James</div>
-          <div className="map-creation-date">Created on: 3.2.3</div>
-          <Rating stars={Math.floor(Math.random() * 6)} />
+          <div className="map-author">Creator: {this.props.creator}</div>
+          <div className="map-creation-date">Created on: {this.props.createdOn.toLocaleString()}</div>
+          <Rating stars={this.props.rating} />
         </div>
         <div className="map-description">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla earum
-          sapiente dignissimos, repudiandae accusantium voluptas sed magnam
-          explicabo veritatis architecto corrupti minima repellendus in possimus
-          magni ab aliquid nobis? Placeat veniam facere eaque ab repudiandae
-          autem, error optio dignissimos. Sed sapiente illo a consequuntur iure
-          incidunt dolore ducimus vero delectus?
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae esse quis neque quia odio est voluptates dolorem tenetur quidem corporis.
+          {this.props.description}
+        </div>
+        <div className="map-tags">
+          {this.props.tags.map(tag => <div className="tag">{tag}</div>)}
         </div>
         <div className="map-stats">
-          <div className="map-played">Played 8 times</div>
-          <div className="map-ratings-amt">3 Ratings</div>
+          <div className="map-played">Played {this.props.timesCompleted} {this.plural("time", this.props.timeCompleted)}</div>
+          <div className="map-ratings-amt">{this.props.ratings.length} {this.plural("Rating", this.props.ratings.length)}</div>
         </div>
       </div>
     );

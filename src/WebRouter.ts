@@ -5,6 +5,7 @@ import destroySession from './controllers/destroySession';
 import createMap from './controllers/createMap';
 import getMap from './controllers/getMap';
 import getAllMaps from './controllers/getAllMaps';
+import getMyMaps from './controllers/getMyMaps';
 
 const http = require('http');
 
@@ -38,6 +39,10 @@ class WebRouter {
 
         this.app.get('/api/getAllMaps', (req:any, res:any) => {
             getAllMaps(req, res, this.database);
+        });
+
+        this.app.get('/api/getMyMaps', (req:any, res:any) => {
+            getMyMaps(req, res, this.database);
         });
 
         this.app.post('/api/login', (req: any, res: any) => {
