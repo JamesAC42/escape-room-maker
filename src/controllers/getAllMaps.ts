@@ -1,3 +1,8 @@
+/*
+  retrieves map data for any map
+  used by the query getAllMaps in mapQueries.ts
+ */
+
 import { IMap } from "../interfaces/IMap";
 import mapQueries from "../queries/mapQueries";
 
