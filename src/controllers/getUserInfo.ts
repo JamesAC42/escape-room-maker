@@ -1,3 +1,7 @@
+/*
+  retrieves user data for a user with a given id
+  used by the query getUser in userQueries.ts
+ */
 
 import userQueries from '../queries/userQueries';
 

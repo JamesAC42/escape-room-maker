@@ -1,5 +1,6 @@
 /*
   retrieves map data for a map with a given id
+  used by the query getMap in mapQueries.ts
  */
 
 import { IMap } from "../interfaces/IMap";
