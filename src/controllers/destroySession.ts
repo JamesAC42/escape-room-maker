@@ -1,3 +1,7 @@
+/*
+  ends the current session; called when a user logs out
+ */
+
 const destroySession = (req:any, res:any) => {
     req.session.destroy((err:any) => {
         if(err) {
