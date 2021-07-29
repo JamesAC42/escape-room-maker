@@ -1,3 +1,7 @@
+/*
+  retrieves map data for a map with a given id
+ */
+
 import { IMap } from "../interfaces/IMap";
 import mapQueries from "../queries/mapQueries";
 

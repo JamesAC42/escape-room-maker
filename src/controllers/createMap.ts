@@ -1,3 +1,7 @@
+/*
+
+ */
+
 import getUsername from "../dbActions/getUsername";
 import { IMap } from "../interfaces/IMap";
 import mapQueries from "../queries/mapQueries";
