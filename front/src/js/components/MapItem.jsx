@@ -15,7 +15,10 @@ class MapItem extends Component {
           <div className="map-title">
               <Link to={"/map/" + this.props.id}>{this.props.title}</Link>
           </div>
-          <div className="map-author">Creator: {this.props.creator}</div>
+          {
+            this.props.creator !== "" ?
+            <div className="map-author">Creator: {this.props.creator}</div> : null
+          }
           <div className="map-creation-date">Created on: {this.props.createdOn.toLocaleString()}</div>
           <Rating stars={this.props.rating} />
         </div>

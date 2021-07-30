@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import '../../../css/Library.scss';
 import MapCard from './MapCard';
+import MapItem from '../MapItem';
 import libData from "../../mock-data/libData";
 import tagData from "../../mock-data/tagData";
+
+import search from '../../../images/search.svg';
 
 class LibraryState {
     constructor() {
@@ -39,19 +42,33 @@ class Library extends Component {
         return(
             <div className="library-container">
                 <div className="tag-whole-area">
-                    <h1 style={{"text-align": "center"}}>Tags</h1>
-                    <div className="tag-section">
+                    <h1 className="tag-header">Tags</h1>
+                    <div className="tag-section card">
                         {
                             tagData.tags.map(x => <span className="tag-link">{x}</span>)
                         }
                     </div>
                 </div>
-                <div className="whole-map-section">
-                    <input type="text" placeholder="Search" className="searchbar"></input>
+                <div className="whole-map-section card flex flex-col flex-center">
+                    <div className="search-row flex flex-row">
+                        <input type="text" placeholder="Search..." className="searchbar"/>
+                        <div className="search-button flex center-child">
+                            <img src={search} alt="Search" />
+                        </div>
+                    </div>
                     <h1 style={{"text-align": "center"}}>Popular Maps</h1>
                     {
-                        this.state.maps.map(x => <MapCard title={x.title} desc={x.description} rating={5} roomCount={10} creator={x.creator} totalPlays={x.totalPlays} difficulty={"Medium"} tags={JSON.parse(x.tags)}
-                        id={x.uid}/>)
+                        this.state.maps.map(map => 
+                            <MapItem
+                            id={map.uid}
+                            title={map.title}
+                            creator={""}
+                            createdOn={new Date(map.created_on)}
+                            rating={5}
+                            description={map.description}
+                            timesCompleted={map.times_completed}
+                            tags={JSON.parse(map.tags)}
+                            ratings={JSON.parse(map.ratings)}/>)
                     }
                 </div>
             </div>
