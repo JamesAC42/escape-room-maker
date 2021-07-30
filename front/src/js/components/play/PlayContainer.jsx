@@ -6,7 +6,7 @@ import play from '../../../images/play.png';
 import pause from '../../../images/pause.png';
 import restart from '../../../images/restart.png';
 
-const totalTime = 6;
+const totalTime = 600;
 
 class PlayContainerState {
     constructor() {

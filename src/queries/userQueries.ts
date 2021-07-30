@@ -4,7 +4,9 @@ const userQueries = {
     findUser: "SELECT uid FROM users WHERE username = $1",
     findEmail: "SELECT uid FROM users WHERE email = $1",
     getUser: "SELECT username, email, creation_date, dob, verified, display_name, admin, rated, settings, played, favorites FROM users WHERE uid = $1",
-    getUsername: "SELECT username FROM users WHERE uid = $1"
+    getUsername: "SELECT username FROM users WHERE uid = $1",
+    getFavorites: "SELECT favorites FROM users WHERE uid = $1",
+    setFavorites: "UPDATE users SET favorites = $1 WHERE uid = $2"
 }
 
 export default userQueries;

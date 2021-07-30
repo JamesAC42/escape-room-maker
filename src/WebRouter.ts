@@ -6,9 +6,14 @@ import createMap from './controllers/createMap';
 import getMap from './controllers/getMap';
 import getAllMaps from './controllers/getAllMaps';
 import getMyMaps from './controllers/getMyMaps';
+import addFavorite from './controllers/addFavorite';
+import removeFavorite from './controllers/removeFavorite';
 
 const http = require('http');
 
+// The WebRouter class contains an express server, a database, 
+// a cache object, and a port. It is responsible for running the
+// API server and routing requests to the proper controller functions
 class WebRouter {
 
     app:any;
@@ -25,6 +30,7 @@ class WebRouter {
         this.routeControllers();
     }
 
+    // Bind the API endpoint URL to the current controller
     routeControllers() {
         
         this.app.get('/api/destroySession', destroySession);
@@ -56,8 +62,17 @@ class WebRouter {
         this.app.post('/api/createMap', (req: any, res: any) => {
             createMap(req, res, this.database);
         });
+
+        this.app.post('/api/addFavorite', (req: any, res: any) => {
+            addFavorite(req, res, this.database);
+        });
+
+        this.app.post('/api/removeFavorite', (req: any, res: any) => {
+            removeFavorite(req, res, this.database);
+        });
     }
 
+    // Create the server and listen on the specified port
     listen() {
         
         const server = http.createServer(this.app);

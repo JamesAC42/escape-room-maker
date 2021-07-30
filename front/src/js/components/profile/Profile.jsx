@@ -32,7 +32,6 @@ class ProfileBind extends Component {
     .then(data => {
       if(data.success) {
         this.setState({myMaps: data.maps});
-        console.log(data.maps);
       }
     })
     .catch(error => {
@@ -97,9 +96,39 @@ class ProfileBind extends Component {
                     rating={5}
                     description={map.description}
                     timesCompleted={map.times_completed}
-                    tags={JSON.parse(map.tags)}
-                    ratings={JSON.parse(map.ratings)}/>
+                    tags={map.tags}
+                    ratings={map.ratings}/>
                 )
+              }
+            </div>
+          </div>
+          <div className="spacer"></div>
+          <div className="profile-header">
+            <div className="card header-card">
+              My Favorites
+            </div>
+          </div>
+          <div className="profile-row">
+            <div className="map-list card">
+              {
+                this.props.userinfo.favorites.map((map) => 
+                  <MapItem
+                    id={map.uid}
+                    title={map.title}
+                    creator={this.props.userinfo.username}
+                    createdOn={new Date(map.created_on)}
+                    rating={5}
+                    description={map.description}
+                    timesCompleted={map.times_completed}
+                    tags={map.tags}
+                    ratings={map.ratings}/>
+                )
+              }
+              {
+                this.props.userinfo.favorites.length === 0 ?
+                <div className="no-favorites">
+                  You do not have any favorites!
+                </div> : null
               }
             </div>
           </div>

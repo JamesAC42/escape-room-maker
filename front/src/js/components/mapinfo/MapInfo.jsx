@@ -3,9 +3,26 @@ import { matchPath, Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import Rating from '../Rating';
 
+import bookmarkOutline from '../../../images/bookmark-outline.png';
+import bookmarkFilled from '../../../images/bookmark-filled.png';
+
+import { connect } from 'react-redux';
+import {
+    userinfoActions
+} from '../../actions/actions';
+
 import '../../../css/mapinfo/mapinfo.scss';
 
 import GridBase from '../GridBase';
+
+const mapStateToProps = (state, props) => ({
+  session: state.session,
+  userinfo: state.userinfo,
+});
+
+const mapDispatchToProps = {
+    setFavorites: userinfoActions.setFavorites,
+}
 
 class MapInfoState {
     constructor() {
@@ -13,7 +30,7 @@ class MapInfoState {
     }
 }
 
-class MapInfo extends Component {
+class MapInfoBind extends Component {
     state;
     constructor(props) {
         super(props);
@@ -32,7 +49,6 @@ class MapInfo extends Component {
         .then(response => response.json())
         .then(data => {
             if(data.success) {
-                console.log(data.map);
                 this.setState({map:data.map});
             } else {
                 console.log(data);
@@ -41,6 +57,67 @@ class MapInfo extends Component {
         .catch(error => {
             console.error('Error: ' +  error);
         })
+    }
+    isFavorite() {
+        let favorites = [];
+        let currentMap = this.props.match.params.id;
+        this.props.userinfo.favorites.forEach((map) => {
+            favorites.push(map.uid);
+        });
+        return favorites.indexOf(currentMap);
+    }
+    toggleFavorite() {
+        let index = this.isFavorite();
+        let url;
+        if(index === -1) {
+            url = "/api/addFavorite/";
+        } else {
+            url = "/api/removeFavorite";
+        }
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                mapid: this.props.match.params.id
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                let favorites = [...this.props.userinfo.favorites];
+                if(index === -1) {
+                    favorites.push(data.map);
+                } else {
+                    favorites.splice(index, 1);
+                }
+                this.props.setFavorites(favorites);
+            } else {
+                console.log(data);
+            }
+        })
+        .catch(error => {
+            console.error('Error: ' +  error);
+        })
+    }
+    renderBookmarkIcon() {
+        if(this.props.session.loggedin) {
+            return (
+                <div 
+                    className="favorite-button flex center-child"
+                    onClick={() => this.toggleFavorite()}>
+                {
+                    this.isFavorite() === -1 ?
+                    <img src={bookmarkOutline} alt="bookmark"/>
+                    :
+                    <img src={bookmarkFilled} alt="bookmark"/>
+                }
+                </div>
+            )
+        } else {
+            return null;
+        }
     }
     render() {
         if(this.props.match.params.id === undefined) {
@@ -57,6 +134,7 @@ class MapInfo extends Component {
                                 <div className="mapinfo-title title">
                                     {map.title} by John Smith
                                 </div>
+                                {this.renderBookmarkIcon()}
                             </div>
                             <div className="meta-row">
                                 <div className="creation-date">
@@ -90,7 +168,7 @@ class MapInfo extends Component {
                         </div>
                         <div className="mapinfo-col mapinfo-data">
                             <div className="rating-outer flex center-child">
-                                <Rating stars={Math.floor(Math.random() * 6)} />
+                                <Rating stars={4} />
                             </div>
                             <Link to={"/play/" + this.state.map.uid}>
                                 <div className="play-button">
@@ -144,5 +222,10 @@ class MapInfo extends Component {
         )
     }
 }
+
+const MapInfo = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MapInfoBind);
 
 export default MapInfo;

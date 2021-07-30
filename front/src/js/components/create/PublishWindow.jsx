@@ -36,7 +36,6 @@ class PublishWindowBind extends Component {
     });
   }
   toggleTag(tag) {
-    console.log(tag);
     let activeTags = [...this.state.tags];
     if(activeTags.indexOf(tag) === -1) {
       activeTags.push(tag);
