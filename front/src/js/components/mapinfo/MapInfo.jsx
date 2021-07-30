@@ -1,6 +1,6 @@
 import React, { Component} from 'react';
 import { matchPath, Redirect } from 'react-router';
-
+import { Link } from 'react-router-dom';
 import Rating from '../Rating';
 
 import '../../../css/mapinfo/mapinfo.scss';
@@ -92,9 +92,11 @@ class MapInfo extends Component {
                             <div className="rating-outer flex center-child">
                                 <Rating stars={Math.floor(Math.random() * 6)} />
                             </div>
-                            <div className="play-button">
-                                Play
-                            </div>
+                            <Link to={"/play/" + this.state.map.uid}>
+                                <div className="play-button">
+                                    Play
+                                </div>
+                            </Link>
                         </div>
                     </div>
                     <div className="mapinfo-row">
