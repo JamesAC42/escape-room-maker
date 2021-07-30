@@ -1,0 +1,65 @@
+.play-container {
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%, -50%);
+
+    .play-info {
+        margin:10px 0;
+        gap:5px;
+        .play-button,
+        .restart-button {
+            border-radius:10px;
+            padding:5px;
+            height:40px; width:70px;
+            cursor:pointer;
+            transition:background .1s ease-in-out;
+            &:hover {
+                background:rgb(111, 55, 240);
+            }
+            img {
+                height:50%;
+            }
+        }
+        .play-button {background:rgb(90, 73, 241);}
+        .restart-button {background:rgb(241, 64, 64);}
+        .timer {
+            margin-left:auto;
+            font-size:18px;
+            font-family:PoppinsBold;
+        }
+    }
+
+    .play-prompt,
+    .pause-prompt,
+    .game-over {
+        position:absolute;
+        top:50%;left:50%;
+        transform:translate(-50%,-50%);
+    }
+
+    .play-prompt {
+        color:#fff;
+        font-size:20px;
+    }
+
+    .game-over {
+        height:60px;
+        width:300px;
+        background:#fff;
+        border:2px solid rgb(255, 48, 48);
+        border-radius:15px;
+        font-size:22px;
+        color:rgb(255, 64, 64);
+    }
+
+    .pause-prompt {
+        height:100px;
+        width:100px;
+        background:rgba(94, 94, 94, 0.815);
+        border-radius:15px;
+        img { 
+            height:50px;
+        }
+    }
+
+}

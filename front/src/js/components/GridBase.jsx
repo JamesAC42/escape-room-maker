@@ -43,6 +43,40 @@ class GridBase extends Component {
     this.ctx.rect(topLeftX, topLeftY, this.state.cellSize, this.state.cellSize);
     this.ctx.stroke();
   }
+
+  coordsExist(destCoords) {
+    let exists = false;
+    Object.keys(this.props.graph.coordinates)
+    .forEach(c => {
+      let iCoords = this.props.graph.coordinates[c];
+      if(destCoords.x === iCoords.x && destCoords.y === iCoords.y) {
+        exists = true;
+      }
+    });
+    return exists;
+  }
+
+  getRoomFromCoordinates(targetX, targetY) {
+    const graph = {...this.props.graph};
+    let activeRoom = null;
+    const rooms = Object.keys(graph.coordinates);
+    for(let i = 0; i < rooms.length; i++) {
+      const roomid = rooms[i];
+      const { x, y } = graph.coordinates[roomid];
+      const { topLeftX, topLeftY } = this.topLeftFromBase(x, y);
+      const distX = targetX - topLeftX;
+      const distY = targetY - topLeftY;
+      if(distX > 0 && distY > 0) {
+        if(
+          distX <= this.state.cellSize &&
+          distY <= this.state.cellSize) {
+            activeRoom = roomid;
+            break;
+        }
+      }
+    }
+    return activeRoom;
+  }
   
   topLeftFromBase(x, y) {
     const centerX = this.state.width / 2;

@@ -18,6 +18,7 @@ import Login from './components/login/Login';
 import Logout from './components/Logout';
 import MapInfo from './components/mapinfo/MapInfo';
 import NavBar from './components/NavBar';
+import PlayPage from './components/play/PlayPage';
 
 function App() {
   return (
@@ -68,6 +69,11 @@ function App() {
           exact
           path="/map/:id?"
           component={MapInfo} />
+
+        <Route
+          exact
+          path="/play/:id?"
+          component={PlayPage} />
 
       </Switch>
     </div>
