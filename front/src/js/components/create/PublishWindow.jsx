@@ -13,11 +13,13 @@ const mapDispatchToProps = {
   setGraph: createPageActions.setGraph
 }
 
+const _tags = ["Fun", "Not Fun", "Fast", "Slow", "Medieval", "Mansion", "Deep Narrative", "Dungeon", "Horror", "Comedy", "Adventure", "Action", "Mystery"];
+
 class PublishWindowState {
   constructor() {
     this.title = '';
     this.description = '';
-    this.tags = '';
+    this.tags = [];
     this.redirect = '';
   }
 }
@@ -33,9 +35,26 @@ class PublishWindowBind extends Component {
       [e.target.name]: e.target.value
     });
   }
+  toggleTag(tag) {
+    console.log(tag);
+    let activeTags = [...this.state.tags];
+    if(activeTags.indexOf(tag) === -1) {
+      activeTags.push(tag);
+    } else {
+      activeTags.splice(activeTags.indexOf(tag), 1);
+    }
+    this.setState({tags:activeTags});
+  }
+  tagClass(tag) {
+    let className = "tag";
+    if(this.state.tags.indexOf(tag) !== -1) {
+      className += " tag-active";
+    }
+    return className;
+  }
   publish() {
-    console.log(this.state);
-    let tags = this.state.tags.split(',');
+    if(this.state.title === "") return;
+    if(this.state.description === "") return;
     fetch('/api/createMap/', {
       method: 'POST',
       headers: {
@@ -44,7 +63,7 @@ class PublishWindowBind extends Component {
       body: JSON.stringify({
         title:this.state.title,
         description:this.state.description,
-        tags,
+        tags:this.state.tags,
         timeLimit: 600,
         graph: this.props.create.graph,
         explicit: false
@@ -103,16 +122,20 @@ class PublishWindowBind extends Component {
                     maxLength={200}/>
             </div>
             <div className="input-item">
-                <label htmlFor="tags">
+                <label className="tag-label" htmlFor="tags">
                     Tags
                 </label>
-                <input 
-                    type="text" 
-                    name="tags"
-                    value={this.state.tags}
-                    onChange={(e) => this.handleText(e)}
-                    placeholder="Tags"
-                    maxLength={200}/>
+                <div className="tags-container flex flex-row">
+                {
+                  _tags.map((tag) => 
+                    <div 
+                      className={this.tagClass(tag)}
+                      onClick={() => this.toggleTag(tag)}>
+                      {tag}
+                    </div>
+                  )
+                }
+                </div>
             </div>
             <div 
               className="button publish-button"
