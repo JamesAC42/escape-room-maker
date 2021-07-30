@@ -1,21 +1,21 @@
-import { handleActions } from "redux-actions";
+import { handleActions } from 'redux-actions'
 
 const create = handleActions(
   {
     SET_ACTIVE_ROOM: (state, action) => {
       return {
         ...state,
-        activeRoom: action.payload.activeRoom,
-      };
+        activeRoom: action.payload.activeRoom
+      }
     },
     SET_MAP: (state, action) => {
       return {
         ...state,
-        map: action.payload.map,
-      };
+        map: action.payload.map
+      }
     },
     SET_GRAPH: (state, action) => {
-      return { 
+      return {
         ...state,
         graph: action.payload.graph
       }
@@ -26,6 +26,6 @@ const create = handleActions(
     map: undefined,
     graph: undefined
   }
-);
+)
 
-export { create as default };
+export { create as default }

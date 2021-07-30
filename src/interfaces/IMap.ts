@@ -1,23 +1,6 @@
 type uuid = string;
 type timestamp = number;
 
-export interface IMap {
-
-  uid: uuid,
-  creator: uuid,
-  createdOn: timestamp,
-  lastModified: timestamp,
-  ratings: Array<IRating>,
-  timeLimit: number,
-  tags: Array<string>,
-  description: string,
-  title: string,
-  explicit: boolean,
-  timesCompleted: number,
-  graph: IRoomGraph
-  
-}
-
 export interface IRoomGraph {
 
   startRoom: uuid,
@@ -134,5 +117,22 @@ export interface IRating {
   header: string,
   text: string,
   rating: 1 | 2 | 3 | 4 | 5
+
+}
+
+export interface IMap {
+
+  uid: uuid,
+  creator: uuid,
+  createdOn: timestamp,
+  lastModified: timestamp,
+  ratings: Array<IRating>,
+  timeLimit: number,
+  tags: Array<string>,
+  description: string,
+  title: string,
+  explicit: boolean,
+  timesCompleted: number,
+  graph: IRoomGraph
 
 }

@@ -14,5 +14,5 @@ export interface IUser {
   played: Array<string>,
   rated: Array<string>,
   settings: string
-  
+
 }
