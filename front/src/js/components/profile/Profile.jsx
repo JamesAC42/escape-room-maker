@@ -47,6 +47,7 @@ class ProfileBind extends Component {
     return (
       <div className="container">
         <div className="bumpered-container">
+          <div className="spacer"></div>
           <div className="profile-row">
             <div className="card profile-card user-header">
               <img className="profile-img" src={userImg} alt="profile"/>
