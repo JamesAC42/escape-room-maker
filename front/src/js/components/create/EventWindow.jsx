@@ -50,8 +50,15 @@ class EventWindowBind extends Component {
     console.log(store.getState());
     console.log("these are the props");
     console.log(props);
+    console.log("this is the EW state");
+    console.log(this.state);
+    this.props.create.graph.startRoom = Object.keys(this.props.create.graph.graph)[0];
+    this.props.create.graph.endRoom = Object.keys(this.props.create.graph.graph)[0];
+    this.props.create.graph.graph[Object.keys(this.props.create.graph.graph)[0]].start = true;
+    this.props.create.graph.graph[Object.keys(this.props.create.graph.graph)[0]].end = true;
   }
   
+  // sets the event type
   eventChoose = (e) => {
     this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventType = e.target.value;
     this.setState({
@@ -59,6 +66,7 @@ class EventWindowBind extends Component {
     });
   }
   
+  // determines if the event if for the active room or its N, S, W, or E door
   selectForEvent = (e) => {
     console.log("\n\n\ncurrentSelected is about to be", e.target.value, "\n\n\n")
     this.setState({
@@ -66,19 +74,19 @@ class EventWindowBind extends Component {
     });
   }
   
+  // determines if an item will be required to start the event when playing the map
   onReqItem = (checked) => {
     this.setState({
       item_req: checked
     });
   }
   
+  // determines if an item will be given to the player upon finishing the event when playing the map
   onSolveItem = (checked) => {
     this.setState({
       item_solve: checked
     });
   }
-  
-  
   
   mapGraph = () => {
     console.log("the props");
@@ -224,40 +232,31 @@ class EventWindowBind extends Component {
     }
   }
   
+  // coordinate combinations to use for checking if a square can be removed
   combinations = [
     [0, 1],
     [0, -1],
     [1, 0],
     [-1, 0]
   ]
-    
   
   // Returns true if the room with coordinates (x+i, y+j) will still
   // be an accessible room on the map if room (x, y) is removed
   // Returns false otherwise
   checkSquareStillValid = (x, y, i, j) => {
     
-    console.log(`Checking validity:\n\n\nx=${x} y=${y} i=${i} j=${j}`);
     var valid = false;
     
     // this loops over the squares adjacent to the one being checked
     // combinations of (a, b) => (-1, -1), (-1, 1), (1, -1), (1, 1)
     this.combinations.forEach(c => {
-      console.log(`\nadj.x=${x+i + c[0]} adj.y=${y+j + c[1]} c[0]=${c[0]} c[1]=${c[1]}`);
       // goes over all of the rooms to find a room with coordinates:
       //    "x" = (x + i) + c[0]
       //    "y" = (y + j) + c[1]
       Object.entries(this.props.create.graph.coordinates).forEach(adjacent => {
-        console.log("adjacent", adjacent);
-        console.log(x+i + c[0], y+j + c[1]);
-        console.log(adjacent[1].x == x+i + c[0]);
-        console.log(adjacent[1].y == y+j + c[1]);
-        console.log(x != x+i + c[0]);
-        console.log(y != y+j + c[1]);
-        // if an adjacent room is found, this square will still be accessible
+        // if an adjacent room is found, this square will still be accessible, so return true
         if(adjacent[1].x == x+i + c[0] && adjacent[1].y == y+j + c[1] &&
             !(x == x+i + c[0] && y == y+j + c[1])) {
-          console.log(x+i, y+j, "Found an adjacent room that saves it", adjacent[1].x, adjacent[1].y);
           valid = true;
         }
       });
@@ -265,6 +264,7 @@ class EventWindowBind extends Component {
     return valid;
   }
   
+  // attempts to remove the active room from the map
   removeRoom = () => {
     // the start room cannot be removed
     if(this.state.start == this.props.create.activeRoom) {
@@ -349,12 +349,12 @@ class EventWindowBind extends Component {
         </select>
         
         <div style={{"float": "right"}}>
-          <input className="remove-button" type="button" onClick={this.removeRoom} id="e-btn" value="Remove"/>
+          <input className="remove-button" type="button" onClick={this.removeRoom} id="remove-btn" value="Remove"/>
         </div>
         
         <div style={{"float": "right"}}>
-            <input className="se-button" type="button" onClick={this.setStart} id="e-btn" value="Start"  style={{backgroundColor: (this.state.start == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.start == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
-            <input className="se-button" type="button" onClick={this.setEnd} id="e-btn" value="End"  style={{backgroundColor: (this.state.end == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.end == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
+            <input className="se-button" type="button" onClick={this.setStart} id="start-btn" value="Start"  style={{backgroundColor: (this.state.start == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.start == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
+            <input className="se-button" type="button" onClick={this.setEnd} id="end-btn" value="End"  style={{backgroundColor: (this.state.end == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.end == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
         </div>
         
         {/* This is rendered if the room has an event attached to it */}

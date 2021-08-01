@@ -36,7 +36,11 @@ $rem-btn-size: 6rem;
     width: $rem-btn-size;
     height: $dir-btn-size;
     font-size: 1.5rem;
-    border: 1px lightgray solid;
+    border: 1px #9b9b9b solid;
     border-radius: 5px;
     margin-left: 2px;
+    &:hover {
+        background-color: #BBB;
+        border-color: #999;
+    }
 }
