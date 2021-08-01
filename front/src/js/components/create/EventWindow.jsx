@@ -24,6 +24,7 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = {
   setRoomVals: eventWindowActions.setRoomVals,
+  setActiveRoom: createPageActions.setActiveRoom,
   setGraph: createPageActions.setGraph
 }
 
@@ -36,8 +37,8 @@ class EventWindowState {
     this.item_solve = is;
     this.roomVals = null;
     this.currentSelected = "Room";
-    this.start = this.props.create.activeRoom;
-    this.end = this.props.create.activeRoom;
+    this.start = Object.keys(this.props.create.graph.graph)[0];
+    this.end = Object.keys(this.props.create.graph.graph)[0];
   }
 }
 
@@ -223,6 +224,108 @@ class EventWindowBind extends Component {
     }
   }
   
+  combinations = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0]
+  ]
+    
+  
+  // Returns true if the room with coordinates (x+i, y+j) will still
+  // be an accessible room on the map if room (x, y) is removed
+  // Returns false otherwise
+  checkSquareStillValid = (x, y, i, j) => {
+    
+    console.log(`Checking validity:\n\n\nx=${x} y=${y} i=${i} j=${j}`);
+    var valid = false;
+    
+    // this loops over the squares adjacent to the one being checked
+    // combinations of (a, b) => (-1, -1), (-1, 1), (1, -1), (1, 1)
+    this.combinations.forEach(c => {
+      console.log(`\nadj.x=${x+i + c[0]} adj.y=${y+j + c[1]} c[0]=${c[0]} c[1]=${c[1]}`);
+      // goes over all of the rooms to find a room with coordinates:
+      //    "x" = (x + i) + c[0]
+      //    "y" = (y + j) + c[1]
+      Object.entries(this.props.create.graph.coordinates).forEach(adjacent => {
+        console.log("adjacent", adjacent);
+        console.log(x+i + c[0], y+j + c[1]);
+        console.log(adjacent[1].x == x+i + c[0]);
+        console.log(adjacent[1].y == y+j + c[1]);
+        console.log(x != x+i + c[0]);
+        console.log(y != y+j + c[1]);
+        // if an adjacent room is found, this square will still be accessible
+        if(adjacent[1].x == x+i + c[0] && adjacent[1].y == y+j + c[1] &&
+            !(x == x+i + c[0] && y == y+j + c[1])) {
+          console.log(x+i, y+j, "Found an adjacent room that saves it", adjacent[1].x, adjacent[1].y);
+          valid = true;
+        }
+      });
+    });
+    return valid;
+  }
+  
+  removeRoom = () => {
+    // the start room cannot be removed
+    if(this.state.start == this.props.create.activeRoom) {
+      alert("You cannot remove the start room");
+      return;
+    }
+    // the end room cannot be removed
+    if(this.state.end == this.props.create.activeRoom) {
+      alert("You cannot remove the end room");
+      return;
+    }
+    if(window.confirm("Are you sure you want to remove this room?")) {
+      // check that the surrounding rooms are still accessible
+      
+      // gets the coordinates of the active room
+      var coords = this.props.create.graph.coordinates[this.props.create.activeRoom];
+      var valid = true;
+      
+      // checks the coordinates objects in the graph
+      // when it finds a match for a room adjacent to the active room, it will
+      // make sure that the room will still be accessible if the active room is
+      // removed
+      this.combinations.forEach(c => {
+        Object.entries(this.props.create.graph.coordinates).forEach(r => {
+          console.log(`x=${coords.x+c[0]} y=${coords.y+c[1]} r.x=${r[1].x} r.y=${r[1].y}`);
+          if(r[1].x == coords.x + c[0] && r[1].y == coords.y + c[1]) {
+            if(!this.checkSquareStillValid(coords.x, coords.y, c[0], c[1])) {
+              console.log("This won't be accessible: ", r[1].x, r[1].y);
+              valid = false;
+            }
+          }
+        })
+      });
+      
+      // if the room can be deleted
+      if(valid) {
+        this.setState({
+          roomVals: this.state.roomVals.filter(x => {
+            return x.room !== this.props.create.activeRoom;
+          })
+        });
+        var oldActive = this.props.create.activeRoom;
+        // set the active room to another room in the map
+        if(this.props.create.activeRoom != Object.keys(this.props.create.graph.graph)[0]) {
+          this.props.create.activeRoom = Object.keys(this.props.create.graph.graph)[0];
+        }
+        else {
+          this.props.create.activeRoom = Object.keys(this.props.create.graph.graph)[1];
+        }
+        // remove the room from the graph
+        delete this.props.create.graph.graph[oldActive];
+        delete this.props.create.graph.coordinates[oldActive];
+        
+      }
+      // alert the user if the room cannot be deleted
+      else {
+        alert("Removing this square will make part of the map inaccessible");
+      }
+    }
+  }
+  
   render() {
     return(
       <div id="ew" className="canvas grid" style={this.props.create.activeRoom == undefined ? styles.styleHidden : this.props.style}>
@@ -244,6 +347,15 @@ class EventWindowBind extends Component {
           <option val="None">No Event</option>
           <option val="Question">Question</option>
         </select>
+        
+        <div style={{"float": "right"}}>
+          <input className="remove-button" type="button" onClick={this.removeRoom} id="e-btn" value="Remove"/>
+        </div>
+        
+        <div style={{"float": "right"}}>
+            <input className="se-button" type="button" onClick={this.setStart} id="e-btn" value="Start"  style={{backgroundColor: (this.state.start == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.start == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
+            <input className="se-button" type="button" onClick={this.setEnd} id="e-btn" value="End"  style={{backgroundColor: (this.state.end == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.end == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
+        </div>
         
         {/* This is rendered if the room has an event attached to it */}
         <div style={this.state.event_type !== "No Event" ? styles.styleVisible : styles.styleHidden}>
@@ -277,10 +389,6 @@ class EventWindowBind extends Component {
           </div>
         </div>
         
-        <div style={{"float": "right"}}>
-          <input className="se-button" type="button" onClick={this.setStart} id="e-btn" value="Start"  style={{backgroundColor: (this.state.start == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.start == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
-          <input className="se-button" type="button" onClick={this.setEnd} id="e-btn" value="End"  style={{backgroundColor: (this.state.end == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.end == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
-        </div>
         
         {this.setEWInputs()}
         

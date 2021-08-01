@@ -29,3 +29,14 @@ $se-btn-size: 5rem;
     border-radius: 5px;
     margin-left: 2px;
 }
+
+$rem-btn-size: 6rem;
+
+.remove-button {
+    width: $rem-btn-size;
+    height: $dir-btn-size;
+    font-size: 1.5rem;
+    border: 1px lightgray solid;
+    border-radius: 5px;
+    margin-left: 2px;
+}
