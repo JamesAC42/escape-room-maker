@@ -63,7 +63,7 @@ class Library extends Component {
                             id={map.uid}
                             title={map.title}
                             creator={""}
-                            createdOn={new Date(map.created_on)}
+                            createdOn={new Date(map.createdOn)}
                             rating={5}
                             description={map.description}
                             timesCompleted={map.times_completed}

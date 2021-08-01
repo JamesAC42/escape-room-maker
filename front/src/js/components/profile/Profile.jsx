@@ -92,7 +92,7 @@ class ProfileBind extends Component {
                     id={map.uid}
                     title={map.title}
                     creator={this.props.userinfo.username}
-                    createdOn={new Date(map.created_on)}
+                    createdOn={new Date(map.createdOn)}
                     rating={5}
                     description={map.description}
                     timesCompleted={map.times_completed}
@@ -116,7 +116,7 @@ class ProfileBind extends Component {
                     id={map.uid}
                     title={map.title}
                     creator={this.props.userinfo.username}
-                    createdOn={new Date(map.created_on)}
+                    createdOn={new Date(map.createdOn)}
                     rating={5}
                     description={map.description}
                     timesCompleted={map.times_completed}

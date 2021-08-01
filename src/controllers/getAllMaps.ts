@@ -10,6 +10,10 @@ const getAllMaps = (req:any, res:any, db:any) => {
 
   db.query(query)
     .then((r:any) => {
+      r.rows.forEach((map:any) => {
+        map.createdOn = map.created_on;
+        delete map.created_on;
+    });
       res.send({success:true,maps:r.rows});
       return;
     })

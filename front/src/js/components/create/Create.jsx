@@ -85,9 +85,14 @@ class CreateBind extends Component {
           className={gridClass}
           activeRoom={this.props.create.activeRoom}
           graph={this.props.create.graph}/>
-        <div style={{position: "absolute", top: "5%", left: "50%", width: "45%", zIndex: -1}}>
-          <EventWindow />
-        </div>
+          
+        {
+          this.props.create.graph ?
+          <div style={{position: "absolute", top: "5%", left: "50%", width: "45%", zIndex: -1}}>
+            <EventWindow />
+          </div> : null
+        }
+        
         {
           this.state.publishWindowVisible ?
           <PublishWindow 

@@ -242,6 +242,11 @@ class GridBind extends GridBase {
       || prevState.activeAddButton.direction !== this.state.activeAddButton.direction) {
         this.renderGrid();
     }
+    if(prevProps.graph !== undefined && this.props.graph !== undefined) {
+      if(Object.keys(prevProps.graph).length !== Object.keys(this.props.graph).length) {
+          this.renderGrid();
+      }
+    }
   }
 }
 

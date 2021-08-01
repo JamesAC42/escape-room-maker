@@ -89,6 +89,7 @@ class MapInfoBind extends Component {
                 let favorites = [...this.props.userinfo.favorites];
                 if(index === -1) {
                     favorites.push(data.map);
+                    console.log(data.map);
                 } else {
                     favorites.splice(index, 1);
                 }

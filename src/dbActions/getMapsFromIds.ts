@@ -29,6 +29,8 @@ const getMapsFromIds = (db:any, ids:Array<string>):Promise<Array<any>> => {
                 // Parse the tags and ratings JSON stored in each map
                 r.rows.forEach((map:any) => {
                     map.tags = JSON.parse(map.tags);
+                    map.createdOn = map.created_on;
+                    delete map.created_on;
                     map.ratings = JSON.parse(map.ratings);
                 });
                 // Resolve the map data

@@ -40,6 +40,8 @@ class SessionHandlerBind extends Component {
             if(data.loggedout) {
                 this.props.logout();
             } else {
+                console.log("favorites");
+                console.log(data.favorites);
                 this.props.setEmail(data.email);
                 this.props.setUsername(data.username);
                 this.props.setUid(data.uid);

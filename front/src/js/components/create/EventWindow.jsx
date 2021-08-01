@@ -266,6 +266,9 @@ class EventWindowBind extends Component {
   
   // attempts to remove the active room from the map
   removeRoom = () => {
+    
+    var newGraph = {...this.props.create.graph};
+    
     // the start room cannot be removed
     if(this.state.start == this.props.create.activeRoom) {
       alert("You cannot remove the start room");
@@ -287,17 +290,19 @@ class EventWindowBind extends Component {
       // when it finds a match for a room adjacent to the active room, it will
       // make sure that the room will still be accessible if the active room is
       // removed
-      this.combinations.forEach(c => {
-        Object.entries(this.props.create.graph.coordinates).forEach(r => {
-          console.log(`x=${coords.x+c[0]} y=${coords.y+c[1]} r.x=${r[1].x} r.y=${r[1].y}`);
-          if(r[1].x == coords.x + c[0] && r[1].y == coords.y + c[1]) {
-            if(!this.checkSquareStillValid(coords.x, coords.y, c[0], c[1])) {
-              console.log("This won't be accessible: ", r[1].x, r[1].y);
-              valid = false;
+      if(Object.keys(newGraph.coordinates).length > 2) {
+        this.combinations.forEach(c => {
+          Object.entries(this.props.create.graph.coordinates).forEach(r => {
+            console.log(`x=${coords.x+c[0]} y=${coords.y+c[1]} r.x=${r[1].x} r.y=${r[1].y}`);
+            if(r[1].x == coords.x + c[0] && r[1].y == coords.y + c[1]) {
+              if(!this.checkSquareStillValid(coords.x, coords.y, c[0], c[1])) {
+                console.log("This won't be accessible: ", r[1].x, r[1].y);
+                valid = false;
+              }
             }
-          }
-        })
-      });
+          })
+        });
+      }
       
       // if the room can be deleted
       if(valid) {
@@ -315,8 +320,9 @@ class EventWindowBind extends Component {
           this.props.create.activeRoom = Object.keys(this.props.create.graph.graph)[1];
         }
         // remove the room from the graph
-        delete this.props.create.graph.graph[oldActive];
-        delete this.props.create.graph.coordinates[oldActive];
+        delete newGraph.graph[oldActive];
+        delete newGraph.coordinates[oldActive];
+        this.props.setGraph(newGraph);
         
       }
       // alert the user if the room cannot be deleted
