@@ -26,7 +26,7 @@ class MapItem extends Component {
           {this.props.description}
         </div>
         <div className="map-tags">
-          {this.props.tags.map(tag => <div className="tag">{tag}</div>)}
+          {this.props.tags.map(tag => <div className="tag" key={tag}>{tag}</div>)}
         </div>
         <div className="map-stats">
           <div className="map-played">Played {this.props.timesCompleted} {this.plural("time", this.props.timeCompleted)}</div>

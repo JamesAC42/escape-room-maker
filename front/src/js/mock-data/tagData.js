@@ -3,7 +3,6 @@ const tagData = {
         "Fun",
         "Trending",
         "Fast",
-        "Medieval",
         "Mansion",
         "Deep Narrative",
         "Medieval",

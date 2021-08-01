@@ -45,7 +45,7 @@ class Library extends Component {
                     <h1 className="tag-header">Tags</h1>
                     <div className="tag-section card">
                         {
-                            tagData.tags.map(x => <span className="tag-link">{x}</span>)
+                            tagData.tags.map(x => <span key={x} className="tag-link">{x}</span>)
                         }
                     </div>
                 </div>
@@ -56,10 +56,11 @@ class Library extends Component {
                             <img src={search} alt="Search" />
                         </div>
                     </div>
-                    <h1 style={{"text-align": "center"}}>Popular Maps</h1>
+                    <h1 style={{textAlign: "center"}}>Popular Maps</h1>
                     {
                         this.state.maps.map(map => 
                             <MapItem
+                            key={map.uid}
                             id={map.uid}
                             title={map.title}
                             creator={""}

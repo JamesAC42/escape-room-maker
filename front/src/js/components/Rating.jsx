@@ -11,9 +11,9 @@ class Rating extends Component {
         let stars = [];
         for(let i = 0; i < 5; i++) {
             if(i < this.props.stars) {
-                stars.push(<BsStarFill style={{verticalAlign:"middle"}}/>)
+                stars.push(<BsStarFill style={{verticalAlign:"middle"}} key={i}/>)
             } else {
-                stars.push(<BsStar style={{verticalAlign:"middle"}}/>)
+                stars.push(<BsStar style={{verticalAlign:"middle"}} key={i}/>)
             }
         }
         return(
