@@ -23,7 +23,8 @@ const mapStateToProps = (store) => ({
 })
 
 const mapDispatchToProps = {
-  setRoomVals: eventWindowActions.setRoomVals
+  setRoomVals: eventWindowActions.setRoomVals,
+  setGraph: createPageActions.setGraph
 }
 
 class EventWindowState {
@@ -35,6 +36,8 @@ class EventWindowState {
     this.item_solve = is;
     this.roomVals = null;
     this.currentSelected = "Room";
+    this.start = this.props.create.activeRoom;
+    this.end = this.props.create.activeRoom;
   }
 }
 
@@ -194,6 +197,32 @@ class EventWindowBind extends Component {
     }
   }
   
+  setStart = () => {
+    if(this.state.end != this.props.create.activeRoom) {
+      if(this.state.start) {
+        this.props.create.graph.graph[this.state.start].start = false;
+      }
+      this.setState({
+        start: this.props.create.activeRoom
+      });
+      this.props.create.graph.startRoom = this.props.create.activeRoom;
+      this.props.create.graph.graph[this.props.create.activeRoom].start = true;
+    }
+  }
+  
+  setEnd = () => {
+    if(this.state.start != this.props.create.activeRoom) {
+      if(this.state.end) {
+        this.props.create.graph.graph[this.state.end].end = false;
+      }
+      this.setState({
+        end: this.props.create.activeRoom
+      });
+      this.props.create.graph.endRoom = this.props.create.activeRoom;
+      this.props.create.graph.graph[this.props.create.activeRoom].end = true;
+    }
+  }
+  
   render() {
     return(
       <div id="ew" className="canvas grid" style={this.props.create.activeRoom == undefined ? styles.styleHidden : this.props.style}>
@@ -246,6 +275,11 @@ class EventWindowBind extends Component {
             <h4>Item Description:</h4>
             <input id="solve-item-desc" type="text" placeholder="Description" name="solveItemDesc" onChange={this.onChangeStateVal.bind(this)}></input>
           </div>
+        </div>
+        
+        <div style={{"float": "right"}}>
+          <input className="se-button" type="button" onClick={this.setStart} id="e-btn" value="Start"  style={{backgroundColor: (this.state.start == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.start == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
+          <input className="se-button" type="button" onClick={this.setEnd} id="e-btn" value="End"  style={{backgroundColor: (this.state.end == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.end == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
         </div>
         
         {this.setEWInputs()}

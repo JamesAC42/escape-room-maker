@@ -18,3 +18,14 @@ $dir-btn-size: 3rem;
     border-radius: 5px;
     margin-left: 2px;
 }
+
+$se-btn-size: 5rem;
+
+.se-button {
+    width: $se-btn-size;
+    height: $dir-btn-size;
+    font-size: 1.5rem;
+    border: 1px lightgray solid;
+    border-radius: 5px;
+    margin-left: 2px;
+}

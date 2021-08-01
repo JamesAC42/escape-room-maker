@@ -54,6 +54,9 @@ class PublishWindowBind extends Component {
   publish() {
     if(this.state.title === "") return;
     if(this.state.description === "") return;
+    console.log("the graph is:")
+    console.log(this.props.create.graph);
+    console.log(JSON.stringify(this.props.create.graph));
     fetch('/api/createMap/', {
       method: 'POST',
       headers: {
