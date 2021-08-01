@@ -6,7 +6,7 @@ import play from '../../../images/play.png';
 import pause from '../../../images/pause.png';
 import restart from '../../../images/restart.png';
 
-const totalTime = 600;
+const totalTime = 6;
 
 class PlayContainerState {
     constructor() {
@@ -17,6 +17,7 @@ class PlayContainerState {
         this.currentEvent = undefined;
         this.showEventWindow = false;
         this.gameOver = false;
+        this.gameWin = false;
 
         this.endRoom = undefined;
     }
@@ -33,7 +34,13 @@ class PlayContainer extends Component {
         }
     }
     componentDidMount() {
-        let endRoom = Object.keys(this.props.graph.graph)[-1];
+        let endRoom = this.props.graph.endRoom;
+        if(!endRoom) {
+            endRoom = Object.keys(this.props.graph.graph)[-1];
+        }
+        this.setState({
+            endRoom
+        })
     }
     restart() {
         this.setState({
@@ -42,7 +49,9 @@ class PlayContainer extends Component {
             remainingTime:totalTime,
             visitedRooms:[],
             currentEvent:undefined,
-            showEventWindow:false
+            showEventWindow:false,
+            gameOver:false,
+            gameWin:false
         });
         if(this.intervalId !== undefined) {
             clearInterval(this.intervalId);
@@ -53,7 +62,10 @@ class PlayContainer extends Component {
         let remainingTime = this.state.remainingTime;
         let visitedRooms = this.state.visitedRooms;
         if(room === undefined) {
-            room = Object.keys(this.props.graph.graph)[0];
+            room = this.props.graph.startRoom;
+            if(!room) {
+                room = Object.keys(this.props.graph.graph)[0];
+            }
             remainingTime = totalTime;
             visitedRooms.push(room);
         }
@@ -62,7 +74,8 @@ class PlayContainer extends Component {
             currentRoom:room,
             remainingTime,
             visitedRooms,
-            gameOver:false
+            gameOver:false,
+            gameWin:false
         });
         this.intervalId = setInterval(() => {
             let remainingTime = this.state.remainingTime - 1;
