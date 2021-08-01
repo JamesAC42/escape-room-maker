@@ -164,9 +164,11 @@ class EventWindowBind extends Component {
       else {
         var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).doorVals.find(y => y.dir == this.state.currentSelected);
       }
-      this.state.event_type = currSelect.eventType;
-      this.state.item_req = currSelect.requireItem;
-      this.state.item_solve = currSelect.solveItem;
+      this.setState({
+        event_type: currSelect.eventType,
+        item_req: currSelect.requireItem,
+        item_solve: currSelect.solveItem
+      })
     }
   }
   
@@ -207,28 +209,32 @@ class EventWindowBind extends Component {
   }
   
   setStart = () => {
+    let graph = {...this.props.create.graph};
     if(this.state.end != this.props.create.activeRoom) {
       if(this.state.start) {
-        this.props.create.graph.graph[this.state.start].start = false;
+        graph.graph[this.state.start].start = false;
       }
       this.setState({
         start: this.props.create.activeRoom
       });
-      this.props.create.graph.startRoom = this.props.create.activeRoom;
-      this.props.create.graph.graph[this.props.create.activeRoom].start = true;
+      graph.startRoom = this.props.create.activeRoom;
+      graph.graph[this.props.create.activeRoom].start = true;
+      this.props.setGraph(graph);
     }
   }
   
   setEnd = () => {
+    let graph = {...this.props.create.graph};
     if(this.state.start != this.props.create.activeRoom) {
       if(this.state.end) {
-        this.props.create.graph.graph[this.state.end].end = false;
+        graph.graph[this.state.end].end = false;
       }
       this.setState({
         end: this.props.create.activeRoom
       });
-      this.props.create.graph.endRoom = this.props.create.activeRoom;
-      this.props.create.graph.graph[this.props.create.activeRoom].end = true;
+      graph.endRoom = this.props.create.activeRoom;
+      graph.graph[this.props.create.activeRoom].end = true;
+      this.props.setGraph(graph);
     }
   }
   
@@ -314,10 +320,10 @@ class EventWindowBind extends Component {
         var oldActive = this.props.create.activeRoom;
         // set the active room to another room in the map
         if(this.props.create.activeRoom != Object.keys(this.props.create.graph.graph)[0]) {
-          this.props.create.activeRoom = Object.keys(this.props.create.graph.graph)[0];
+          this.props.setActiveRoom(Object.keys(this.props.create.graph.graph)[0]);
         }
         else {
-          this.props.create.activeRoom = Object.keys(this.props.create.graph.graph)[1];
+          this.props.setActiveRoom(Object.keys(this.props.create.graph.graph)[1]);
         }
         // remove the room from the graph
         delete newGraph.graph[oldActive];
@@ -331,12 +337,17 @@ class EventWindowBind extends Component {
       }
     }
   }
+
+  componentDidMount() {
+    this.mapGraph();
+    this.setInitRenderVals();
+        
+    this.setEWInputs();
+  }
   
   render() {
     return(
       <div id="ew" className="canvas grid" style={this.props.create.activeRoom == undefined ? styles.styleHidden : this.props.style}>
-        {this.mapGraph()}
-        {this.setInitRenderVals()}
         <h1>
           Room ID: <span style={{color: "#8ffad1"}}>{this.props.create.activeRoom}</span>
           <div style={{float: "right"}}>
@@ -395,8 +406,6 @@ class EventWindowBind extends Component {
           </div>
         </div>
         
-        
-        {this.setEWInputs()}
         
       </div>  
     );

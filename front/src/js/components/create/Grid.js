@@ -173,8 +173,18 @@ class GridBind extends GridBase {
     const { topLeftX, topLeftY } = this.topLeftFromBase(x, y);
     this.ctx.drawImage(tile, topLeftX, topLeftY, this.state.cellSize, this.state.cellSize);
 
-    if(id === this.props.activeRoom) {
-      this.ctx.fillStyle = "rgba(66, 194, 219, 0.5)";
+    if(
+      id === this.props.activeRoom || 
+      id === this.props.graph.startRoom || 
+      id === this.props.graph.endRoom) {
+        if(id === this.props.activeRoom) {
+          this.ctx.fillStyle = "rgba(66, 194, 219, 0.5)";
+        }
+        if(id === this.props.graph.startRoom) {
+          this.ctx.fillStyle = "rgba(133, 255, 149, 0.5)";
+        } else if(id === this.props.graph.endRoom) {
+          this.ctx.fillStyle = "rgba(255, 127, 120, 0.5)";
+        }
       this.ctx.fillRect(topLeftX, topLeftY, this.state.cellSize, this.state.cellSize);
     }
     this.ctx.strokeStyle = "#d9806c";
@@ -246,6 +256,10 @@ class GridBind extends GridBase {
       if(Object.keys(prevProps.graph).length !== Object.keys(this.props.graph).length) {
           this.renderGrid();
       }
+      if(prevProps.graph.startRoom !== this.props.graph.startRoom ||
+        prevProps.graph.endRoom !== this.props.graph.endRoom) {
+          this.renderGrid();
+        } 
     }
   }
 }
