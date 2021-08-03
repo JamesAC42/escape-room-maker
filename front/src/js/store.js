@@ -1,17 +1,17 @@
 import { createStore, combineReducers } from "redux";
 
-import create from './reducers/create';
-import settings from './reducers/settings';
-import session from './reducers/session';
-import userinfo from './reducers/userinfo';
-import eventWindow from './reducers/eventWindow';
+import create from "./reducers/create";
+import settings from "./reducers/settings";
+import session from "./reducers/session";
+import userinfo from "./reducers/userinfo";
+import eventWindow from "./reducers/eventWindow";
 
 let initState = {
   settings: {
-    darkMode: false
+    darkMode: false,
   },
   session: {
-    loggedin: false
+    loggedin: false,
   },
   userinfo: {
     username: undefined,
@@ -26,13 +26,13 @@ let initState = {
     settings: undefined,
     played: undefined,
     favorites: undefined,
-    loaded: false
+    loaded: false,
   },
   create: {
     activeRoom: undefined,
     graph: undefined,
-    map:undefined
-  }
+    map: undefined,
+  },
 };
 
 const escapeRoomReducer = combineReducers({
@@ -40,11 +40,11 @@ const escapeRoomReducer = combineReducers({
   session,
   userinfo,
   create,
-  eventWindow
+  eventWindow,
 });
 
 const configureStore = (reducer, initState) => {
   return createStore(reducer, initState);
-}
+};
 
 export default configureStore(escapeRoomReducer, initState);

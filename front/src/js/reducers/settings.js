@@ -1,17 +1,17 @@
-import { handleActions } from 'redux-actions';
+import { handleActions } from "redux-actions";
 
 const settings = handleActions(
-    {
-        TOGGLE_DARKMODE: (state, action) => {
-            return {
-                ...state,
-                darkMode: action.payload.enabled
-            }
-        }
+  {
+    TOGGLE_DARKMODE: (state, action) => {
+      return {
+        ...state,
+        darkMode: action.payload.enabled,
+      };
     },
-    {
-        darkMode: false
-    }
-)
+  },
+  {
+    darkMode: false,
+  }
+);
 
-export { settings as default }
+export { settings as default };

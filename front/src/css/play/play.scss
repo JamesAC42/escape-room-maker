@@ -31,7 +31,8 @@
 
     .play-prompt,
     .pause-prompt,
-    .game-over {
+    .game-over,
+    .game-win {
         position:absolute;
         top:50%;left:50%;
         transform:translate(-50%,-50%);
@@ -42,14 +43,23 @@
         font-size:20px;
     }
 
-    .game-over {
+    .game-over,
+    .game-win {
         height:60px;
         width:300px;
         background:#fff;
-        border:2px solid rgb(255, 48, 48);
         border-radius:15px;
         font-size:22px;
+    }
+
+    .game-over {
         color:rgb(255, 64, 64);
+        border:2px solid rgb(255, 48, 48);
+    }
+
+    .game-win {
+        color:rgb(65, 192, 76);
+        border:2px solid rgb(65, 192, 76);
     }
 
     .pause-prompt {

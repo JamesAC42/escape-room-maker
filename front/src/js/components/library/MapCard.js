@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import '../../../css/MapCard.scss';
+import React, { Component } from "react";
+import "../../../css/MapCard.scss";
 
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 class MapCardState {
   constructor() {
@@ -10,64 +10,73 @@ class MapCardState {
 }
 
 class MapCard extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = new MapCardState();
   }
-  
+
   style_hidden = {
-    "visibility": "hidden"
-  }
-  
+    visibility: "hidden",
+  };
+
   style_visible = {
-    "visibility": "visible"
-  }
-  
+    visibility: "visible",
+  };
+
   style_tag = {
-      "margin-top": "10px",
-      "margin-right": "10px",
-      "background-color": "lightblue",
-      "padding": "5px 15px",
-      "border-radius": "20px"
-  }
-  
+    "margin-top": "10px",
+    "margin-right": "10px",
+    "background-color": "lightblue",
+    padding: "5px 15px",
+    "border-radius": "20px",
+  };
+
   render() {
     console.log(this.props);
-    return(
-      <div className="map-overview" style={this.props.style ? this.props.style : this.style_visible}>
-        
+    return (
+      <div
+        className="map-overview"
+        style={this.props.style ? this.props.style : this.style_visible}
+      >
         <img className="thumbnail" />
-        
-        <div className="mo-data">
-            
-            <div className="mo-info">
-                <h3 className="mo-title">Title: {this.props.title}</h3>
-                <h3 className="mo-rating">Rating: {this.props.rating}</h3>
-            </div>
-            
-            <div className="mo-info">
-                <h3 className="mo-desc">{this.props.desc}</h3>
-            </div>
-            
-            <div className="mo-info">
-                <h3 className="mo-creator">Created by: {this.props.creator}</h3>
-                <h3 className="mo-total-rooms">Total rooms: {this.props.roomCount}</h3>
-            </div>
-            
-            <div className="mo-info">
-                <h3 className="mo-total-plays">Total plays: {this.props.totalPlays}</h3>
-                <h3 className="mo-difficulty">Difficulty: {this.props.difficulty}</h3>
-            </div>
 
-            <Link to={"/map/" + this.props.id}>View</Link>
-            
-            <div className="mo-tag-section">
-                <div className="mo-tag-list">{this.props.tags.map(tag => <span style={this.style_tag}>{tag}</span>)}</div>
+        <div className="mo-data">
+          <div className="mo-info">
+            <h3 className="mo-title">Title: {this.props.title}</h3>
+            <h3 className="mo-rating">Rating: {this.props.rating}</h3>
+          </div>
+
+          <div className="mo-info">
+            <h3 className="mo-desc">{this.props.desc}</h3>
+          </div>
+
+          <div className="mo-info">
+            <h3 className="mo-creator">Created by: {this.props.creator}</h3>
+            <h3 className="mo-total-rooms">
+              Total rooms: {this.props.roomCount}
+            </h3>
+          </div>
+
+          <div className="mo-info">
+            <h3 className="mo-total-plays">
+              Total plays: {this.props.totalPlays}
+            </h3>
+            <h3 className="mo-difficulty">
+              Difficulty: {this.props.difficulty}
+            </h3>
+          </div>
+
+          <Link to={"/map/" + this.props.id}>View</Link>
+
+          <div className="mo-tag-section">
+            <div className="mo-tag-list">
+              {this.props.tags.map((tag) => (
+                <span style={this.style_tag}>{tag}</span>
+              ))}
             </div>
+          </div>
         </div>
-        
-        
-      </div>  
+      </div>
     );
   }
 }
