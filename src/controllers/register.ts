@@ -1,3 +1,7 @@
+/*
+  handles the process of a user registering an account
+ */
+
 const bcrypt = require('bcrypt');
 const { v4: uuid } = require('uuid');
 
@@ -21,6 +25,7 @@ const register = (req: any, res: any, db: any, cache:any) => {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     console.log("ip: " + ip);
 
+    // check that the username, email, password, password confirmation, and date of birth are given
     if(username === undefined 
         || email === undefined
         || password === undefined
@@ -33,6 +38,7 @@ const register = (req: any, res: any, db: any, cache:any) => {
         return;        
     }
 
+    // check that password and password confirmation are the same
     if(password !== passwordConfirm) {
         res.send({
             success:false,
@@ -40,6 +46,7 @@ const register = (req: any, res: any, db: any, cache:any) => {
         });
         return;
     }
+    // check that the given email address is of a valid format
     if(!validateEmail(email)) {
         res.send({
             success:false,
@@ -55,6 +62,7 @@ const register = (req: any, res: any, db: any, cache:any) => {
         });
         return;
     }
+    // don't accept usernames longer than 50 characters
     if(username.length > 50) {
         res.send({
             success:false,
@@ -62,6 +70,7 @@ const register = (req: any, res: any, db: any, cache:any) => {
         });
         return;
     }
+    // check that the birthday is valid (valid date in the past)
     let dobDate:Date;
     try { 
         dobDate = new Date(dob);
@@ -97,8 +106,8 @@ const register = (req: any, res: any, db: any, cache:any) => {
     db.query(findQuery)
     .then((r: any) => {
 
-        if(r.rows.length > 0) {
-            res.send({
+        if(r.rows.length > 0) { // if there is already an account with the given username...
+            res.send({ // give an error
                 success:false,
                 error: 'Account with that username already exists.'
             });
@@ -108,13 +117,13 @@ const register = (req: any, res: any, db: any, cache:any) => {
         db.query(findEmailQuery)
         .then((r: any) => {
 
-            if(r.rows.length > 0) {
-                res.send({
+            if(r.rows.length > 0) { // if there is already an account with the given email...
+                res.send({ // give an error
                     success:false,
                     error: 'Account with that email already exists.'
                 });
                 return;
-            } else {
+            } else { // if the information is all valid...
                 
                 bcrypt.genSalt(10, (err:any, salt:any) => {
                     bcrypt.hash(password, salt, (err:any, hash:any) => {
@@ -126,7 +135,7 @@ const register = (req: any, res: any, db: any, cache:any) => {
                         const played:Array<any> = [];
                         const favorites:Array<any> = [];
 
-                        const insertQuery = {
+                        const insertQuery = { // make a new user
                             name: 'create-user',
                             text: userQueries.createUser,
                             values: [
@@ -147,7 +156,7 @@ const register = (req: any, res: any, db: any, cache:any) => {
                         }
             
                         db.query(insertQuery)
-                        .then((r: any) => {
+                        .then((r: any) => { // give the new user the given information
 
                             req.session.key = uid;
                             res.send({

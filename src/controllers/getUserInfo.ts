@@ -11,12 +11,14 @@ const getUserInfo = (req: any, res: any, db: any) => {
     console.log(`sessionID: ${req.session.id}`);
     console.log(`key: ${req.session.key}`);
 
+    // check if the user is logged out
     const userId = req.session.key;
     if(userId === undefined) {
         res.send({loggedout: true});
         return;
     }
 
+    // make a getUser query
     const query = {
         name: 'get-user',
         text: userQueries.getUser,
@@ -30,7 +32,7 @@ const getUserInfo = (req: any, res: any, db: any) => {
                     res.send({loggedout:true});
                     return;
                 })
-            } else {
+            } else { // get the user info from the database
                 let {
                     username,
                     email,

@@ -8,13 +8,14 @@ import mapQueries from "../queries/mapQueries";
 
 const getAllMaps = (req:any, res:any, db:any) => {
 
+  // make a getAllMaps query
   const query = {
     name: 'get-all-maps',
     text: mapQueries.getAllMaps
   };
 
   db.query(query)
-    .then((r:any) => {
+    .then((r:any) => { // get the map info from the database
       res.send({success:true,maps:r.rows});
       return;
     })
