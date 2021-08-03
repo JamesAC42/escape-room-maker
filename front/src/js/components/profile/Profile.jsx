@@ -100,6 +100,12 @@ class ProfileBind extends Component {
                     ratings={map.ratings}/>
                 )
               }
+              {
+                this.state.myMaps.length === 0 ?
+                <div className="no-maps">
+                  You have not made any maps!
+                </div> : null
+              }
             </div>
           </div>
           <div className="spacer"></div>
@@ -126,7 +132,7 @@ class ProfileBind extends Component {
               }
               {
                 this.props.userinfo.favorites.length === 0 ?
-                <div className="no-favorites">
+                <div className="no-maps">
                   You do not have any favorites!
                 </div> : null
               }
