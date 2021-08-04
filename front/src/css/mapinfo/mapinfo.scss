@@ -29,6 +29,7 @@ pre {
         .meta-row {
             display:flex;
             flex-direction: row;
+            align-items:center;
             gap:10px;
 
             span.meta-info-label {
@@ -50,6 +51,20 @@ pre {
             .description {
                 margin:10px 0;
             }
+
+            .favorite-button {
+                height:50px;width:50px;
+                border-radius:12px;
+                margin-left:auto;
+                border:1px solid rgb(52, 167, 243);
+                background:rgb(52, 167, 243);
+                cursor:pointer;
+                transition:background .1s ease-in-out;
+                img { height:60%; }
+                &:hover {
+                    background:rgb(98, 101, 255);
+                }
+            }
         }
 
         &.mapinfo-data {
@@ -60,6 +75,9 @@ pre {
                 .rating-container {
                     font-size:30px;
                 }
+            }
+            a {
+                text-decoration:none;
             }
             .play-button {
                 margin:auto 0;

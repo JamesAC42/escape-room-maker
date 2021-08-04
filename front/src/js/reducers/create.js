@@ -15,16 +15,16 @@ const create = handleActions(
       };
     },
     SET_GRAPH: (state, action) => {
-      return { 
+      return {
         ...state,
-        graph: action.payload.graph
-      }
-    }
+        graph: action.payload.graph,
+      };
+    },
   },
   {
     activeRoom: undefined,
     map: undefined,
-    graph: undefined
+    graph: undefined,
   }
 );
 

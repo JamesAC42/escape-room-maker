@@ -7,10 +7,10 @@ const eventWindow = handleActions(
         ...state,
         roomVals: action.payload.roomVals,
       };
-    }
+    },
   },
   {
-    roomVals: undefined
+    roomVals: undefined,
   }
 );
 
