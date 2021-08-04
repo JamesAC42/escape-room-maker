@@ -31,7 +31,8 @@
 
     .play-prompt,
     .pause-prompt,
-    .game-end {
+    .game-end,
+    .event-window {
         position:absolute;
         top:50%;left:50%;
         transform:translate(-50%,-50%);
@@ -80,6 +81,78 @@
         border-radius:15px;
         img { 
             height:50px;
+        }
+        z-index:1000;
+    }
+
+    .event-window {
+        height:100%;
+        width:100%;
+        border-radius:10px;
+        z-index:10;
+        background:rgba(255, 255, 255, 0.651);
+
+        .event-window-inner {
+            background:rgb(28, 27, 43);
+            padding:15px;
+            border-radius:10px;
+
+            gap:20px;
+
+            color:#fff;
+
+            .event-input {
+                input {
+                    height:30px;
+                    line-height:30px;
+                    font-family:Poppins;
+                    padding:5px 10px;
+                    font-size:18px;
+                    border:1px solid rgb(141, 117, 247);
+                    outline:none;
+                    background:rgb(30, 27, 59);
+                    color:#fff;
+                    border-radius:10px;
+                    &:focus {
+                        outline:2px solid rgb(68, 124, 245);
+                    }
+                }
+            }
+
+            $red: rgb(255, 88, 88);
+
+            .event-submit {
+                gap:10px;
+                .event-submit-button {
+                    padding:10px 15px;
+                    font-size:18px;
+                    border-radius:10px;
+                    cursor:pointer;
+                    transition:all .1s ease-in-out;
+                    &.green {
+                        $green: rgb(73, 214, 104);
+                        border:1px solid $green;
+                        color:$green;
+                        &:hover {
+                            background:$green;
+                        }
+                    }
+                    &.red {
+                        border:1px solid $red;
+                        color:$red;
+                        &:hover {
+                            background:$red;
+                        }
+                    }
+                    &:hover {
+                        color:#fff;
+                    }
+                }
+            }
+
+            .event-result {
+                color:$red;
+            }
         }
     }
 

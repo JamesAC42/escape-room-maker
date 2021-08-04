@@ -41,10 +41,7 @@ class PlayGrid extends GridBase {
         ) {
           return;
         }
-        this.props.setCurrentRoom(room);
-        if (this.props.visitedRooms.indexOf(room) === -1) {
-          this.props.setVisited(room);
-        }
+        this.props.tryToVisit(room);
       }
     }
   }

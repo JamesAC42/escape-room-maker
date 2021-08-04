@@ -8,7 +8,7 @@ import restart from "../../../images/restart.png";
 
 import {Link} from 'react-router-dom';
 
-const totalTime = 60;
+const totalTime = 600;
 
 // Contains the information about the play state
 class PlayContainerState {
@@ -19,8 +19,11 @@ class PlayContainerState {
     this.visitedRooms = [];
     this.currentEvent = undefined;
     this.showEventWindow = false;
+    this.eventWindowResult = '';
     this.gameOver = false;
     this.gameWin = false;
+
+    this.eventResponse = '';
 
     this.endRoom = undefined;
   }
@@ -91,12 +94,15 @@ class PlayContainer extends Component {
     let room = this.state.currentRoom;
     let remainingTime = this.state.remainingTime;
     let visitedRooms = this.state.visitedRooms;
+
+    // If the current room was undefined, we need to restart the game
     if (room === undefined) {
       room = this.props.graph.startRoom;
       if (!room) {
         room = Object.keys(this.props.graph.graph)[0];
       }
       remainingTime = totalTime;
+      visitedRooms = [];
       visitedRooms.push(room);
     }
     this.setState({
@@ -133,25 +139,91 @@ class PlayContainer extends Component {
     this.setState({ currentRoom: room });
   }
 
-  // Add a room to the set of visited rooms
-  setVisited(room) {
+  // Attempt to enter a room. If the room 
+  // doesn't need an event, just go to it.
+  // If it does, set the event and show the event window
+  tryToVisit(room) {
     let visitedRooms = [...this.state.visitedRooms];
+
+    // If the room has already been visited, go to it freely
     if (visitedRooms.indexOf(room) === -1) {
-      visitedRooms.push(room);
-      this.setState({ visitedRooms });
-      if(room === this.props.graph.endRoom) {
-        this.setState({ 
-          gameWin: true,
-          playing: false
-        });
-        if(this.intervalId) clearInterval(this.intervalId);
-      }
+
+      // If the room has a question event, set the event and show
+      // the event window
+      if(this.props.graph.graph[room].eventType === "Question") {
+        this.setState({
+          currentEvent: {
+            type: "Question",
+            room
+          },
+          showEventWindow: true
+        })
+      } else if(this.props.graph.graph[room].eventType === "No Event") {
+        // If the room does not have an event, just go to it
+        visitedRooms.push(room);
+        this.setState({ visitedRooms, currentRoom: room });
+        // Check if the room is the end room, show the win
+        // prompt if so
+        if(room === this.props.graph.endRoom) {
+          this.setState({ 
+            gameWin: true,
+            playing: false,
+            currentRoom: undefined
+          });
+          if(this.intervalId) clearInterval(this.intervalId);
+        }
+      } 
+    } else {
+      this.setState({ currentRoom: room })
     }
   }
 
   // Set the current event
   setCurrentEvent(event) {
     this.setState({ currentEvent: event });
+  }
+
+  // Event handler for user typing in the event window response
+  // text field
+  handleEventResponse(e) {
+    this.setState({ 
+      eventResponse: e.target.value
+    })
+  }
+
+  // Triggered when a user clicks the submit button on the
+  // event window. Checks whether the input matches the correct
+  // answer stored in the event. If it matches, go to that room.
+  // If not, then tell the user it was wrong.
+  submitEvent() {
+
+    let response = this.state.eventResponse;
+    let correctAnswer = this.props.graph.graph[this.state.currentEvent.room].eventA;
+
+    if(response.toLowerCase() !== correctAnswer.toLowerCase()) {
+      this.setState({eventWindowResult:'Incorrect!'});
+    } else {
+      // Answer was correct, so move player into that room
+      let visitedRooms = [...this.state.visitedRooms];
+      let room = this.state.currentEvent.room;
+      visitedRooms.push(room);
+      this.setState({ 
+        currentRoom: room,
+        visitedRooms
+      });
+      // Close the event window
+      this.closeEvent();
+    }
+  }
+
+  // Resets the event information and closes the window
+  closeEvent() {
+    this.setState({ 
+      currentEvent: undefined,
+      showEventWindow: false,
+      eventResponse:'',
+      eventWindowResult:''
+    })
   }
 
   // Render the grid and controls
@@ -187,7 +259,7 @@ class PlayContainer extends Component {
           currentRoom={this.state.currentRoom}
           playing={this.state.playing}
           visitedRooms={this.state.visitedRooms}
-          setVisited={(room) => this.setVisited(room)}
+          tryToVisit={(room) => this.tryToVisit(room)}
           setCurrentRoom={(room) => this.setCurrentRoom(room)}
         />
         {this.state.currentRoom === undefined ? (
@@ -214,6 +286,40 @@ class PlayContainer extends Component {
             </div>
           </div>
         ) : null}
+        {
+          this.state.showEventWindow ?
+          <div className="event-window flex center-child">
+
+            <div className="event-window-inner flex flex-col flex-center">
+              <div className="event-question">
+              {
+                this.props.graph.graph[this.state.currentEvent.room].eventQ
+              }
+              </div>
+              <div className="event-input">
+                <input 
+                  type="text" 
+                  placeholder="Response..."
+                  value={this.state.eventResponse}
+                  onChange={(e) => this.handleEventResponse(e)}/>
+              </div>
+              <div className="event-submit flex flex-row">
+                <div 
+                  className="event-submit-button green"
+                  onClick={() => this.submitEvent()}>GO</div>
+                <div 
+                  className="event-submit-button red"
+                  onClick={() => this.closeEvent()}>CLOSE</div>
+              </div>
+              {
+                this.state.eventWindowResult !== '' ?
+                <div className="event-result">
+                  {this.state.eventWindowResult}
+                </div> : null
+              }
+            </div>
+          </div> : null
+        }
       </div>
     );
   }
