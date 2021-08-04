@@ -244,8 +244,10 @@ class EventWindowBind extends Component {
         <div style={this.getRoomOrDoor().eventType !== "No Event" ? styles.visible : styles.hidden}>
           
           <div>
-            <h4>Event description:</h4>
-            <input id="event-desc" type="text" placeholder="Question" name="eventDesc" value={this.getRoomOrDoor().eventDesc} onChange={this.onChangeStateVal.bind(this)}></input>
+            <h4>Event question:</h4>
+            <input id="event-q" type="text" placeholder="Question" name="eventQ" value={this.getRoomOrDoor().eventQ} onChange={this.onChangeStateVal.bind(this)}></input>
+            <h4>Event answer:</h4>
+            <input id="event-a" type="text" placeholder="Question" name="eventA" value={this.getRoomOrDoor().eventA} onChange={this.onChangeStateVal.bind(this)}></input>
           </div>
           
           <h4>

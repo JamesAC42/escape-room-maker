@@ -31,7 +31,8 @@ export class Room {
     this.requireItem = false;
     this.requireItemName = "req item name - " + uid;
     this.requireQuestion = true;
-    this.eventDesc = "event desc - " + uid;
+    this.eventQ = "event question - " + uid;
+    this.eventA = "event answer - " + uid;
     this.solveItem = false;
     this.solveItemName = "solve item name - " + uid;
     this.solveItemDesc = "solve item desc - " + uid;
@@ -44,12 +45,13 @@ export class Door {
     this.room = uid;
     this.eventType = "No Event";
     this.requireItem = false;
-    this.requireItemName = dir + " - req item name" + uid;
+    this.requireItemName = dir + " - req item name - " + uid;
     this.requireQuestion = true;
-    this.eventDesc = dir + " - event desc" + uid;
+    this.eventQ = dir + " - event question - " + uid;
+    this.eventA = dir + " - event answer - " + uid;
     this.solveItem = false;
-    this.solveItemName = dir + " - solve item name" + uid;
-    this.solveItemDesc = dir + " - solve item desc" + uid;
+    this.solveItemName = dir + " - solve item name - " + uid;
+    this.solveItemDesc = dir + " - solve item desc - " + uid;
   }
 }
 
