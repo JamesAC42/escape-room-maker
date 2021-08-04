@@ -6,6 +6,7 @@ import session from "./reducers/session";
 import userinfo from "./reducers/userinfo";
 import eventWindow from "./reducers/eventWindow";
 
+// The default, initial state of the redux store
 let initState = {
   settings: {
     darkMode: false,
@@ -35,6 +36,7 @@ let initState = {
   },
 };
 
+// Combines the reducers to bind them to the store
 const escapeRoomReducer = combineReducers({
   settings,
   session,

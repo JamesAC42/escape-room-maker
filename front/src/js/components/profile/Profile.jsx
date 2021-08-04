@@ -13,17 +13,21 @@ const mapStateToProps = (state, props) => ({
   userinfo: state.userinfo,
 });
 
+// Stores the maps that a user has created
 class ProfileState {
   constructor() {
     this.myMaps = [];
   }
 }
 
+// Page level component class for the profile page
 class ProfileBind extends Component {
   constructor(props) {
     super(props);
     this.state = new ProfileState();
   }
+
+  // Get all the maps that the user has made from the server
   componentDidMount() {
     fetch("/api/getMyMaps", {
       method: "GET",
@@ -39,6 +43,8 @@ class ProfileBind extends Component {
       });
   }
   render() {
+
+    // If not logged in, then redirect to the login page
     if (!this.props.session.loggedin) {
       return <Redirect to="/login/profile" />;
     }

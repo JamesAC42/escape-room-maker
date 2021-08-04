@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "../../css/Home.scss";
 
+// Page component class that renders the home page
 class Home extends Component {
   render() {
     return (

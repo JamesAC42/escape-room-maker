@@ -3,6 +3,8 @@ import { BsStarFill, BsStar } from "react-icons/bs";
 
 import "../../css/rating.scss";
 
+// Component that render 5 stars, with the amount of stars
+// filled in based on the rating
 class Rating extends Component {
   render() {
     let stars = [];

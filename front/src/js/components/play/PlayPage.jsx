@@ -9,11 +9,14 @@ class PlayPageState {
   }
 }
 
+// The page level component class for playing a given map
 class PlayPage extends Component {
   constructor(props) {
     super(props);
     this.state = new PlayPageState();
   }
+
+  // Get the map data from the server when the page loads
   componentDidMount() {
     const id = this.props.match.params.id;
     if (id === undefined) return;
@@ -27,7 +30,6 @@ class PlayPage extends Component {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          console.log(data.map);
           this.setState({ map: data.map });
         } else {
           console.log(data);
@@ -37,6 +39,7 @@ class PlayPage extends Component {
         console.error("Error: " + error);
       });
   }
+  // Render the PlayContainer with the map data
   render() {
     return (
       <div className="container">

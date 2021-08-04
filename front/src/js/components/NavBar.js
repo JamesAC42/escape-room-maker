@@ -9,6 +9,9 @@ const mapStateToProps = (state, props) => ({
   userinfo: state.userinfo,
 });
 
+// Component that renders the navigation bar.
+// Will show either the profile or the login link based on
+// whether the client is logged in or not
 class NavBarBind extends Component {
   render() {
     return (

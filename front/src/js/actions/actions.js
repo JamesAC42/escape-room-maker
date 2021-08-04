@@ -1,5 +1,7 @@
 import { createActions } from "redux-actions";
 
+// All the redux actions form mutating the store
+
 export const settingsActions = createActions({
   TOGGLE_DARKMODE: (enabled) => ({ enabled }),
 });

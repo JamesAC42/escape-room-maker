@@ -1,5 +1,6 @@
 import { handleActions } from "redux-actions";
 
+// Reducer for mutating the event window relevant redux store data
 const eventWindow = handleActions(
   {
     SET_ROOM_VALS: (state, action) => {

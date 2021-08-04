@@ -10,6 +10,7 @@ import {Link} from 'react-router-dom';
 
 const totalTime = 60;
 
+// Contains the information about the play state
 class PlayContainerState {
   constructor() {
     this.currentRoom = undefined;
@@ -25,16 +26,21 @@ class PlayContainerState {
   }
 }
 
+// Render the grid and the controls for playing
 class PlayContainer extends Component {
   constructor(props) {
     super(props);
     this.state = new PlayContainerState();
   }
+
+  // Remove the timer interval when the component unmounts
   componentWillUnmount() {
     if (this.intervalId !== undefined) {
       clearInterval(this.intervalId);
     }
   }
+
+  // Initialize the end room if it is null (legacy)
   componentDidMount() {
     let endRoom = this.props.graph.endRoom;
     if (!endRoom) {
@@ -44,11 +50,16 @@ class PlayContainer extends Component {
       endRoom,
     });
   }
+
+  // Restart the map
   restart() {
+
+    // Get the start room in case it is null (legacy)
     let startRoom = this.props.graph.startRoom;
     if(!startRoom) {
       startRoom = Object.keys(this.props.graph.graph)[0];
     }
+    // Reset the map information
     this.setState({
       playing: true,
       currentRoom: startRoom,
@@ -59,6 +70,8 @@ class PlayContainer extends Component {
       gameOver: false,
       gameWin:false
     });
+
+    // Reset the timer information
     if(this.intervalId) clearInterval(this.intervalId);
     this.intervalId = setInterval(() => {
       let remainingTime = this.state.remainingTime - 1;
@@ -72,6 +85,8 @@ class PlayContainer extends Component {
       this.setState({ remainingTime: remainingTime });
     }, 1000);
   }
+
+  // Either resume playing from paused or initialize the first play
   play() {
     let room = this.state.currentRoom;
     let remainingTime = this.state.remainingTime;
@@ -92,6 +107,8 @@ class PlayContainer extends Component {
       gameOver: false,
       gameWin: false,
     });
+
+    // Start the timer
     this.intervalId = setInterval(() => {
       let remainingTime = this.state.remainingTime - 1;
       if (remainingTime <= 0) {
@@ -104,13 +121,19 @@ class PlayContainer extends Component {
       this.setState({ remainingTime: remainingTime });
     }, 1000);
   }
+
+  // Stop the timer and set playing to false
   pause() {
     this.setState({ playing: false });
     clearInterval(this.intervalId);
   }
+
+  // Set the current room
   setCurrentRoom(room) {
     this.setState({ currentRoom: room });
   }
+
+  // Add a room to the set of visited rooms
   setVisited(room) {
     let visitedRooms = [...this.state.visitedRooms];
     if (visitedRooms.indexOf(room) === -1) {
@@ -125,9 +148,13 @@ class PlayContainer extends Component {
       }
     }
   }
+
+  // Set the current event
   setCurrentEvent(event) {
     this.setState({ currentEvent: event });
   }
+
+  // Render the grid and controls
   render() {
     return (
       <div className="play-container card">

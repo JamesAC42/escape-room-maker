@@ -21,8 +21,13 @@ const mapDispatchToProps = {
   setLoaded: userinfoActions.setLoaded,
 };
 
+// Component that is rendered automatically when the page
+// first loads. Makes a request to the server to see if 
+// the client has an active session. If they do, then it 
+// logs them in and sets all of the user data
 class SessionHandlerBind extends Component {
   componentDidMount() {
+    // Makes the server request
     fetch("/api/getUserInfo", {
       method: "GET",
       headers: {
@@ -32,9 +37,11 @@ class SessionHandlerBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
+        // If no user session, log out
         if (data.loggedout) {
           this.props.logout();
         } else {
+          // Otherwise, set all of the user data
           this.props.setEmail(data.email);
           this.props.setUsername(data.username);
           this.props.setUid(data.uid);
