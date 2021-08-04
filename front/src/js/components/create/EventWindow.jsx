@@ -87,20 +87,34 @@ class EventWindowBind extends Component {
   
   // sets the starting room
   setStart = () => {
-    if(this.props.create.graph.endRoom != this.props.create.activeRoom) {
-      let tempGraph = {...this.props.create.graph};
-      tempGraph.startRoom = this.props.create.activeRoom;
-      this.props.setGraph(tempGraph);
+    let tempGraph = {...this.props.create.graph};
+    if(this.props.create.graph.startRoom == this.props.create.activeRoom) {
+      tempGraph.startRoom = null;
     }
+    else if(this.props.create.graph.endRoom == this.props.create.activeRoom) {
+      tempGraph.startRoom = this.props.create.activeRoom;
+      tempGraph.endRoom = null;
+    }
+    else {
+      tempGraph.startRoom = this.props.create.activeRoom;
+    }
+    this.props.setGraph(tempGraph);
   }
   
   // sets the ending room
   setEnd = () => {
-    if(this.props.create.graph.startRoom != this.props.create.activeRoom) {
-      let tempGraph = {...this.props.create.graph};
-      tempGraph.endRoom = this.props.create.activeRoom;
-      this.props.setGraph(tempGraph);
+    let tempGraph = {...this.props.create.graph};
+    if(this.props.create.graph.endRoom == this.props.create.activeRoom) {
+      tempGraph.endRoom = null;
     }
+    else if(this.props.create.graph.startRoom == this.props.create.activeRoom) {
+      tempGraph.endRoom = this.props.create.activeRoom;
+      tempGraph.startRoom = null;
+    }
+    else {
+      tempGraph.endRoom = this.props.create.activeRoom;
+    }
+    this.props.setGraph(tempGraph);
   };
 
   // coordinate combinations to use for checking if a square can be removed
