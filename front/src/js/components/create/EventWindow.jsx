@@ -5,7 +5,6 @@ import '../../../css/grid.scss';
 import { connect } from 'react-redux';
 import store from "../../store";
 import { createPageActions } from '../../actions/actions';
-import { eventWindowActions } from '../../actions/eventWindowActions';
 
 const styles  = {
   styleHidden: {
@@ -18,23 +17,17 @@ const styles  = {
 }
 
 const mapStateToProps = (store) => ({
-  create: store.create,
-  eventWindow: store.eventWindow
+  create: store.create
 })
 
 const mapDispatchToProps = {
-  setRoomVals: eventWindowActions.setRoomVals,
   setActiveRoom: createPageActions.setActiveRoom,
   setGraph: createPageActions.setGraph
 }
 
 class EventWindowState {
-  constructor(pr, et, ir, d, is) {
+  constructor(pr) {
     this.props = pr;
-    this.event_type = et;
-    this.item_req = ir;
-    this.desc = d;
-    this.item_solve = is;
     this.currentSelected = "Room";
   }
 }
@@ -42,7 +35,7 @@ class EventWindowState {
 class EventWindowBind extends Component {
   constructor(props){
     super(props);
-    this.state = new EventWindowState(props, "No Event", false, true, false);
+    this.state = new EventWindowState(props);
     console.log("this is the store");
     console.log(store.getState());
     console.log("these are the props");
@@ -55,11 +48,8 @@ class EventWindowBind extends Component {
   
   // sets the event type
   eventChoose = (e) => {
-    var tempGraph = this.props.create.graph;
+    let tempGraph = {...this.props.create.graph};
     tempGraph.graph[this.props.create.activeRoom].eventType = e.target.value;
-    this.setState({
-      event_type: e.target.value
-    });
     this.setGraph(tempGraph);
   }
   
@@ -73,50 +63,40 @@ class EventWindowBind extends Component {
   
   // determines if an item will be required to start the event when playing the map
   onReqItem = (checked) => {
-    this.setState({
-      item_req: checked
-    });
+    let tempGraph  = {...this.props.create.graph};
+    tempGraph.graph[this.props.create.activeRoom].requireItem = checked;
+    this.props.setGraph(tempGraph);
+    console.log("THE NEW VALUE IS ", tempGraph.graph[this.props.create.activeRoom].requireItem);
+    console.log("checked ", checked);
   }
   
   // determines if an item will be given to the player upon finishing the event when playing the map
   onSolveItem = (checked) => {
-    this.setState({
-      item_solve: checked
-    });
+    let tempGraph  = {...this.props.create.graph};
+    tempGraph.graph[this.props.create.activeRoom].solveItem = checked;
+    this.props.setGraph(tempGraph);
+    console.log("THE NEW VALUE IS ", tempGraph.graph[this.props.create.activeRoom].solveItem);
+    console.log("checked ", checked);
   }
-  
-  setInitRenderVals = () => {
-    if(this.props.create.activeRoom) {
-      if(this.state.currentSelected == "Room") {
-        var currSelect = this.props.create.graph.graph[this.props.create.activeRoom];
-      }
-      else {
-        var currSelect = this.props.create.graph.graph[this.props.create.activeRoom].doorVals.find(y => y.dir == this.state.currentSelected);
-      }
-      this.setState({
-        event_type: currSelect.eventType,
-        item_req: currSelect.requireItem,
-        item_solve: currSelect.solveItem
-      })
-    }
-  }
-  
+ 
   onChangeStateVal = (e) => {
     
-    console.log("cr graph.graph:", this.props.create.graph.graph);
-    console.log("activeRoom:", this.props.create.activeRoom);
-    var valType = e.target.type == "checkbox" ? "checked" : "value";
+    console.log("onchangeStateVal graph.graph:", this.props.create.graph.graph);
+    console.log("onchangeStateVal activeRoom:", this.props.create.activeRoom);
+    console.log("onchangeStateVal st currentSelected:", this.state.currentSelected);
+    let valType = e.target.type == "checkbox" ? "checked" : "value";
     if(this.state.currentSelected == "Room") {
-      var tempGraph = this.props.create.graph;
+      let tempGraph = this.props.create.graph;
       tempGraph.graph[this.props.create.activeRoom][e.target.attributes.name.value] = e.target[valType];
       this.props.setGraph(tempGraph);
     }
     else {
-      var tempGraph = this.props.create.graph;
+      let tempGraph = this.props.create.graph;
       tempGraph.graph[this.props.create.activeRoom]
                 .doorVals.find(y => y.dir == this.state.currentSelected)[e.target.attributes.name.value] = e.target[valType];
       this.props.setGraph(tempGraph);
     }
+    
     if(e.target.attributes.name.value == "requireItem") {
       this.onReqItem(e.target[valType]);
     }
@@ -126,18 +106,18 @@ class EventWindowBind extends Component {
   }
   
   setStart = () => {
-    let graph = {...this.props.create.graph};
-    if(graph.endRoom != this.props.create.activeRoom) {
-      graph.startRoom = this.props.create.activeRoom;
-      this.props.setGraph(graph);
+    if(this.props.create.graph.endRoom != this.props.create.activeRoom) {
+      let tempGraph = {...this.props.create.graph};
+      tempGraph.startRoom = this.props.create.activeRoom;
+      this.props.setGraph(tempGraph);
     }
   }
   
   setEnd = () => {
-    let graph = {...this.props.create.graph};
-    if(graph.startRoom != this.props.create.activeRoom) {
-      graph.endRoom = this.props.create.activeRoom;
-      this.props.setGraph(graph);
+    if(this.props.create.graph.startRoom != this.props.create.activeRoom) {
+      let tempGraph = {...this.props.create.graph};
+      tempGraph.endRoom = this.props.create.activeRoom;
+      this.props.setGraph(tempGraph);
     }
   }
   
@@ -154,7 +134,7 @@ class EventWindowBind extends Component {
   // Returns false otherwise
   checkSquareStillValid = (x, y, i, j) => {
     
-    var valid = false;
+    let valid = false;
     
     // this loops over the squares adjacent to the one being checked
     // combinations of (a, b) => (-1, -1), (-1, 1), (1, -1), (1, 1)
@@ -176,7 +156,7 @@ class EventWindowBind extends Component {
   // attempts to remove the active room from the map
   removeRoom = () => {
     
-    var newGraph = {...this.props.create.graph};
+    let newGraph = {...this.props.create.graph};
     
     // the start room cannot be removed
     if(this.props.create.graph.startRoom == this.props.create.activeRoom) {
@@ -192,8 +172,8 @@ class EventWindowBind extends Component {
       // check that the surrounding rooms are still accessible
       
       // gets the coordinates of the active room
-      var coords = this.props.create.graph.coordinates[this.props.create.activeRoom];
-      var valid = true;
+      let coords = this.props.create.graph.coordinates[this.props.create.activeRoom];
+      let valid = true;
       
       // checks the coordinates objects in the graph
       // when it finds a match for a room adjacent to the active room, it will
@@ -215,10 +195,10 @@ class EventWindowBind extends Component {
       
       // if the room can be deleted
       if(valid) {
-        var tempGraph = this.props.create.graph;
+        let tempGraph = this.props.create.graph;
         delete tempGraph.graph[this.props.create.activeRoom];
         this.props.setGraph(tempGraph);
-        var oldActive = this.props.create.activeRoom;
+        let oldActive = this.props.create.activeRoom;
         // set the active room to another room in the map
         if(this.props.create.activeRoom != Object.keys(this.props.create.graph.graph)[0]) {
           this.props.setActiveRoom(Object.keys(this.props.create.graph.graph)[0]);
@@ -238,12 +218,27 @@ class EventWindowBind extends Component {
       }
     }
   }
-
-  componentDidMount() {
-    this.setInitRenderVals();
+ 
+  getRoomOrDoor = () => {
+    console.log("grod currentSelected", this.state.currentSelected);
+    if(this.state.currentSelected == "Room") {
+      console.log("grod g.g[ar]", this.props.create.graph.graph[this.props.create.activeRoom]);
+      return this.props.create.graph.graph[this.props.create.activeRoom];
+    }
+    else {
+      console.log("grod g.g[ar].dv[dir]", this.props.create.graph.graph[this.props.create.activeRoom].doorVals.find(y => y.dir == this.state.currentSelected));
+      return this.props.create.graph.graph[this.props.create.activeRoom].doorVals.find(y => y.dir == this.state.currentSelected);
+    }
   }
   
-  componentDidUpdate(prevProps, props) {
+  getButtonStyle = (btn) => {
+    return {
+      backgroundColor: (this.state.currentSelected == btn ? "#8ffad1" : ""),
+      borderColor: (this.state.currentSelected == btn ? "#6fdab1" : "")
+    }
+  }
+ 
+  componentDidUpdate(prevProps) {
     console.log("prev props", prevProps);
     console.log("this.props", this.props);
     if(Object.keys(prevProps.create.graph.graph).length != Object.keys(this.props.create.graph.graph).length) {
@@ -257,16 +252,16 @@ class EventWindowBind extends Component {
         <h1>
           Room ID: <span style={{color: "#8ffad1"}}>{this.props.create.activeRoom}</span>
           <div style={{float: "right"}}>
-            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="room-btn" value="Room" style={{width: "6rem", backgroundColor: (this.state.currentSelected == "Room" ? "#8ffad1" : ""), borderColor: (this.state.currentSelected == "Room" ? "#6fdab1" : "")}}/>
-            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="n-btn" value="N"  style={{backgroundColor: (this.state.currentSelected == "N" ? "#8ffad1" : ""), borderColor: (this.state.currentSelected == "N" ? "#6fdab1" : "")}}/>
-            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="s-btn" value="S"  style={{backgroundColor: (this.state.currentSelected == "S" ? "#8ffad1" : ""), borderColor: (this.state.currentSelected == "S" ? "#6fdab1" : "")}}/>
-            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="w-btn" value="W"  style={{backgroundColor: (this.state.currentSelected == "W" ? "#8ffad1" : ""), borderColor: (this.state.currentSelected == "W" ? "#6fdab1" : "")}}/>
-            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="e-btn" value="E"  style={{backgroundColor: (this.state.currentSelected == "E" ? "#8ffad1" : ""), borderColor: (this.state.currentSelected == "E" ? "#6fdab1" : "")}}/>
+            <input className="room-button" type="button" onClick={this.selectForEvent.bind(this)} id="room-btn" value="Room" style={this.getButtonStyle("Room")}/>
+            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="n-btn" value="N" style={this.getButtonStyle("N")}/>
+            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="s-btn" value="S" style={this.getButtonStyle("S")}/>
+            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="w-btn" value="W" style={this.getButtonStyle("W")}/>
+            <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="e-btn" value="E" style={this.getButtonStyle("E")}/>
           </div>
         </h1>
         
         <h4>Choose event type:</h4>
-        <select id="event-select" name="eventType" onChange={this.onChangeStateVal.bind(this)}>
+        <select id="event-select" name="eventType" value={this.getRoomOrDoor().eventType} onChange={this.onChangeStateVal.bind(this)}>
           <option val="None">No Event</option>
           <option val="Question">Question</option>
         </select>
@@ -281,38 +276,36 @@ class EventWindowBind extends Component {
         </div>
         
         {/* This is rendered if the room has an event attached to it */}
-        <div style={this.state.event_type !== "No Event" ? styles.styleVisible : styles.styleHidden}>
+        <div style={this.getRoomOrDoor().eventType !== "No Event" ? styles.styleVisible : styles.styleHidden}>
           
           <div>
             <h4>Event description:</h4>
-            <input id="event-desc" type="text" placeholder="Question" name="eventDesc" onChange={this.onChangeStateVal.bind(this)}></input>
+            <input id="event-desc" type="text" placeholder="Question" name="eventDesc" value={this.getRoomOrDoor().eventDesc} onChange={this.onChangeStateVal.bind(this)}></input>
           </div>
           
           <h4>
-            Require Item to Trigger Event: <input type="checkbox" id="req-item-choice" name="requireItem"
+            Require Item to Trigger Event: <input type="checkbox" id="req-item-choice" name="requireItem" value={this.getRoomOrDoor().requireItem}
               onChange={this.onChangeStateVal.bind(this)}></input>
           </h4>
           
           {/* This is rendered if the event requires an item to be triggered */}
-          <div style={this.state.item_req && this.state.event_type !== "No Event" ? styles.styleVisible : styles.styleHidden}>
+          <div style={this.getRoomOrDoor.requireItem && this.getRoomOrDoor.eventType !== "No Event" ? styles.styleVisible : styles.styleHidden}>
             <h4>Item Name:</h4>
-            <input id="req-item-name" type="text" placeholder="Name" name="requireItemName" onChange={this.onChangeStateVal.bind(this)}></input>
+            <input id="req-item-name" type="text" placeholder="Name" name="requireItemName" value={this.getRoomOrDoor().requireItemName} onChange={this.onChangeStateVal.bind(this)}></input>
           </div>
           
           <h4>
-            Item received upon solving: <input type="checkbox" id="solve-item-choice" name="solveItem" onChange={this.onChangeStateVal.bind(this)}></input>
+            Item received upon solving: <input type="checkbox" id="solve-item-choice" name="solveItem" value={this.getRoomOrDoor().solveItem} onChange={this.onChangeStateVal.bind(this)}></input>
           </h4>
           
           {/* This is rendered if an item will be awarded when completing the event */}
-          <div style={this.state.item_solve && this.state.event_type !== "No Event" ? styles.styleVisible : styles.styleHidden}>
+          <div style={this.getRoomOrDoor.solveItem && this.getRoomOrDoor.eventType !== "No Event" ? styles.styleVisible : styles.styleHidden}>
             <h4>Item Name:</h4>
-            <input id="solve-item-name" type="text" placeholder="Name" name="solveItemName" onChange={this.onChangeStateVal.bind(this)}></input>
+            <input id="solve-item-name" type="text" placeholder="Name" name="solveItemName" value={this.getRoomOrDoor().solveItemName} onChange={this.onChangeStateVal.bind(this)}></input>
             <h4>Item Description:</h4>
-            <input id="solve-item-desc" type="text" placeholder="Description" name="solveItemDesc" onChange={this.onChangeStateVal.bind(this)}></input>
+            <input id="solve-item-desc" type="text" placeholder="Description" name="solveItemDesc" value={this.getRoomOrDoor().solveItemDesc} onChange={this.onChangeStateVal.bind(this)}></input>
           </div>
         </div>
-        
-        
       </div>
     );
   }

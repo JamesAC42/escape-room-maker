@@ -87,7 +87,7 @@ class CreateBind extends Component {
           graph={this.props.create.graph}/>
           
         {
-          this.props.create.graph ?
+          (this.props.create.graph && this.props.create.activeRoom) ?
           <div style={{position: "absolute", top: "5%", left: "50%", width: "45%", zIndex: -1}}>
             <EventWindow />
           </div> : null
