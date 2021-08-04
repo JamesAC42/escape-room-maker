@@ -3,8 +3,8 @@ import mapQueries from "../queries/mapQueries";
 // Database action for getting all maps created by a certain user
 const getUserMaps = (db: any, userid: string): Promise<Array<any>> => {
   return new Promise((resolve: any, reject: any) => {
+    
     // Construct the database query
-
     const query = {
       name: "get-user-maps",
       text: mapQueries.getUserMaps,

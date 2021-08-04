@@ -1,3 +1,4 @@
+// SQL queries to be used to interact with the database; specifically the users table
 const userQueries = {
   createUser:
     "INSERT INTO users(uid, username, password, email, creation_date, dob, verified, display_name, admin, rated, settings, played, favorites) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)",

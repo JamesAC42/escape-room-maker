@@ -1,9 +1,11 @@
 import getUserFavorites from "../dbActions/getUserFavorites";
 import setUserFavorites from "../dbActions/setUserFavorites";
 
-// API Controller for removing a favorite from a user's list of favorites.
-// Takes a request and response object, as well as a database object
-// The map id of the favorite to be removed is in the req body
+/*
+  API Controller for removing a favorite from a user's list of favorites.
+ Takes a request and response object, as well as a database object
+ The map id of the favorite to be removed is in the req body
+*/
 const removeFavorite = (req: any, res: any, db: any) => {
   // Get the map id from the req body
   const { mapid } = req.body;

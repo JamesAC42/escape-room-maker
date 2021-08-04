@@ -7,6 +7,7 @@ const setUserFavorites = (
   favorites: Array<string>
 ): Promise<any> => {
   return new Promise((resolve: any, reject: any) => {
+    
     // Construct the database query
     const query = {
       name: "set-user-favorites",

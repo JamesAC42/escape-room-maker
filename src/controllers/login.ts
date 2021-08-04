@@ -1,12 +1,10 @@
-/*
-  handles the process of a user logging in
- */
 const bcrypt = require("bcrypt");
 import getMapsFromIds from "../dbActions/getMapsFromIds";
 import userQueries from "../queries/userQueries";
 
 // API endpoint for logging in
 const login = (req: any, res: any, db: any) => {
+
   // Extract the provided email and password from the req body
   const { email, password } = req.body;
 
@@ -100,8 +98,8 @@ const login = (req: any, res: any, db: any) => {
                   });
                 }
               })
-              .catch((e: any) => {
-                console.log(e);
+              .catch((e: Error) => {
+                console.error(e);
                 res.send({
                   success: false,
                   error: "User does not exist",
@@ -116,8 +114,8 @@ const login = (req: any, res: any, db: any) => {
         });
       }
     })
-    .catch((e: any) => {
-      console.log(e);
+    .catch((e: Error) => {
+      console.error(e);
       res.send({
         success: false,
         error: "User does not exist",

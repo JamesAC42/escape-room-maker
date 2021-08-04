@@ -1,6 +1,9 @@
+// Define some custom types
 type uuid = string;
 type timestamp = number;
 
+// The Map stores all meta information
+// about a map, as well as the graph
 export interface IMap {
   uid: uuid;
   creator: uuid;
@@ -16,6 +19,8 @@ export interface IMap {
   graph: IRoomGraph;
 }
 
+// The room graph stores the grid of rooms 
+// and their data and coordinates
 export interface IRoomGraph {
   startRoom: uuid;
   endRoom: uuid;
@@ -30,6 +35,7 @@ export interface IRoomGraph {
   };
 }
 
+// Stores location of a room
 interface ICoordinates {
   x: number;
   y: number;
@@ -42,6 +48,7 @@ enum Direction {
   WEST,
 }
 
+// Data stored in a room
 export interface IRoom {
   uid: uuid;
   event: IRoomEvent;
@@ -54,6 +61,7 @@ export interface IRoom {
   };
 }
 
+// Data stored in a door
 export interface IDoor {
   uid: uuid;
   rooms: Array<uuid>;
@@ -63,29 +71,37 @@ export interface IDoor {
   };
 }
 
+// Event information
 interface IEvent {
   sourceRoom: uuid;
-  pageData: string; // TODO: type this
+  pageData: string;
   completed: boolean;
   description: string;
 }
 
+// Possible Tile types, or images that would be displayed
+// on a Room grid cell
 enum Tiles {}
 
+// Events for rooms have extra information
 export interface IRoomEvent extends IEvent {
   image: string;
   tile: Tiles;
 }
 
+// Rooms with items store the items they contain
 export interface IItemRoomEvent extends IRoomEvent {
   items: Array<IItem>;
 }
 
+// Door events have extra information compared to normal
+// Events
 export interface IDoorEvent extends IEvent {
   door: uuid;
   destRoom: uuid;
 }
 
+// Data stored in an item
 export interface IItem {
   name: string;
   uid: uuid;
@@ -93,6 +109,7 @@ export interface IItem {
   image: string;
 }
 
+// Data associated with a player
 export interface IPlayer {
   name: string;
   inventory: Array<IItem>;
@@ -100,6 +117,7 @@ export interface IPlayer {
   image: string;
 }
 
+// A rating on a map
 export interface IRating {
   author: uuid;
   timestamp: timestamp;

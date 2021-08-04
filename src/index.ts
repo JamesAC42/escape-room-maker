@@ -1,3 +1,7 @@
+// The main entry point of the server process. Creates the
+// clients for the cache, the database, instantiates the express server and
+// passes it to the WebRouter to handle connections
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const redis = require("redis");
@@ -16,8 +20,11 @@ const conString = `postgres://${conInfo.username}:${conInfo.password}@localhost:
 const client = new pg.Client(conString);
 client.connect();
 
+// Create the express server
 const app = express();
 
+// Adding some middleware to handle request body and
+// sessions
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -34,5 +41,6 @@ app.use(
   })
 );
 
+// Create a WebRouter and listen for requests
 const wr = new WebRouter(app, client, redisClient);
 wr.listen();

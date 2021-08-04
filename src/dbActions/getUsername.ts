@@ -1,7 +1,4 @@
-/*
-  retrieves the username of an account from a given user id
- */
-
+// Retrieves the username of an account from a given user id
 import userQueries from "../queries/userQueries"
 
 const getUsername = (db: any, userid: string): Promise<string> => {

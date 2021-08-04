@@ -1,14 +1,18 @@
-// Database action to return a list of map data object for a given list of
-// map ids
+/*
+  Database action to return a list of map data objects for a given list of
+  map IDs
+*/
 const getMapsFromIds = (db: any, ids: Array<string>): Promise<Array<any>> => {
   return new Promise((resolve: any, reject: any) => {
+
     // If there were no ids then just resolve an empty list
     if (ids.length === 0) {
       resolve([]);
       return;
     }
 
-    // Construct the query string
+    // Construct the query string dynamically so that we
+    // search for multiple maps
     const params = ids.map((id: string, index: number) => {
       return "$" + (index + 1);
     });

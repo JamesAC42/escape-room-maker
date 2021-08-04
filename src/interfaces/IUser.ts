@@ -1,3 +1,4 @@
+// Data stored in a User object
 type timestamp = number;
 export interface IUser {
   uid: string;

@@ -3,9 +3,11 @@ import setUserFavorites from "../dbActions/setUserFavorites";
 import { IMap } from "../interfaces/IMap";
 import getMap from "../dbActions/getMap";
 
-// API controller for adding a map to a user's favorites list.
-// Takes a req and res object, and a database object.
-// The map id to be added is in the req body
+/*
+ API controller for adding a map to a user's favorites list.
+ Takes a req and res object, and a database object.
+ The map id to be added is in the req body
+*/
 const addFavorite = (req: any, res: any, db: any) => {
   // Get the map id from the req body
   const { mapid } = req.body;

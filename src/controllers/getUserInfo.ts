@@ -1,17 +1,18 @@
-/*
-  retrieves user data for a user with a given id
-  used by the query getUser in userQueries.ts
- */
 import getMapsFromIds from "../dbActions/getMapsFromIds";
 import userQueries from "../queries/userQueries";
 
-// API endpoint for getting a user's information when requesting a session
+/*
+  API endpoint that retrieves user data for a user with a given id.
+  Used by the query getUser in userQueries.ts
+ */
 const getUserInfo = (req: any, res: any, db: any) => {
+
+  // Print out some diagnostic info
   console.log("Session requested...");
   console.log(`sessionID: ${req.session.id}`);
   console.log(`key: ${req.session.key}`);
 
-  // check if the client has a session, get the userid
+  // Check if the client has a session, get the userid
   const userId = req.session.key;
   if (userId === undefined) {
     res.send({ loggedout: true });
@@ -79,8 +80,8 @@ const getUserInfo = (req: any, res: any, db: any) => {
         });
       }
     })
-    .catch((e: any) => {
-      console.log(e);
+    .catch((e: Error) => {
+      console.error(e);
       res.send({
         loggedout: true,
         success: false,

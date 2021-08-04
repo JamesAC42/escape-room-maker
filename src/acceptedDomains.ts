@@ -1,3 +1,4 @@
+// Email domains that are allowed
 const domains = [
   /* Default domains included */
   "aol.com",
@@ -179,30 +180,7 @@ const domains = [
   "zipmail.com.br",
   "globo.com",
   "globomail.com",
-  "oi.com.br",
-
-  /* Cockmail domains */
-  "cock.li",
-  "airmail.cc",
-  "420blaze.it",
-  "aaathats3as.com",
-  "cumallover.me",
-  "goat.si",
-  "horsefucker.org",
-  "national.shitposting.agency",
-  "tfwno.gf",
-  "cock.lu",
-  "cock.email",
-  "firemail.cc",
-  "memeware.net",
-  "cocaine.ninja",
-  "waifu.club",
-  "dicksinhisan.us",
-  "loves.dicksinhisan.us",
-  "wants.dicksinhisan.us",
-  "dicksinmyan.us",
-  "loves.dicksinmyan.us",
-  "wants.dicksinmyan.us",
+  "oi.com.br"
 ];
 
 export default domains;
