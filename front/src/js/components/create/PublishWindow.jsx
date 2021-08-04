@@ -35,6 +35,7 @@ class PublishWindowState {
     this.description = "";
     this.tags = [];
     this.redirect = "";
+    this.error = "";
   }
 }
 
@@ -66,11 +67,10 @@ class PublishWindowBind extends Component {
     return className;
   }
   publish() {
-    if (this.state.title === "") return;
-    if (this.state.description === "") return;
-    console.log("the graph is:");
-    console.log(this.props.create.graph);
-    console.log(JSON.stringify(this.props.create.graph));
+    if (this.state.title === "" || this.state.description === "") {
+      this.setState({ error: "Invalid input: Need title and description" });
+      return;
+    }
     fetch("/api/createMap/", {
       method: "POST",
       headers: {
@@ -153,6 +153,7 @@ class PublishWindowBind extends Component {
             >
               PUBLISH
             </div>
+            <div className="publish-error">{this.state.error}</div>
           </div>
         </div>
       </div>
