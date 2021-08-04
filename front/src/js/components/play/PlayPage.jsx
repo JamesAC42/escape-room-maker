@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import PlayContainer from "./PlayContainer";
 
+// Stores the state for the page state
 class PlayPageState {
   constructor() {
     this.map = undefined;
@@ -40,7 +41,9 @@ class PlayPage extends Component {
     return (
       <div className="container">
         {this.state.map !== undefined ? (
-          <PlayContainer graph={this.state.map.graph} />
+          <PlayContainer 
+            graph={this.state.map.graph}
+            uid={this.state.map.uid} />
         ) : null}
       </div>
     );
