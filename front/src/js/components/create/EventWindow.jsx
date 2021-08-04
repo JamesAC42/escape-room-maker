@@ -159,16 +159,6 @@ class EventWindowBind extends Component {
     
     let newGraph = {...this.props.create.graph};
     
-    // the start room cannot be removed
-    if(this.props.create.graph.startRoom == this.props.create.activeRoom) {
-      alert("You cannot remove the start room.");
-      return;
-    }
-    // the end room cannot be removed
-    if(this.props.create.graph.endRoom == this.props.create.activeRoom) {
-      alert("You cannot remove the end room.");
-      return;
-    }
     // the end room cannot be removed
     if(Object.keys(this.props.create.graph.graph).length == 1) {
       alert("You cannot remove the only room.");
@@ -217,6 +207,12 @@ class EventWindowBind extends Component {
           );
         }
         // remove the room from the graph
+        if(newGraph.startRoom == oldActive) {
+          newGraph.startRoom = null;
+        }
+        if(newGraph.endRoom == oldActive) {
+          newGraph.endRoom = null;
+        }
         delete newGraph.graph[oldActive];
         delete newGraph.coordinates[oldActive];
         this.props.setGraph(newGraph);
