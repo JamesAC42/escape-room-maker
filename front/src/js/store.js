@@ -4,7 +4,6 @@ import create from "./reducers/create";
 import settings from "./reducers/settings";
 import session from "./reducers/session";
 import userinfo from "./reducers/userinfo";
-import eventWindow from "./reducers/eventWindow";
 
 // The default, initial state of the redux store
 let initState = {
@@ -33,7 +32,7 @@ let initState = {
     activeRoom: undefined,
     graph: undefined,
     map: undefined,
-  },
+  }
 };
 
 // Combines the reducers to bind them to the store
@@ -42,7 +41,6 @@ const escapeRoomReducer = combineReducers({
   session,
   userinfo,
   create,
-  eventWindow,
 });
 
 const configureStore = (reducer, initState) => {

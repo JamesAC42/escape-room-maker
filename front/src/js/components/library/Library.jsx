@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "../../../css/Library.scss";
-import MapCard from "./MapCard";
 import MapItem from "../MapItem";
 import libData from "../../mock-data/libData";
 import tagData from "../../mock-data/tagData";
