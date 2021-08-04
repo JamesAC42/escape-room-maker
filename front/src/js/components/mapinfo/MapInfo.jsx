@@ -22,19 +22,26 @@ const mapDispatchToProps = {
   setFavorites: userinfoActions.setFavorites,
 };
 
+// Stores the state information for the map to be displayed
 class MapInfoState {
   constructor() {
     this.map = {};
   }
 }
 
+// The MapInfo component class shows all information about a 
+// given map
 class MapInfoBind extends Component {
   state;
   constructor(props) {
     super(props);
     this.state = new MapInfoState();
   }
+  // After the component mounts, make a request to the API to
+  // get the map's data
   componentDidMount() {
+
+    // Get the map ID from the URL parameters
     const id = this.props.match.params.id;
     if (id === undefined) return;
     fetch("/api/getMap?id=" + id, {
@@ -47,6 +54,7 @@ class MapInfoBind extends Component {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
+          // Set the data after receiving it
           this.setState({ map: data.map });
         } else {
           console.log(data);
@@ -56,6 +64,8 @@ class MapInfoBind extends Component {
         console.error("Error: " + error);
       });
   }
+
+  // Determines whether the current map is bookmarked by the user
   isFavorite() {
     let favorites = [];
     let currentMap = this.props.match.params.id;
@@ -64,7 +74,11 @@ class MapInfoBind extends Component {
     });
     return favorites.indexOf(currentMap);
   }
+
+  // Toggles whether the current map is bookmarked
   toggleFavorite() {
+    
+    // Determine whether to remove or add it as a favorite
     let index = this.isFavorite();
     let url;
     if (index === -1) {
@@ -72,6 +86,8 @@ class MapInfoBind extends Component {
     } else {
       url = "/api/removeFavorite";
     }
+
+    // Make the API request to update the user information
     fetch(url, {
       method: "POST",
       headers: {
@@ -83,6 +99,9 @@ class MapInfoBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
+
+        // If successful, update the information client-side
+        // to be in sync with the server
         if (data.success) {
           let favorites = [...this.props.userinfo.favorites];
           if (index === -1) {
@@ -100,6 +119,9 @@ class MapInfoBind extends Component {
         console.error("Error: " + error);
       });
   }
+
+  // Renders the bookmark icon as filled or not
+  // depending on whether the map is a bookmark
   renderBookmarkIcon() {
     if (this.props.session.loggedin) {
       return (
@@ -118,10 +140,16 @@ class MapInfoBind extends Component {
       return null;
     }
   }
+
+  // Render the component
   render() {
+
+    // If the map id wasn't provided, redirect to the home page
     if (this.props.match.params.id === undefined) {
       return <Redirect to="/" />;
     }
+
+    // Don't render until the map is loaded
     if (this.state.map.uid === undefined) return null;
     let map = { ...this.state.map };
     return (
@@ -131,7 +159,7 @@ class MapInfoBind extends Component {
             <div className="mapinfo-col mapinfo-meta">
               <div className="meta-row">
                 <div className="mapinfo-title title">
-                  {map.title} by John Smith
+                  {map.title} by {map.creator}
                 </div>
                 {this.renderBookmarkIcon()}
               </div>

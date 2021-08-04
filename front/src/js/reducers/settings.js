@@ -1,5 +1,6 @@
 import { handleActions } from "redux-actions";
 
+// Reducer for mutating the settings relevant redux store data
 const settings = handleActions(
   {
     TOGGLE_DARKMODE: (state, action) => {

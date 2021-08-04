@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "../../css/grid.scss";
 import tileImage from "../../images/woodtile.png";
 
+// The state of the grid
 export class GridBaseState {
   cellSize;
   height;
@@ -13,6 +14,7 @@ export class GridBaseState {
   }
 }
 
+// The parent grid class that the other grids inherit from
 class GridBase extends Component {
   constructor(props) {
     super(props);
@@ -21,6 +23,9 @@ class GridBase extends Component {
     this.tile = new Image();
     this.tile.src = tileImage;
   }
+
+  // Abstract event handler functions that the children of this component
+  // will implement
 
   handleHover(e) {
     return;
@@ -34,7 +39,10 @@ class GridBase extends Component {
     return;
   }
 
+  // Basic method to render a cell of the grid
   drawCell(id, x, y, tile) {
+
+    // Get the coordinates of the grid and render the tile there
     const { topLeftX, topLeftY } = this.topLeftFromBase(x, y);
     this.ctx.drawImage(
       tile,
@@ -43,13 +51,15 @@ class GridBase extends Component {
       this.state.cellSize,
       this.state.cellSize
     );
-
+    
+    // Render the outline of the grid cell
     this.ctx.strokeStyle = "#d9806c";
     this.ctx.beginPath();
     this.ctx.rect(topLeftX, topLeftY, this.state.cellSize, this.state.cellSize);
     this.ctx.stroke();
   }
 
+  // Check if coordinates exist at a given point
   coordsExist(destCoords) {
     let exists = false;
     Object.keys(this.props.graph.coordinates).forEach((c) => {
@@ -61,6 +71,7 @@ class GridBase extends Component {
     return exists;
   }
 
+  // Get the ID of the room at a set of given coordinates
   getRoomFromCoordinates(targetX, targetY) {
     const graph = { ...this.props.graph };
     let activeRoom = null;
@@ -81,6 +92,7 @@ class GridBase extends Component {
     return activeRoom;
   }
 
+  // Get the raster canvas coordinates from the grid coordinates
   topLeftFromBase(x, y) {
     const centerX = this.state.width / 2;
     const centerY = this.state.height / 2;
@@ -94,6 +106,7 @@ class GridBase extends Component {
     return { topLeftX, topLeftY };
   }
 
+  // Render all the cells in the grid
   drawGridCells() {
     this.ctx.lineWidth = 3;
     Object.keys(this.props.graph.coordinates).forEach((roomid) => {
@@ -102,6 +115,7 @@ class GridBase extends Component {
     });
   }
 
+  // Render the grid
   renderGrid() {
     if (this.props.graph === undefined) return;
     requestAnimationFrame(() => {
@@ -112,6 +126,7 @@ class GridBase extends Component {
     });
   }
 
+  // Detect when the props change and when to rerender
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.graph === undefined && this.props.graph !== undefined) {
       this.renderGrid();
@@ -122,11 +137,13 @@ class GridBase extends Component {
     }
   }
 
+  // Initialize the grid context when the component mounts
   componentDidMount() {
     this.ctx = this.canvas.current.getContext("2d");
     this.renderGrid();
   }
 
+  // Render the canvas
   render() {
     return (
       <div>

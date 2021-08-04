@@ -13,6 +13,7 @@ const mapDispatchToProps = {
   setGraph: createPageActions.setGraph,
 };
 
+// Titles for all tag buttons
 const _tags = [
   "Fun",
   "Not Fun",
@@ -29,26 +30,36 @@ const _tags = [
   "Mystery",
 ];
 
+// Stores the state and input values for the Publish Window
 class PublishWindowState {
   constructor() {
     this.title = "";
     this.description = "";
     this.tags = [];
     this.redirect = "";
+    this.error = "";
   }
 }
 
+
+// The PublishWindow component class used for publishing a map,
+// allows user to give more information to a map including 
+// a title, description, and tags
 class PublishWindowBind extends Component {
   state;
   constructor(props) {
     super(props);
     this.state = new PublishWindowState();
   }
+
+  // Event handler for when a user changes some text input fields
   handleText(e) {
     this.setState({
       [e.target.name]: e.target.value,
     });
   }
+
+  // Event handler for setting the active tags when a user clicks one
   toggleTag(tag) {
     let activeTags = [...this.state.tags];
     if (activeTags.indexOf(tag) === -1) {
@@ -58,6 +69,8 @@ class PublishWindowBind extends Component {
     }
     this.setState({ tags: activeTags });
   }
+
+  // Returns the css class for a tag based on whether it is active or not
   tagClass(tag) {
     let className = "tag";
     if (this.state.tags.indexOf(tag) !== -1) {
@@ -65,12 +78,16 @@ class PublishWindowBind extends Component {
     }
     return className;
   }
+
+  // Method to send the map data to the server to publish the new map
   publish() {
-    if (this.state.title === "") return;
-    if (this.state.description === "") return;
-    console.log("the graph is:");
-    console.log(this.props.create.graph);
-    console.log(JSON.stringify(this.props.create.graph));
+
+    // Validate that a title and description have been given
+    if (this.state.title === "" || this.state.description === "") {
+      this.setState({ error: "Invalid input: Need title and description" });
+      return;
+    }
+    // Make the API request
     fetch("/api/createMap/", {
       method: "POST",
       headers: {
@@ -87,6 +104,9 @@ class PublishWindowBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
+
+        // If successful, reset the data and redirect to the
+        // map info page of the new map
         if (data.success) {
           this.setState({ redirect: data.id });
           this.props.setActiveRoom(undefined);
@@ -101,6 +121,8 @@ class PublishWindowBind extends Component {
       });
   }
   render() {
+
+    // If we need to redirect after publishing, then do so here
     if (this.state.redirect !== "") {
       return <Redirect to={"/map/" + this.state.redirect} />;
     }
@@ -153,6 +175,7 @@ class PublishWindowBind extends Component {
             >
               PUBLISH
             </div>
+            <div className="publish-error">{this.state.error}</div>
           </div>
         </div>
       </div>

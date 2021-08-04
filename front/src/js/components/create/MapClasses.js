@@ -1,3 +1,4 @@
+// Represents a map card
 export class Map {
   constructor() {
     this.title = "";
@@ -8,6 +9,7 @@ export class Map {
   }
 }
 
+// Represents the data structure containing the rooms of the graph
 export class Graph {
   constructor() {
     this.startRoom = null;
@@ -18,6 +20,7 @@ export class Graph {
   }
 }
 
+// Represents the data structure containing the events in each room
 export class Room {
   constructor(uid, coordinates) {
     this.uid = uid;
@@ -53,6 +56,7 @@ export class Door {
   }
 }
 
+// Stores x and y coordinates
 export class Coordinates {
   constructor(x, y) {
     this.x = x;

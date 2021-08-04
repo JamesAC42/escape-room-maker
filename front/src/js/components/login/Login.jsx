@@ -34,18 +34,23 @@ const mapDispatchToProps = {
   setLoaded: userinfoActions.setLoaded,
 };
 
+// Login component class for displaying the login page
 class LoginBind extends Component {
   state;
   constructor(props) {
     super(props);
     this.state = new LoginState();
   }
+
+  // Toggles whether the Login or Registration form is being displayed
   toggleMode() {
     this.setState({
       mode: this.state.mode ? 0 : 1,
       error: "",
     });
   }
+
+  // Event handler for setting the login input values
   updateLoginValues(e) {
     this.setState({
       ...this.state,
@@ -55,6 +60,8 @@ class LoginBind extends Component {
       },
     });
   }
+
+  // Event handler for setting the register input values
   updateRegisterValues(e) {
     this.setState({
       ...this.state,
@@ -64,6 +71,9 @@ class LoginBind extends Component {
       },
     });
   }
+
+  // Storing all of the user data received from the server
+  // into the redux store via reducer
   setData(data) {
     this.props.setEmail(data.email);
     this.props.setUsername(data.username);
@@ -80,6 +90,8 @@ class LoginBind extends Component {
     this.props.setLoaded();
     this.props.login();
   }
+
+  // Determines whether to call login or register when the submit button is clicked
   submit() {
     if (this.state.mode) {
       this.login();
@@ -87,13 +99,18 @@ class LoginBind extends Component {
       this.register();
     }
   }
+
+  // Validates the user input and makes a request to the server to login
   login() {
+    // Ensure non-empty input
     if (this.state.login.email === "" || this.state.login.password === "") {
       this.setState({
         error: "Invalid input.",
       });
       return;
     }
+
+    // Send login request to server
     fetch("/api/login/", {
       method: "POST",
       headers: {
@@ -105,6 +122,10 @@ class LoginBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
+
+        // If the request went through successfully, 
+        // set the data and login. 
+        // Otherwise, display the error message
         if (data.success) {
           this.setData(data);
           this.setState({
@@ -121,7 +142,10 @@ class LoginBind extends Component {
         console.error("Error: " + error);
       });
   }
+
+  // Validate the user input and contact the server to register
   register() {
+    // ensure non-empty input
     if (
       this.state.register.email === "" ||
       this.state.register.username === "" ||
@@ -134,18 +158,21 @@ class LoginBind extends Component {
       });
       return;
     }
+    // Verify proper email format
     if (!validateEmail(this.state.register.email)) {
       this.setState({
         error: "Invalid email address.",
       });
       return;
     }
+    // Verify passwords match
     if (this.state.register.password !== this.state.register.passwordConfirm) {
       this.setState({
         error: "Passwords do not match.",
       });
       return;
     }
+    // Send register request to server
     fetch("/api/register/", {
       method: "POST",
       headers: {
@@ -157,6 +184,10 @@ class LoginBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
+
+        // If the request went through successfully, 
+        // set the data and login. 
+        // Otherwise, display the error message
         if (data.success) {
           this.setData(data);
           this.setState({
@@ -173,7 +204,11 @@ class LoginBind extends Component {
         console.error("Error: " + error);
       });
   }
+  
+  // Render the component on the page
   render() {
+
+    // Redirect to the proper page if the user is alread logged in
     if (this.props.session.loggedin) {
       let params = this.props.match.params.from;
       if (params !== undefined) {

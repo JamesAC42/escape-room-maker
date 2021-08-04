@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import '../../../css/EventWindow.scss';
-import '../../../css/grid.scss';
+import React, { Component } from "react";
+import "../../../css/EventWindow.scss";
+import "../../../css/grid.scss";
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import store from "../../store";
 import { createPageActions } from '../../actions/actions';
 
@@ -22,8 +22,8 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = {
   setActiveRoom: createPageActions.setActiveRoom,
-  setGraph: createPageActions.setGraph
-}
+  setGraph: createPageActions.setGraph,
+};
 
 class EventWindowState {
   constructor(pr) {
@@ -33,12 +33,11 @@ class EventWindowState {
 }
 
 class EventWindowBind extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = new EventWindowState(props);
     this.props.create.graph.startRoom = Object.keys(this.props.create.graph.graph)[0];
     this.props.create.graph.endRoom = Object.keys(this.props.create.graph.graph)[0];
-    console.log(this.props);
   }
   
   checkEmptyTextBoxes = (prevProps, props) => {
@@ -63,7 +62,7 @@ class EventWindowBind extends Component {
   selectForEvent = (e) => {
     if(this.state.currentSelected != e.target.value) {
       if(this.checkEmptyTextBoxes(this.props, this.props)) {
-        alert("aaaaYou cannot leave any input fields empty.");
+        alert("You cannot leave any input fields empty.");
         return;
       }
       this.setState({
@@ -104,8 +103,8 @@ class EventWindowBind extends Component {
       tempGraph.endRoom = this.props.create.activeRoom;
       this.props.setGraph(tempGraph);
     }
-  }
-  
+  };
+
   // coordinate combinations to use for checking if a square can be removed
   combinations = [
     [0, 1],
@@ -123,21 +122,26 @@ class EventWindowBind extends Component {
     
     // this loops over the squares adjacent to the one being checked
     // combinations of (a, b) => (-1, -1), (-1, 1), (1, -1), (1, 1)
-    this.combinations.forEach(c => {
+    this.combinations.forEach((c) => {
       // goes over all of the rooms to find a room with coordinates:
       //    "x" = (x + i) + c[0]
       //    "y" = (y + j) + c[1]
-      Object.entries(this.props.create.graph.coordinates).forEach(adjacent => {
-        // if an adjacent room is found, this square will still be accessible, so return true
-        if(adjacent[1].x == x+i + c[0] && adjacent[1].y == y+j + c[1] &&
-            !(x == x+i + c[0] && y == y+j + c[1])) {
-          valid = true;
+      Object.entries(this.props.create.graph.coordinates).forEach(
+        (adjacent) => {
+          // if an adjacent room is found, this square will still be accessible, so return true
+          if (
+            adjacent[1].x == x + i + c[0] &&
+            adjacent[1].y == y + j + c[1] &&
+            !(x == x + i + c[0] && y == y + j + c[1])
+          ) {
+            valid = true;
+          }
         }
-      });
+      );
     });
     return valid;
-  }
-  
+  };
+
   // attempts to remove the active room from the map
   removeRoom = () => {
     
@@ -153,9 +157,9 @@ class EventWindowBind extends Component {
       alert("You cannot remove the end room");
       return;
     }
-    if(window.confirm("Are you sure you want to remove this room?")) {
+    if (window.confirm("Are you sure you want to remove this room?")) {
       // check that the surrounding rooms are still accessible
-      
+
       // gets the coordinates of the active room
       let coords = this.props.create.graph.coordinates[this.props.create.activeRoom];
       let valid = true;
@@ -172,10 +176,10 @@ class EventWindowBind extends Component {
                 valid = false;
               }
             }
-          })
+          });
         });
       }
-      
+
       // if the room can be deleted
       if(valid) {
         let tempGraph = this.props.create.graph;
@@ -183,17 +187,22 @@ class EventWindowBind extends Component {
         this.props.setGraph(tempGraph);
         let oldActive = this.props.create.activeRoom;
         // set the active room to another room in the map
-        if(this.props.create.activeRoom != Object.keys(this.props.create.graph.graph)[0]) {
-          this.props.setActiveRoom(Object.keys(this.props.create.graph.graph)[0]);
-        }
-        else {
-          this.props.setActiveRoom(Object.keys(this.props.create.graph.graph)[1]);
+        if (
+          this.props.create.activeRoom !=
+          Object.keys(this.props.create.graph.graph)[0]
+        ) {
+          this.props.setActiveRoom(
+            Object.keys(this.props.create.graph.graph)[0]
+          );
+        } else {
+          this.props.setActiveRoom(
+            Object.keys(this.props.create.graph.graph)[1]
+          );
         }
         // remove the room from the graph
         delete newGraph.graph[oldActive];
         delete newGraph.coordinates[oldActive];
         this.props.setGraph(newGraph);
-        
       }
       // alert the user if the room cannot be deleted
       else {
@@ -230,14 +239,15 @@ class EventWindowBind extends Component {
   
   // handles error checking for empty text boxes when trying to switch rooms
   componentDidUpdate(prevProps) {
-    if(prevProps.create.activeRoom != this.props.create.activeRoom) {
+    if(this.props.create.graph.graph[prevProps.create.activeRoom] &&
+      prevProps.create.activeRoom != this.props.create.activeRoom) {
       if(this.checkEmptyTextBoxes(prevProps, this.props)) {
         alert("You cannot leave any input fields empty.");
         this.props.setActiveRoom(prevProps.create.activeRoom);
       }
     }
   }
-  
+
   render() {
     return(
       <div id="ew" className="canvas grid" style={this.props.create.activeRoom == undefined ? styles.hidden : this.props.style}>
@@ -251,15 +261,21 @@ class EventWindowBind extends Component {
             <input className="direction-button" type="button" onClick={this.selectForEvent.bind(this)} id="e-btn" value="E" style={this.getButtonStyle(this.state.currentSelected == "E")}/>
           </div>
         </h1>
-        
+
         <h4>Choose event type:</h4>
         <select id="event-select" name="eventType" value={this.getRoomOrDoor().eventType} onChange={this.onChangeStateVal.bind(this)}>
           <option val="None">No Event</option>
           <option val="Question">Question</option>
         </select>
-        
-        <div style={{"float": "right"}}>
-          <input className="remove-button" type="button" onClick={this.removeRoom} id="remove-btn" value="Remove"/>
+
+        <div style={{ float: "right" }}>
+          <input
+            className="remove-button"
+            type="button"
+            onClick={this.removeRoom}
+            id="remove-btn"
+            value="Remove"
+          />
         </div>
         
         <div style={{"float": "right"}}>
@@ -276,7 +292,7 @@ class EventWindowBind extends Component {
             <h4>Event answer:</h4>
             <input id="event-a" type="text" placeholder="Question" name="eventA" value={this.getRoomOrDoor().eventA} onChange={this.onChangeStateVal.bind(this)} style={this.getTextBoxStyle("eventA")}></input>
           </div>
-          
+
           <h4>
             Require Item to Trigger Event: <input type="checkbox" id="req-item-choice" name="requireItem" checked={this.getRoomOrDoor().requireItem}
               onChange={this.onChangeStateVal.bind(this)}></input>
@@ -287,7 +303,7 @@ class EventWindowBind extends Component {
             <h4>Item Name:</h4>
             <input id="req-item-name" type="text" placeholder="Name" name="requireItemName" value={this.getRoomOrDoor().requireItemName} onChange={this.onChangeStateVal.bind(this)} style={this.getTextBoxStyle("requireItemName")}></input>
           </div>
-          
+
           <h4>
             Item received upon solving: <input type="checkbox" id="solve-item-choice" name="solveItem" checked={this.getRoomOrDoor().solveItem} onChange={this.onChangeStateVal.bind(this)}></input>
           </h4>

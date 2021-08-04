@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+// Component that renders a text box that can resize itself based on the input length
 class ResizableTextBox extends Component {
   constructor(props) {
     super(props);

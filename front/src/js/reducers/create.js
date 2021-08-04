@@ -1,5 +1,6 @@
 import { handleActions } from "redux-actions";
 
+// Reducer for mutating the creation relevant redux store data
 const create = handleActions(
   {
     SET_ACTIVE_ROOM: (state, action) => {

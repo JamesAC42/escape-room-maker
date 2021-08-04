@@ -6,8 +6,11 @@ import play from "../../../images/play.png";
 import pause from "../../../images/pause.png";
 import restart from "../../../images/restart.png";
 
-const totalTime = 600;
+import {Link} from 'react-router-dom';
 
+const totalTime = 60;
+
+// Contains the information about the play state
 class PlayContainerState {
   constructor() {
     this.currentRoom = undefined;
@@ -23,16 +26,21 @@ class PlayContainerState {
   }
 }
 
+// Render the grid and the controls for playing
 class PlayContainer extends Component {
   constructor(props) {
     super(props);
     this.state = new PlayContainerState();
   }
+
+  // Remove the timer interval when the component unmounts
   componentWillUnmount() {
     if (this.intervalId !== undefined) {
       clearInterval(this.intervalId);
     }
   }
+
+  // Initialize the end room if it is null (legacy)
   componentDidMount() {
     let endRoom = this.props.graph.endRoom;
     if (!endRoom) {
@@ -42,20 +50,43 @@ class PlayContainer extends Component {
       endRoom,
     });
   }
+
+  // Restart the map
   restart() {
+
+    // Get the start room in case it is null (legacy)
+    let startRoom = this.props.graph.startRoom;
+    if(!startRoom) {
+      startRoom = Object.keys(this.props.graph.graph)[0];
+    }
+    // Reset the map information
     this.setState({
-      playing: false,
-      currentRoom: undefined,
+      playing: true,
+      currentRoom: startRoom,
       remainingTime: totalTime,
-      visitedRooms: [],
+      visitedRooms: [startRoom],
       currentEvent: undefined,
       showEventWindow: false,
-      gameOver: false
+      gameOver: false,
+      gameWin:false
     });
-    if (this.intervalId !== undefined) {
-      clearInterval(this.intervalId);
-    }
+
+    // Reset the timer information
+    if(this.intervalId) clearInterval(this.intervalId);
+    this.intervalId = setInterval(() => {
+      let remainingTime = this.state.remainingTime - 1;
+      if (remainingTime <= 0) {
+        this.restart();
+        this.setState({
+          gameOver: true,
+        });
+        remainingTime = 0;
+      }
+      this.setState({ remainingTime: remainingTime });
+    }, 1000);
   }
+
+  // Either resume playing from paused or initialize the first play
   play() {
     let room = this.state.currentRoom;
     let remainingTime = this.state.remainingTime;
@@ -76,6 +107,8 @@ class PlayContainer extends Component {
       gameOver: false,
       gameWin: false,
     });
+
+    // Start the timer
     this.intervalId = setInterval(() => {
       let remainingTime = this.state.remainingTime - 1;
       if (remainingTime <= 0) {
@@ -88,27 +121,40 @@ class PlayContainer extends Component {
       this.setState({ remainingTime: remainingTime });
     }, 1000);
   }
+
+  // Stop the timer and set playing to false
   pause() {
     this.setState({ playing: false });
     clearInterval(this.intervalId);
   }
+
+  // Set the current room
   setCurrentRoom(room) {
     this.setState({ currentRoom: room });
   }
+
+  // Add a room to the set of visited rooms
   setVisited(room) {
     let visitedRooms = [...this.state.visitedRooms];
     if (visitedRooms.indexOf(room) === -1) {
       visitedRooms.push(room);
       this.setState({ visitedRooms });
       if(room === this.props.graph.endRoom) {
-        this.setState({ gameWin: true });
-        this.restart();
+        this.setState({ 
+          gameWin: true,
+          playing: false
+        });
+        if(this.intervalId) clearInterval(this.intervalId);
       }
     }
   }
+
+  // Set the current event
   setCurrentEvent(event) {
     this.setState({ currentEvent: event });
   }
+
+  // Render the grid and controls
   render() {
     return (
       <div className="play-container card">
@@ -152,14 +198,20 @@ class PlayContainer extends Component {
             <img src={pause} alt="paused" />
           </div>
         ) : null}
-        {this.state.gameOver ? (
-          <div className="game-over flex center-child">
-            <div className="game-over-message">GAME OVER</div>
-          </div>
-        ) : null}
-        {this.state.gameWin ? (
-          <div className="game-win flex center-child">
-            <div className="game-win-message">YOU WIN!</div>
+        {this.state.gameOver || this.state.gameWin ? (
+          <div className={`game-end flex flex-col flex-center ${this.state.gameOver ? "game-end-lose" : "game-end-win"}`}>
+            <div className="game-end-message">{this.state.gameOver ? "GAME OVER" : "YOU WIN"}</div>
+            <div className="game-end-links flex flex-row">
+              {
+                !this.state.gameOver ?
+                <div className="game-end-link">
+                  <Link to={"/map/" + this.props.uid}>
+                    Rate This Map
+                  </Link>
+                </div> : null
+              }
+              <div className="game-end-link"><Link to={"/library"}>Browse More</Link></div>
+            </div>
           </div>
         ) : null}
       </div>

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "../../css/Window.scss";
 
+// Component that render a simple popup window
 class Window extends Component {
   render() {
     let headText = this.props.headText;

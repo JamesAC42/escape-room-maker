@@ -17,6 +17,9 @@ import MapInfo from "./components/mapinfo/MapInfo";
 import NavBar from "./components/NavBar";
 import PlayPage from "./components/play/PlayPage";
 
+// Main top level component that handles which page component to render
+// based on the url path. Also renders the session handler, the navbar,
+// and the background stripe
 function App() {
   return (
     <div>

@@ -13,6 +13,8 @@ const mapDispatchToProps = {
   unload: userinfoActions.unload,
 };
 
+// Page component class that logs the user out when loaded
+// if the user was currently logged in
 class LogoutBind extends Component {
   state;
   constructor(props) {
@@ -21,6 +23,8 @@ class LogoutBind extends Component {
       redirect: false,
     };
   }
+  // Make the API request to the server to destroy the
+  // user's session and log them out
   componentDidMount() {
     if (!this.props.session.loggedin) return;
     fetch("/api/destroySession", {
@@ -28,6 +32,7 @@ class LogoutBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
+        // Redirect to the home page after logging out
         if (data.success) {
           this.setState({ redirect: true });
         }
@@ -36,10 +41,13 @@ class LogoutBind extends Component {
         console.error("Error: " + error);
       });
   }
+  // Reset all of the user information and log out
   componentWillUnmount() {
     this.props.unload();
     this.props.logout();
   }
+
+  // Render the component to redirect if necessary
   render() {
     if (this.state.redirect || !this.props.session.loggedin) {
       return <Redirect to="/" />;

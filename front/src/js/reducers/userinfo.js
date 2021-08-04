@@ -1,5 +1,6 @@
 import { handleActions } from "redux-actions";
 
+// Reducer for mutating the user info relevant redux store data
 const userinfo = handleActions(
   {
     SET_USERNAME: (state, action) => ({

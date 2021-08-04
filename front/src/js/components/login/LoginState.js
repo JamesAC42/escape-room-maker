@@ -1,3 +1,5 @@
+
+// State class for login information
 export class ILogin {
   email;
   password;
@@ -7,6 +9,7 @@ export class ILogin {
   }
 }
 
+// State class for register information
 export class IRegister {
   email;
   username;
@@ -22,6 +25,7 @@ export class IRegister {
   }
 }
 
+// State class for login and registration information
 export class LoginState {
   mode;
   login;
