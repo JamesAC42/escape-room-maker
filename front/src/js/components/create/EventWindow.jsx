@@ -38,6 +38,7 @@ class EventWindowBind extends Component {
     this.state = new EventWindowState(props);
     this.props.create.graph.startRoom = Object.keys(this.props.create.graph.graph)[0];
     this.props.create.graph.endRoom = Object.keys(this.props.create.graph.graph)[0];
+    console.log(this.props);
   }
   
   checkEmptyTextBoxes = (prevProps, props) => {
