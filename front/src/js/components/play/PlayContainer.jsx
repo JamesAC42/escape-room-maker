@@ -6,7 +6,9 @@ import play from "../../../images/play.png";
 import pause from "../../../images/pause.png";
 import restart from "../../../images/restart.png";
 
-const totalTime = 600;
+import {Link} from 'react-router-dom';
+
+const totalTime = 60;
 
 class PlayContainerState {
   constructor() {
@@ -43,18 +45,32 @@ class PlayContainer extends Component {
     });
   }
   restart() {
+    let startRoom = this.props.graph.startRoom;
+    if(!startRoom) {
+      startRoom = Object.keys(this.props.graph.graph)[0];
+    }
     this.setState({
-      playing: false,
-      currentRoom: undefined,
+      playing: true,
+      currentRoom: startRoom,
       remainingTime: totalTime,
-      visitedRooms: [],
+      visitedRooms: [startRoom],
       currentEvent: undefined,
       showEventWindow: false,
-      gameOver: false
+      gameOver: false,
+      gameWin:false
     });
-    if (this.intervalId !== undefined) {
-      clearInterval(this.intervalId);
-    }
+    if(this.intervalId) clearInterval(this.intervalId);
+    this.intervalId = setInterval(() => {
+      let remainingTime = this.state.remainingTime - 1;
+      if (remainingTime <= 0) {
+        this.restart();
+        this.setState({
+          gameOver: true,
+        });
+        remainingTime = 0;
+      }
+      this.setState({ remainingTime: remainingTime });
+    }, 1000);
   }
   play() {
     let room = this.state.currentRoom;
@@ -101,8 +117,11 @@ class PlayContainer extends Component {
       visitedRooms.push(room);
       this.setState({ visitedRooms });
       if(room === this.props.graph.endRoom) {
-        this.setState({ gameWin: true });
-        this.restart();
+        this.setState({ 
+          gameWin: true,
+          playing: false
+        });
+        if(this.intervalId) clearInterval(this.intervalId);
       }
     }
   }
@@ -152,14 +171,20 @@ class PlayContainer extends Component {
             <img src={pause} alt="paused" />
           </div>
         ) : null}
-        {this.state.gameOver ? (
-          <div className="game-over flex center-child">
-            <div className="game-over-message">GAME OVER</div>
-          </div>
-        ) : null}
-        {this.state.gameWin ? (
-          <div className="game-win flex center-child">
-            <div className="game-win-message">YOU WIN!</div>
+        {this.state.gameOver || this.state.gameWin ? (
+          <div className={`game-end flex flex-col flex-center ${this.state.gameOver ? "game-end-lose" : "game-end-win"}`}>
+            <div className="game-end-message">{this.state.gameOver ? "GAME OVER" : "YOU WIN"}</div>
+            <div className="game-end-links flex flex-row">
+              {
+                !this.state.gameOver ?
+                <div className="game-end-link">
+                  <Link to={"/map/" + this.props.uid}>
+                    Rate This Map
+                  </Link>
+                </div> : null
+              }
+              <div className="game-end-link"><Link to={"/library"}>Browse More</Link></div>
+            </div>
           </div>
         ) : null}
       </div>
