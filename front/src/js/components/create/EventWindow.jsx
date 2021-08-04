@@ -36,8 +36,6 @@ class EventWindowBind extends Component {
   constructor(props) {
     super(props);
     this.state = new EventWindowState(props);
-    this.props.create.graph.startRoom = Object.keys(this.props.create.graph.graph)[0];
-    this.props.create.graph.endRoom = Object.keys(this.props.create.graph.graph)[0];
   }
   
   checkEmptyTextBoxes = (prevProps, props) => {
@@ -149,12 +147,17 @@ class EventWindowBind extends Component {
     
     // the start room cannot be removed
     if(this.props.create.graph.startRoom == this.props.create.activeRoom) {
-      alert("You cannot remove the start room");
+      alert("You cannot remove the start room.");
       return;
     }
     // the end room cannot be removed
     if(this.props.create.graph.endRoom == this.props.create.activeRoom) {
-      alert("You cannot remove the end room");
+      alert("You cannot remove the end room.");
+      return;
+    }
+    // the end room cannot be removed
+    if(Object.keys(this.props.create.graph.graph).length == 1) {
+      alert("You cannot remove the only room.");
       return;
     }
     if (window.confirm("Are you sure you want to remove this room?")) {
@@ -206,7 +209,7 @@ class EventWindowBind extends Component {
       }
       // alert the user if the room cannot be deleted
       else {
-        alert("Removing this square will make part of the map inaccessible");
+        alert("Removing this square will make part of the map inaccessible.");
       }
     }
   }
