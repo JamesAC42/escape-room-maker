@@ -29,13 +29,12 @@ export class Room {
     this.doorVals = ["N", "S", "W", "E"].map(dir => new Door(uid, dir));
     this.eventType = "No Event";
     this.requireItem = false;
-    this.requireItemName = "req item name - " + uid;
-    this.requireQuestion = true;
-    this.eventQ = "event question - " + uid;
-    this.eventA = "event answer - " + uid;
+    this.requireItemName = "Item";
+    this.eventQ = "Question";
+    this.eventA = "Answer";
     this.solveItem = false;
-    this.solveItemName = "solve item name - " + uid;
-    this.solveItemDesc = "solve item desc - " + uid;
+    this.solveItemName = "Name";
+    this.solveItemDesc = "Description";
   }
 }
 
@@ -45,13 +44,12 @@ export class Door {
     this.room = uid;
     this.eventType = "No Event";
     this.requireItem = false;
-    this.requireItemName = dir + " - req item name - " + uid;
-    this.requireQuestion = true;
-    this.eventQ = dir + " - event question - " + uid;
-    this.eventA = dir + " - event answer - " + uid;
+    this.requireItemName = "Item";
+    this.eventQ = "Question";
+    this.eventA = "Answer";
     this.solveItem = false;
-    this.solveItemName = dir + " - solve item name - " + uid;
-    this.solveItemDesc = dir + " - solve item desc - " + uid;
+    this.solveItemName = "Name";
+    this.solveItemDesc = "Description";
   }
 }
 

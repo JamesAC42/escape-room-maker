@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import store from "../../store";
 import { createPageActions } from '../../actions/actions';
 
-const styles  = {
+const styles = {
   hidden: {
     "visibility": "hidden"
   },
@@ -36,21 +36,39 @@ class EventWindowBind extends Component {
   constructor(props){
     super(props);
     this.state = new EventWindowState(props);
-    console.log("this is the store");
-    console.log(store.getState());
-    console.log("these are the props");
-    console.log(props);
-    console.log("this is the EW state");
-    console.log(this.state);
     this.props.create.graph.startRoom = Object.keys(this.props.create.graph.graph)[0];
     this.props.create.graph.endRoom = Object.keys(this.props.create.graph.graph)[0];
   }
   
-  // determines if the event if for the active room or its N, S, W, or E door
-  selectForEvent = (e) => {
-    this.setState({
-      currentSelected: e.target.value
+  checkEmptyTextBoxes = (prevProps, props) => {
+    let empty = false;
+    ["requireItemName", "eventQ", "eventA", "solveItemName", "solveItemDesc"].forEach(val => {
+      if(this.state.currentSelected == "Room") {
+        if(props.create.graph.graph[prevProps.create.activeRoom][val] == "") {
+          empty = true;
+        }
+      }
+      else {
+        if(props.create.graph.graph[prevProps.create.activeRoom].doorVals.find(y => y.dir == this.state.currentSelected)[val] == "") {
+          empty = true;
+        }
+      }
     });
+    return empty;
+  }
+  
+  // determines if the event if for the active room or its N, S, W, or E door
+  // won't change if there are empty text boxes
+  selectForEvent = (e) => {
+    if(this.state.currentSelected != e.target.value) {
+      if(this.checkEmptyTextBoxes(this.props, this.props)) {
+        alert("aaaaYou cannot leave any input fields empty.");
+        return;
+      }
+      this.setState({
+        currentSelected: e.target.value
+      });
+    }
   }
   
   // changes the event values in the store when one of the input fields changes
@@ -148,10 +166,8 @@ class EventWindowBind extends Component {
       if(Object.keys(newGraph.coordinates).length > 2) {
         this.combinations.forEach(c => {
           Object.entries(this.props.create.graph.coordinates).forEach(r => {
-            // console.log(`x=${coords.x+c[0]} y=${coords.y+c[1]} r.x=${r[1].x} r.y=${r[1].y}`);
             if(r[1].x == coords.x + c[0] && r[1].y == coords.y + c[1]) {
               if(!this.checkSquareStillValid(coords.x, coords.y, c[0], c[1])) {
-                console.log("This won't be accessible: ", r[1].x, r[1].y);
                 valid = false;
               }
             }
@@ -198,16 +214,26 @@ class EventWindowBind extends Component {
   // helper function for determining the styling of the "Room" and direction buttons
   getButtonStyle = (val) => {
     return {
-      backgroundColor: (val ? "#8ffad1" : ""),
-      borderColor: (val ? "#6fdab1" : "")
+      backgroundColor: val ? "#8ffad1" : "",
+      borderColor: val ? "#6fdab1" : ""
     }
   }
- 
+  
+  // helper function for determining the styling of the "Room" and direction buttons
+  getTextBoxStyle = (val) => {
+    return {
+      backgroundColor: this.getRoomOrDoor()[val] == "" ? "#ffcfcf" : "",
+      borderColor: this.getRoomOrDoor()[val] == "" ? "#d46363" : ""
+    }
+  }
+  
+  // handles error checking for empty text boxes when trying to switch rooms
   componentDidUpdate(prevProps) {
-    console.log("prev props", prevProps);
-    console.log("this.props", this.props);
-    if(Object.keys(prevProps.create.graph.graph).length != Object.keys(this.props.create.graph.graph).length) {
-      console.log("an update happened");
+    if(prevProps.create.activeRoom != this.props.create.activeRoom) {
+      if(this.checkEmptyTextBoxes(prevProps, this.props)) {
+        alert("You cannot leave any input fields empty.");
+        this.props.setActiveRoom(prevProps.create.activeRoom);
+      }
     }
   }
   
@@ -245,9 +271,9 @@ class EventWindowBind extends Component {
           
           <div>
             <h4>Event question:</h4>
-            <input id="event-q" type="text" placeholder="Question" name="eventQ" value={this.getRoomOrDoor().eventQ} onChange={this.onChangeStateVal.bind(this)}></input>
+            <input id="event-q" type="text" placeholder="Question" name="eventQ" value={this.getRoomOrDoor().eventQ} onChange={this.onChangeStateVal.bind(this)} style={this.getTextBoxStyle("eventQ")}></input>
             <h4>Event answer:</h4>
-            <input id="event-a" type="text" placeholder="Question" name="eventA" value={this.getRoomOrDoor().eventA} onChange={this.onChangeStateVal.bind(this)}></input>
+            <input id="event-a" type="text" placeholder="Question" name="eventA" value={this.getRoomOrDoor().eventA} onChange={this.onChangeStateVal.bind(this)} style={this.getTextBoxStyle("eventA")}></input>
           </div>
           
           <h4>
@@ -258,7 +284,7 @@ class EventWindowBind extends Component {
           {/* This is only rendered if the event requires an item to be triggered */}
           <div style={this.getRoomOrDoor().requireItem && this.getRoomOrDoor().eventType !== "No Event" ? styles.visible : styles.hidden}>
             <h4>Item Name:</h4>
-            <input id="req-item-name" type="text" placeholder="Name" name="requireItemName" value={this.getRoomOrDoor().requireItemName} onChange={this.onChangeStateVal.bind(this)}></input>
+            <input id="req-item-name" type="text" placeholder="Name" name="requireItemName" value={this.getRoomOrDoor().requireItemName} onChange={this.onChangeStateVal.bind(this)} style={this.getTextBoxStyle("requireItemName")}></input>
           </div>
           
           <h4>
@@ -268,9 +294,9 @@ class EventWindowBind extends Component {
           {/* This is only rendered if an item will be awarded when completing the event */}
           <div style={this.getRoomOrDoor().solveItem && this.getRoomOrDoor().eventType !== "No Event" ? styles.visible : styles.hidden}>
             <h4>Item Name:</h4>
-            <input id="solve-item-name" type="text" placeholder="Name" name="solveItemName" value={this.getRoomOrDoor().solveItemName} onChange={this.onChangeStateVal.bind(this)}></input>
+            <input id="solve-item-name" type="text" placeholder="Name" name="solveItemName" value={this.getRoomOrDoor().solveItemName} onChange={this.onChangeStateVal.bind(this)} style={this.getTextBoxStyle("solveItemName")}></input>
             <h4>Item Description:</h4>
-            <input id="solve-item-desc" type="text" placeholder="Description" name="solveItemDesc" value={this.getRoomOrDoor().solveItemDesc} onChange={this.onChangeStateVal.bind(this)}></input>
+            <input id="solve-item-desc" type="text" placeholder="Description" name="solveItemDesc" value={this.getRoomOrDoor().solveItemDesc} onChange={this.onChangeStateVal.bind(this)} style={this.getTextBoxStyle("solveItemDesc")}></input>
           </div>
         </div>
       </div>
