@@ -88,7 +88,7 @@ class ProfileBind extends Component {
                 <MapItem
                   id={map.uid}
                   title={map.title}
-                  creator={this.props.userinfo.username}
+                  creator={map.creator}
                   createdOn={new Date(map.createdOn)}
                   rating={5}
                   description={map.description}
@@ -112,7 +112,7 @@ class ProfileBind extends Component {
                 <MapItem
                   id={map.uid}
                   title={map.title}
-                  creator={this.props.userinfo.username}
+                  creator={map.creator}
                   createdOn={new Date(map.createdOn)}
                   rating={5}
                   description={map.description}
