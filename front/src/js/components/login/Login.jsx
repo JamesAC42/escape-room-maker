@@ -88,12 +88,15 @@ class LoginBind extends Component {
     }
   }
   login() {
+    // Ensure non-empty input
     if (this.state.login.email === "" || this.state.login.password === "") {
       this.setState({
         error: "Invalid input.",
       });
       return;
     }
+
+    // Send login request to server
     fetch("/api/login/", {
       method: "POST",
       headers: {
@@ -122,6 +125,7 @@ class LoginBind extends Component {
       });
   }
   register() {
+    // ensure non-empty input
     if (
       this.state.register.email === "" ||
       this.state.register.username === "" ||
@@ -134,18 +138,21 @@ class LoginBind extends Component {
       });
       return;
     }
+    // Verify proper email format
     if (!validateEmail(this.state.register.email)) {
       this.setState({
         error: "Invalid email address.",
       });
       return;
     }
+    // Verify passwords match
     if (this.state.register.password !== this.state.register.passwordConfirm) {
       this.setState({
         error: "Passwords do not match.",
       });
       return;
     }
+    // Send register request to server
     fetch("/api/register/", {
       method: "POST",
       headers: {
@@ -173,6 +180,7 @@ class LoginBind extends Component {
         console.error("Error: " + error);
       });
   }
+  
   render() {
     if (this.props.session.loggedin) {
       let params = this.props.match.params.from;

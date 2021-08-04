@@ -38,21 +38,29 @@ class GridBind extends GridBase {
   }
 
   handleClick(e) {
+    // If there is an add room plus button
     if (this.state.activeAddButton.room !== null) {
       this.addNewRoom();
     } else {
+      // Identify room clicked
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       const room = this.getRoomFromCoordinates(x, y);
       if (room !== null) {
         if (room !== this.props.activeRoom) {
+          // If room clicked exists set it to active room
           this.props.setActiveRoom(room);
         }
       }
     }
   }
 
+  // Calaculate new cords moving one unit in the given direction.
+  // 0 = North
+  // 1 = East
+  // 2 = South
+  // 3 = West
   moveCoords(x, y, direction) {
     if (direction === 0) {
       return { x, y: y + 1 };
@@ -64,6 +72,7 @@ class GridBind extends GridBase {
       return { x: x - 1, y };
     }
   }
+
 
   handleHover(e) {
     const rect = e.target.getBoundingClientRect();
@@ -96,6 +105,7 @@ class GridBind extends GridBase {
     }
   }
 
+  // If mouse leaves room remove add button
   handleMouseLeave(e) {
     this.setState({
       activeAddButton: {
@@ -140,7 +150,7 @@ class GridBind extends GridBase {
 
     let direction = this.state.activeAddButton.direction;
     let newCoords = this.moveCoords(coords.x, coords.y, direction);
-
+    // Make sure new room fits into 11x11 grid
     if (
       newCoords.x < -5 ||
       newCoords.x > 5 ||
@@ -150,10 +160,10 @@ class GridBind extends GridBase {
     ) {
       return;
     }
-
+    // Create new room
     const roomId = nanoid();
     const newRoom = new Room(roomId, newCoords);
-
+    // Add room to graph
     graph.graph[roomId] = newRoom;
     graph.coordinates[roomId] = newCoords;
     this.props.setGraph(graph);
@@ -207,7 +217,9 @@ class GridBind extends GridBase {
   }
 
   drawAddButton() {
+    // If hovered room exists
     if (this.state.activeAddButton.room !== null) {
+      // Set vals
       let room = this.state.activeAddButton.room;
       let coords = this.props.graph.graph[room].coordinates;
       let { topLeftX, topLeftY } = this.topLeftFromBase(coords.x, coords.y);
@@ -218,6 +230,7 @@ class GridBind extends GridBase {
       const cellSizeHalf = this.state.cellSize / 2;
 
       let x, y;
+      // Compute drawing coords
       if (direction === 0) {
         x = topLeftX + cellSizeHalf;
         y = topLeftY;
@@ -233,6 +246,7 @@ class GridBind extends GridBase {
       }
       x -= plusSizeHalf;
       y -= plusSizeHalf;
+      //render image
       this.ctx.drawImage(this.plus, x, y, plusSize, plusSize);
     }
   }

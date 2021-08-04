@@ -13,6 +13,7 @@ const mapDispatchToProps = {
   setGraph: createPageActions.setGraph,
 };
 
+// Titles for all tag buttons
 const _tags = [
   "Fun",
   "Not Fun",
