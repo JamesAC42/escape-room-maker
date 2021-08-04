@@ -48,6 +48,7 @@ class MapInfoBind extends Component {
       .then((data) => {
         if (data.success) {
           this.setState({ map: data.map });
+          console.log(data.map);
         } else {
           console.log(data);
         }
@@ -131,7 +132,7 @@ class MapInfoBind extends Component {
             <div className="mapinfo-col mapinfo-meta">
               <div className="meta-row">
                 <div className="mapinfo-title title">
-                  {map.title} by John Smith
+                  {map.title} by {map.creator}
                 </div>
                 {this.renderBookmarkIcon()}
               </div>
