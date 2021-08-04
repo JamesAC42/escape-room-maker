@@ -26,7 +26,30 @@ export class Room {
     this.start = false;
     this.end = false;
     this.coordinates = coordinates;
-    this.doors = {};
+    this.doorVals = ["N", "S", "W", "E"].map(dir => new Door(dir));
+    this.eventType = "No Event";
+    this.requireItem = false;
+    this.requireItemName = "req item name - " + uid;
+    this.requireQuestion = true;
+    this.eventDesc = "event desc - " + uid;
+    this.solveItem = false;
+    this.solveItemName = "solve item name - " + uid;
+    this.solveItemDesc = "solve item desc - " + uid;
+  }
+}
+
+export class Door {
+  constructor(uid, dir) {
+    this.dir = dir;
+    this.room = uid;
+    this.eventType = "No Event";
+    this.requireItem = false;
+    this.requireItemName = dir + " - req item name" + uid;
+    this.requireQuestion = true;
+    this.eventDesc = dir + " - event desc" + uid;
+    this.solveItem = false;
+    this.solveItemName = dir + " - solve item name" + uid;
+    this.solveItemDesc = dir + " - solve item desc" + uid;
   }
 }
 

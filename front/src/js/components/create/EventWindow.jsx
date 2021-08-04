@@ -35,10 +35,7 @@ class EventWindowState {
     this.item_req = ir;
     this.desc = d;
     this.item_solve = is;
-    this.roomVals = null;
     this.currentSelected = "Room";
-    this.start = Object.keys(this.props.create.graph.graph)[0];
-    this.end = Object.keys(this.props.create.graph.graph)[0];
   }
 }
 
@@ -54,16 +51,16 @@ class EventWindowBind extends Component {
     console.log(this.state);
     this.props.create.graph.startRoom = Object.keys(this.props.create.graph.graph)[0];
     this.props.create.graph.endRoom = Object.keys(this.props.create.graph.graph)[0];
-    this.props.create.graph.graph[Object.keys(this.props.create.graph.graph)[0]].start = true;
-    this.props.create.graph.graph[Object.keys(this.props.create.graph.graph)[0]].end = true;
   }
   
   // sets the event type
   eventChoose = (e) => {
-    this.state.roomVals.find(x => x.room == this.props.create.activeRoom).eventType = e.target.value;
+    var tempGraph = this.props.create.graph;
+    tempGraph.graph[this.props.create.activeRoom].eventType = e.target.value;
     this.setState({
       event_type: e.target.value
     });
+    this.setGraph(tempGraph);
   }
   
   // determines if the event if for the active room or its N, S, W, or E door
@@ -88,81 +85,13 @@ class EventWindowBind extends Component {
     });
   }
   
-  mapGraph = () => {
-    console.log("the props");
-    console.log(this.props);
-    
-    
-    console.log(this.props.create.graph == undefined ? "graph und" : "rooms: " + Object.keys(this.props.create.graph.graph));
-    if(this.props.create.graph) {
-      if(this.state.roomVals == null) {
-        console.log("typeof", typeof this.props.create.graph.graph);
-        this.state.roomVals = Object.keys(this.props.create.graph.graph).map(x => ({
-          room: x,
-          eventType: "No Event",
-          requireItem: false,
-          requireItemName: "req item name" + x,
-          requireQuestion: true,
-          eventDesc: "event desc" + x,
-          solveItem: false,
-          solveItemName: "solve item name" + x,
-          solveItemDesc: "solve item desc" + x,
-          doorVals: ["N", "S", "W", "E"].map(dir => ({
-            dir: dir,
-            room: x,
-            eventType: "No Event",
-            requireItem: false,
-            requireItemName: dir + " - req item name" + x,
-            requireQuestion: true,
-            eventDesc: dir + " - event desc" + x,
-            solveItem: false,
-            solveItemName: dir + " - solve item name" + x,
-            solveItemDesc: dir + " - solve item desc" + x,
-          }))
-        }));
-      }
-      else {
-        if(this.state.roomVals.length != Object.keys(this.props.create.graph.graph).length){
-          Object.keys(this.props.create.graph.graph).forEach(x => {
-            if(!this.state.roomVals.find(r => r.room == x)) {
-              this.state.roomVals.push({
-                room: x,
-                eventType: "No Event",
-                requireItem: false,
-                requireItemName: "req item name - " + x,
-                requireQuestion: true,
-                eventDesc: "event desc - " + x,
-                solveItem: false,
-                solveItemName: "solve item name - " + x,
-                solveItemDesc: "solve item desc - " + x,
-                doorVals: ["N", "S", "W", "E"].map(dir => ({
-                  dir: dir,
-                  room: x,
-                  eventType: "No Event",
-                  requireItem: false,
-                  requireItemName: dir + " - req item name - " + x,
-                  requireQuestion: true,
-                  eventDesc: dir + " - event desc - " + x,
-                  solveItem: false,
-                  solveItemName: dir + " - solve item name - " + x,
-                  solveItemDesc: dir + " - solve item desc - " + x,
-                }))
-              });
-            }
-          });
-        }
-      }
-    }
-    console.log("roomVals: ", this.state.roomVals);
-  }
-  
   setInitRenderVals = () => {
-    if(this.state.roomVals !== null && this.props.create.activeRoom) {
+    if(this.props.create.activeRoom) {
       if(this.state.currentSelected == "Room") {
-        var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom);
+        var currSelect = this.props.create.graph.graph[this.props.create.activeRoom];
       }
       else {
-        var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).doorVals.find(y => y.dir == this.state.currentSelected);
+        var currSelect = this.props.create.graph.graph[this.props.create.activeRoom].doorVals.find(y => y.dir == this.state.currentSelected);
       }
       this.setState({
         event_type: currSelect.eventType,
@@ -172,34 +101,22 @@ class EventWindowBind extends Component {
     }
   }
   
-  setEWInputs = () => {
-    if(this.state.roomVals !== null && this.props.create.activeRoom) {
-      if(this.state.currentSelected == "Room") {
-        var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom);
-      }
-      else {
-        var currSelect = this.state.roomVals.find(x => x.room == this.props.create.activeRoom).doorVals.find(y => y.dir == this.state.currentSelected);
-      }
-      document.getElementById("event-select").value = currSelect.eventType;
-      document.getElementById("req-item-choice").checked = currSelect.requireItem;
-      document.getElementById("req-item-name").value = currSelect.requireItemName;
-      document.getElementById("event-desc").value = currSelect.eventDesc;
-      document.getElementById("solve-item-choice").checked = currSelect.solveItem;
-      document.getElementById("solve-item-name").value = currSelect.solveItemName;
-      document.getElementById("solve-item-desc").value = currSelect.solveItemDesc;
-    }
-  }
-  
   onChangeStateVal = (e) => {
+    
+    console.log("cr graph.graph:", this.props.create.graph.graph);
+    console.log("activeRoom:", this.props.create.activeRoom);
     var valType = e.target.type == "checkbox" ? "checked" : "value";
     if(this.state.currentSelected == "Room") {
-      this.state.roomVals.find(x => x.room == this.props.create.activeRoom)[e.target.attributes.name.value] = e.target[valType];
+      var tempGraph = this.props.create.graph;
+      tempGraph.graph[this.props.create.activeRoom][e.target.attributes.name.value] = e.target[valType];
+      this.props.setGraph(tempGraph);
     }
     else {
-      this.state.roomVals.find(x => x.room == this.props.create.activeRoom)
+      var tempGraph = this.props.create.graph;
+      tempGraph.graph[this.props.create.activeRoom]
                 .doorVals.find(y => y.dir == this.state.currentSelected)[e.target.attributes.name.value] = e.target[valType];
+      this.props.setGraph(tempGraph);
     }
-    this.props.setRoomVals(this.state.roomVals);
     if(e.target.attributes.name.value == "requireItem") {
       this.onReqItem(e.target[valType]);
     }
@@ -210,30 +127,16 @@ class EventWindowBind extends Component {
   
   setStart = () => {
     let graph = {...this.props.create.graph};
-    if(this.state.end != this.props.create.activeRoom) {
-      if(this.state.start) {
-        graph.graph[this.state.start].start = false;
-      }
-      this.setState({
-        start: this.props.create.activeRoom
-      });
+    if(graph.endRoom != this.props.create.activeRoom) {
       graph.startRoom = this.props.create.activeRoom;
-      graph.graph[this.props.create.activeRoom].start = true;
       this.props.setGraph(graph);
     }
   }
   
   setEnd = () => {
     let graph = {...this.props.create.graph};
-    if(this.state.start != this.props.create.activeRoom) {
-      if(this.state.end) {
-        graph.graph[this.state.end].end = false;
-      }
-      this.setState({
-        end: this.props.create.activeRoom
-      });
+    if(graph.startRoom != this.props.create.activeRoom) {
       graph.endRoom = this.props.create.activeRoom;
-      graph.graph[this.props.create.activeRoom].end = true;
       this.props.setGraph(graph);
     }
   }
@@ -276,12 +179,12 @@ class EventWindowBind extends Component {
     var newGraph = {...this.props.create.graph};
     
     // the start room cannot be removed
-    if(this.state.start == this.props.create.activeRoom) {
+    if(this.props.create.graph.startRoom == this.props.create.activeRoom) {
       alert("You cannot remove the start room");
       return;
     }
     // the end room cannot be removed
-    if(this.state.end == this.props.create.activeRoom) {
+    if(this.props.create.graph.endRoom == this.props.create.activeRoom) {
       alert("You cannot remove the end room");
       return;
     }
@@ -299,7 +202,7 @@ class EventWindowBind extends Component {
       if(Object.keys(newGraph.coordinates).length > 2) {
         this.combinations.forEach(c => {
           Object.entries(this.props.create.graph.coordinates).forEach(r => {
-            console.log(`x=${coords.x+c[0]} y=${coords.y+c[1]} r.x=${r[1].x} r.y=${r[1].y}`);
+            // console.log(`x=${coords.x+c[0]} y=${coords.y+c[1]} r.x=${r[1].x} r.y=${r[1].y}`);
             if(r[1].x == coords.x + c[0] && r[1].y == coords.y + c[1]) {
               if(!this.checkSquareStillValid(coords.x, coords.y, c[0], c[1])) {
                 console.log("This won't be accessible: ", r[1].x, r[1].y);
@@ -312,11 +215,9 @@ class EventWindowBind extends Component {
       
       // if the room can be deleted
       if(valid) {
-        this.setState({
-          roomVals: this.state.roomVals.filter(x => {
-            return x.room !== this.props.create.activeRoom;
-          })
-        });
+        var tempGraph = this.props.create.graph;
+        delete tempGraph.graph[this.props.create.activeRoom];
+        this.props.setGraph(tempGraph);
         var oldActive = this.props.create.activeRoom;
         // set the active room to another room in the map
         if(this.props.create.activeRoom != Object.keys(this.props.create.graph.graph)[0]) {
@@ -339,10 +240,15 @@ class EventWindowBind extends Component {
   }
 
   componentDidMount() {
-    this.mapGraph();
     this.setInitRenderVals();
-        
-    this.setEWInputs();
+  }
+  
+  componentDidUpdate(prevProps, props) {
+    console.log("prev props", prevProps);
+    console.log("this.props", this.props);
+    if(Object.keys(prevProps.create.graph.graph).length != Object.keys(this.props.create.graph.graph).length) {
+      console.log("an update happened");
+    }
   }
   
   render() {
@@ -370,8 +276,8 @@ class EventWindowBind extends Component {
         </div>
         
         <div style={{"float": "right"}}>
-            <input className="se-button" type="button" onClick={this.setStart} id="start-btn" value="Start"  style={{backgroundColor: (this.state.start == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.start == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
-            <input className="se-button" type="button" onClick={this.setEnd} id="end-btn" value="End"  style={{backgroundColor: (this.state.end == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.state.end == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
+            <input className="se-button" type="button" onClick={this.setStart} id="start-btn" value="Start"  style={{backgroundColor: (this.props.create.graph.startRoom == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.props.create.graph.startRoom == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
+            <input className="se-button" type="button" onClick={this.setEnd} id="end-btn" value="End"  style={{backgroundColor: (this.props.create.graph.endRoom == this.props.create.activeRoom ? "#8ffad1" : ""), borderColor: (this.props.create.graph.endRoom == this.props.create.activeRoom ? "#6fdab1" : "")}}/>
         </div>
         
         {/* This is rendered if the room has an event attached to it */}
@@ -407,7 +313,7 @@ class EventWindowBind extends Component {
         </div>
         
         
-      </div>  
+      </div>
     );
   }
 }

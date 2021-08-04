@@ -33,6 +33,9 @@ let initState = {
     graph: undefined,
     map: undefined,
   },
+  eventWindow: {
+    roomVals: undefined,
+  }
 };
 
 const escapeRoomReducer = combineReducers({
