@@ -174,7 +174,7 @@ class Library extends Component {
               description={map.description}
               timesCompleted={map.times_completed}
               tags={JSON.parse(map.tags)}
-              ratings={JSON.parse(map.ratings)}
+              reviews={map.reviews}
             />
           ))}
           {this.state.visibleMaps.length === 0 ? (

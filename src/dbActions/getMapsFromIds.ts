@@ -17,9 +17,9 @@ const getMapsFromIds = (db: any, ids: Array<string>): Promise<Array<any>> => {
       return "$" + (index + 1);
     });
     const queryString =
-      "SELECT maps.uid, created_on, tags, ratings, description, title, times_completed, users.username as creator FROM maps INNER JOIN users ON (maps.creator = users.uid) WHERE maps.uid IN (" +
+      "SELECT maps.uid, created_on, tags, ratings, description, maps.title, times_completed, COUNT(reviews.map_id) as reviews, users.username as creator FROM maps INNER JOIN users ON (maps.creator = users.uid) LEFT JOIN reviews ON (maps.uid = reviews.map_id) WHERE maps.uid IN (" +
       params.join(",") +
-      ")";
+      ") GROUP BY maps.uid, users.username";
 
     // Construct the query object
     const query = {
@@ -41,6 +41,7 @@ const getMapsFromIds = (db: any, ids: Array<string>): Promise<Array<any>> => {
           });
           // Resolve the map data
           resolve(r.rows);
+          
         }
       })
       .catch((err: Error) => {

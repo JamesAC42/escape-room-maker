@@ -9,7 +9,7 @@ export interface IMap {
   creator: uuid;
   createdOn: timestamp;
   lastModified: timestamp;
-  ratings: Array<IRating>;
+  ratings: Array<IReview>;
   timeLimit: number;
   tags: Array<string>;
   description: string;
@@ -118,11 +118,23 @@ export interface IPlayer {
 }
 
 // A rating on a map
-export interface IRating {
+export interface IReview {
+  uid:uuid;
   author: uuid;
   timestamp: timestamp;
   map: uuid;
-  header: string;
-  text: string;
+  title: string;
+  body: string;
   rating: 1 | 2 | 3 | 4 | 5;
+}
+
+// Rating information stored in the table
+export interface IReviewDB {
+  uid:uuid,
+  mapId:uuid, 
+  userId:uuid,
+  timestamp:Date,
+  rating: 1 | 2 | 3 | 4 | 5,
+  title:string,
+  body:string
 }

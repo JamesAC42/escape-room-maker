@@ -100,7 +100,7 @@ class ProfileBind extends Component {
                   description={map.description}
                   timesCompleted={map.times_completed}
                   tags={map.tags}
-                  ratings={map.ratings}
+                  reviews={map.reviews}
                 />
               ))}
               {this.state.myMaps.length === 0 ? (
@@ -124,7 +124,7 @@ class ProfileBind extends Component {
                   description={map.description}
                   timesCompleted={map.times_completed}
                   tags={map.tags}
-                  ratings={map.ratings}
+                  reviews={map.reviews}
                 />
               ))}
               {this.props.userinfo.favorites.length === 0 ? (

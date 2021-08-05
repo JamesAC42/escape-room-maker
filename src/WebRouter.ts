@@ -8,6 +8,9 @@ import getAllMaps from "./controllers/getAllMaps";
 import getMyMaps from "./controllers/getMyMaps";
 import addFavorite from "./controllers/addFavorite";
 import removeFavorite from "./controllers/removeFavorite";
+import getMapReviews from "./controllers/getMapReviews";
+import addReview from "./controllers/addReview";
+import removeReview from "./controllers/removeReview";
 
 const http = require("http");
 
@@ -49,6 +52,10 @@ class WebRouter {
       getMyMaps(req, res, this.database);
     });
 
+    this.app.get("/api/getMapReviews", (req:any, res:any) => {
+      getMapReviews(req, res, this.database);
+    });
+
     this.app.post("/api/login", (req: any, res: any) => {
       login(req, res, this.database);
     });
@@ -67,6 +74,14 @@ class WebRouter {
 
     this.app.post("/api/removeFavorite", (req: any, res: any) => {
       removeFavorite(req, res, this.database);
+    });
+
+    this.app.post("/api/addReview", (req:any, res:any) => {
+      addReview(req, res, this.database);
+    });
+
+    this.app.post("/api/removeReview", (req:any, res:any) => {
+      removeReview(req, res, this.database);
     });
   }
 

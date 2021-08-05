@@ -6,12 +6,15 @@ import Rating from "../Rating";
 import bookmarkOutline from "../../../images/bookmark-outline.png";
 import bookmarkFilled from "../../../images/bookmark-filled.png";
 
-import { connect } from "react-redux";
+import { connect, ReactReduxContext } from "react-redux";
 import { userinfoActions } from "../../actions/actions";
+
+import {getData} from '../getData';
 
 import "../../../css/mapinfo/mapinfo.scss";
 
 import GridBase from "../GridBase";
+import Review from "./Review";
 
 const mapStateToProps = (state, props) => ({
   session: state.session,
@@ -26,6 +29,15 @@ const mapDispatchToProps = {
 class MapInfoState {
   constructor() {
     this.map = {};
+    this.averageRating = 1;
+    this.reviews = [];
+    this.showReviewForm = false;
+    this.reviewForm = {
+      title: '',
+      body: '',
+      rating: 1
+    };
+    this.reviewFormError = '';
   }
 }
 
@@ -44,25 +56,32 @@ class MapInfoBind extends Component {
     // Get the map ID from the URL parameters
     const id = this.props.match.params.id;
     if (id === undefined) return;
-    fetch("/api/getMap?id=" + id, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        withCredentials: "true",
-      },
+    getData("/api/getMap?id=" + id)
+    .then(data => {
+      if (data.success) {
+        // Set the data after receiving it
+        this.setState({ map: data.map });
+      } else {
+        console.log(data);
+      }
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          // Set the data after receiving it
-          this.setState({ map: data.map });
-        } else {
-          console.log(data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error: " + error);
-      });
+    getData("/api/getMapReviews?id=" + id)
+    .then((data) => {
+      if (data.success) {
+        // Set the data after receiving it,
+        // also calculate the average rating based on the reviews
+        let total = 0;
+        data.reviews.forEach(review => {
+          total += review.rating;
+        });
+        this.setState({ 
+          reviews: data.reviews,
+          averageRating: Math.round(total / data.reviews.length)
+        });
+      } else {
+        console.log(data);
+      }
+    })
   }
 
   // Determines whether the current map is bookmarked by the user
@@ -106,7 +125,6 @@ class MapInfoBind extends Component {
           let favorites = [...this.props.userinfo.favorites];
           if (index === -1) {
             favorites.push(data.map);
-            console.log(data.map);
           } else {
             favorites.splice(index, 1);
           }
@@ -141,6 +159,110 @@ class MapInfoBind extends Component {
     }
   }
 
+  // Toggles whether the review form is visible
+  toggleReviewForm() {
+    this.setState({
+      showReviewForm: !this.state.showReviewForm
+    })
+  }
+
+  // Event handler for setting the user input in the 
+  // review form
+  handleFormInput(e) {
+    this.setState({
+      ...this.state,
+      reviewForm: {
+        ...this.state.reviewForm,
+        [e.target.name]: e.target.value,
+      },
+    });
+  }
+
+  // Event handler for changing the rating when making
+  // a review
+  handleStarChange(i) {
+    this.setState({
+      ...this.state,
+      reviewForm: {
+        ...this.state.reviewForm,
+        rating: i + 1
+      }
+    })
+  }
+
+  // Gather the form data and send it to the server to add a 
+  // review to the current map
+  submitReview() {
+    if(!this.props.session.loggedin) {
+      return;
+    }
+    if(
+      this.state.reviewForm.title === '' ||
+      this.state.reviewForm.body === ''
+    ) {
+      this.setState({reviewFormError:'Invalid input.'});
+      return;
+    }
+
+    const reviewData = {
+      ...this.state.reviewForm,
+      mapId: this.props.match.params.id
+    };
+    fetch("/api/addReview/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reviewData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if(data.success) {
+
+          // Construct the review and add it to the
+          // local list of reviews to be in sync
+          let review = {
+            author:this.props.userinfo.username,
+            body:this.state.reviewForm.body,
+            rating:this.state.reviewForm.rating,
+            title:this.state.reviewForm.title,
+            uid:data.id,
+            timestamp:data.timestamp
+          };
+          let reviews = [...this.state.reviews];
+          reviews.push(review);
+
+          // Reset the form values
+          this.setState({
+            showReviewForm:false,
+            reviewForm:{
+              title: '',
+              body: '',
+              rating: 1
+            },
+            reviewFormError:'',
+            reviews
+          });
+
+        } else {
+          console.log(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error: " + error);
+      });
+
+  }
+
+  // Remove a review from the list of reviews
+  removeReview(uid) {
+    let reviews = [...this.state.reviews];
+    reviews = reviews.filter(review => {
+      return review.uid !== uid
+    });
+    this.setState({reviews});
+  }
+
   // Render the component
   render() {
 
@@ -154,12 +276,12 @@ class MapInfoBind extends Component {
     let map = { ...this.state.map };
     return (
       <div className="container mapinfo-container">
-        <div className="bumpered-container mapinfo-container card">
+        <div className="bumpered-container card">
           <div className="mapinfo-row">
             <div className="mapinfo-col mapinfo-meta">
               <div className="meta-row">
                 <div className="mapinfo-title title">
-                  {map.title} by {map.creator}
+                  {map.title} by <span className="mapinfo-creator">{map.creator}</span>
                 </div>
                 {this.renderBookmarkIcon()}
               </div>
@@ -196,7 +318,7 @@ class MapInfoBind extends Component {
             </div>
             <div className="mapinfo-col mapinfo-data">
               <div className="rating-outer flex center-child">
-                <Rating stars={4} />
+                <Rating stars={this.state.averageRating} />
               </div>
               <Link to={"/play/" + this.state.map.uid}>
                 <div className="play-button">Play</div>
@@ -208,78 +330,68 @@ class MapInfoBind extends Component {
           </div>
           <div className="mapinfo-reviews">
             <div className="mapinfo-reviews-header">
-              {map.ratings.length} ratings
+              {this.state.reviews.length} review
+              {
+                this.state.reviews.length === 1 ? "" : "s"
+              }
+              {
+                this.props.session.loggedin ?
+                <div 
+                  className="mapinfo-toggle-review-form"
+                  onClick={() => this.toggleReviewForm()}>
+                  Write a Review
+                </div> : null
+              }
             </div>
-            <div className="mapinfo-review-item">
-              <div className="mapinfo-review-title">Review title</div>
-              <div className="mapinfo-review-author">By John Smith</div>
-              <div className="mapinfo-review-body">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque
-                numquam illum voluptatum laudantium iure fugiat? Ipsam
-                consequuntur quisquam obcaecati, expedita sit numquam ipsum
-                delectus, laborum ea ut explicabo nostrum laudantium? Hic,
-                dolores quod quisquam quaerat ex possimus alias perferendis
-                quidem praesentium ipsa, assumenda aut, consequatur ullam nemo
-                eveniet officiis explicabo.
-              </div>
-              <Rating stars={Math.floor(Math.random() * 6)} />
-            </div>
-            <div className="mapinfo-review-item">
-              <div className="mapinfo-review-title">Review title</div>
-              <div className="mapinfo-review-author">By John Smith</div>
-              <div className="mapinfo-review-body">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque
-                numquam illum voluptatum laudantium iure fugiat? Ipsam
-                consequuntur quisquam obcaecati, expedita sit numquam ipsum
-                delectus, laborum ea ut explicabo nostrum laudantium? Hic,
-                dolores quod quisquam quaerat ex possimus alias perferendis
-                quidem praesentium ipsa, assumenda aut, consequatur ullam nemo
-                eveniet officiis explicabo.
-              </div>
-              <Rating stars={Math.floor(Math.random() * 6)} />
-            </div>
-            <div className="mapinfo-review-item">
-              <div className="mapinfo-review-title">Review title</div>
-              <div className="mapinfo-review-author">By John Smith</div>
-              <div className="mapinfo-review-body">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque
-                numquam illum voluptatum laudantium iure fugiat? Ipsam
-                consequuntur quisquam obcaecati, expedita sit numquam ipsum
-                delectus, laborum ea ut explicabo nostrum laudantium? Hic,
-                dolores quod quisquam quaerat ex possimus alias perferendis
-                quidem praesentium ipsa, assumenda aut, consequatur ullam nemo
-                eveniet officiis explicabo.
-              </div>
-              <Rating stars={Math.floor(Math.random() * 6)} />
-            </div>
-            <div className="mapinfo-review-item">
-              <div className="mapinfo-review-title">Review title</div>
-              <div className="mapinfo-review-author">By John Smith</div>
-              <div className="mapinfo-review-body">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque
-                numquam illum voluptatum laudantium iure fugiat? Ipsam
-                consequuntur quisquam obcaecati, expedita sit numquam ipsum
-                delectus, laborum ea ut explicabo nostrum laudantium? Hic,
-                dolores quod quisquam quaerat ex possimus alias perferendis
-                quidem praesentium ipsa, assumenda aut, consequatur ullam nemo
-                eveniet officiis explicabo.
-              </div>
-              <Rating stars={Math.floor(Math.random() * 6)} />
-            </div>
-            <div className="mapinfo-review-item">
-              <div className="mapinfo-review-title">Review title</div>
-              <div className="mapinfo-review-author">By John Smith</div>
-              <div className="mapinfo-review-body">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque
-                numquam illum voluptatum laudantium iure fugiat? Ipsam
-                consequuntur quisquam obcaecati, expedita sit numquam ipsum
-                delectus, laborum ea ut explicabo nostrum laudantium? Hic,
-                dolores quod quisquam quaerat ex possimus alias perferendis
-                quidem praesentium ipsa, assumenda aut, consequatur ullam nemo
-                eveniet officiis explicabo.
-              </div>
-              <Rating stars={Math.floor(Math.random() * 6)} />
-            </div>
+
+            {
+              this.state.showReviewForm && this.props.session.loggedin ?
+              <div className="mapinfo-form-outer flex flex-row">
+                <div className="input-outer flex flex-col">
+                  <input 
+                    type="text" 
+                    name="title" 
+                    placeholder="Title"
+                    onChange={(e) => this.handleFormInput(e)}
+                    value={this.state.reviewForm.title}/>
+                  <textarea 
+                    name="body" 
+                    id="reviewtext" 
+                    cols="30" 
+                    rows="5" 
+                    placeholder="Review..."
+                    onChange={(e) => this.handleFormInput(e)}
+                    value={this.state.reviewForm.body}>
+                    </textarea>
+                </div>
+                <div className="submit-outer flex flex-col">
+                  <div className="stars-setting">
+                    <Rating stars={this.state.reviewForm.rating} onChange={(i) => this.handleStarChange(i)}/>
+                  </div>
+                  <div className="submit-button-outer">
+                    <div 
+                      className="submit-button"
+                      onClick={() => this.submitReview()}>
+                        Submit
+                    </div>
+                  </div>
+                  <div className="form-error">{this.state.reviewFormError}</div>
+                </div>
+              </div> : null
+            }
+            {
+              this.state.reviews.length === 0 ?
+              <div className="no-reviews flex center-child">
+                This map has no reviews
+              </div> : null
+            }
+            {
+              this.state.reviews.map(review => 
+                <Review
+                  review={review}
+                  removeReview={(review) => this.removeReview(review)}/>
+              )
+            }
           </div>
         </div>
       </div>

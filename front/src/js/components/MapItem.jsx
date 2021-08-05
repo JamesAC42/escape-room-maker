@@ -38,13 +38,9 @@ class MapItem extends Component {
           ))}
         </div>
         <div className="map-stats">
-          <div className="map-played">
-            Played {this.props.timesCompleted}{" "}
-            {this.plural("time", this.props.timeCompleted)}
-          </div>
           <div className="map-ratings-amt">
-            {this.props.ratings.length}{" "}
-            {this.plural("Rating", this.props.ratings.length)}
+            {this.props.reviews}{" "}
+            {this.plural("Review", parseInt(this.props.reviews))}
           </div>
         </div>
       </div>

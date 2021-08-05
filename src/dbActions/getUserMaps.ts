@@ -19,13 +19,13 @@ const getUserMaps = (db: any, userid: string): Promise<Array<any>> => {
           map.tags = JSON.parse(map.tags);
           map.createdOn = map.created_on;
           delete map.created_on;
-          map.ratings = JSON.parse(map.ratings);
         });
         // Send the data back to the caller
         resolve(r.rows);
       })
       .catch((err: any) => {
-        reject("Error querying database");
+        console.error("Error retrieving user maps.");
+        reject(new Error(err));
       });
   });
 };
