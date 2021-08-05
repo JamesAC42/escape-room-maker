@@ -8,3 +8,4 @@ front/package-lock.json
 front/.env
 front/build/
 front/.cache/
+front/build.sh
