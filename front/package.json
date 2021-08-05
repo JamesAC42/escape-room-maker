@@ -40,5 +40,9 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3501/"
+  "proxy": "http://localhost:3501/",
+  "devDependencies": {
+    "cssnano": "^4.1.11",
+    "postcss": "^8.3.6"
+  }
 }
