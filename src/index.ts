@@ -10,9 +10,12 @@ const pg = require("pg");
 
 const conInfo = require("../pw.json");
 const config = require("../config.json");
+const redisPw = require("../redisPw.json");
 
 const RedisStore = require("connect-redis")(session);
 const redisClient = redis.createClient();
+
+redisClient.auth(redisPw.pw);
 
 import WebRouter from "./WebRouter";
 

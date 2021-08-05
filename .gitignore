@@ -2,6 +2,9 @@ node_modules/
 dist/
 config.json
 pw.json
+redisPw.json
 front/package-lock.json
 front/package-lock.json
 front/.env
+front/build/
+front/.cache/
