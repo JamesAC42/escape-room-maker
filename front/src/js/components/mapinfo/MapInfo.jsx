@@ -68,20 +68,24 @@ class MapInfoBind extends Component {
     getData("/api/getMapReviews?id=" + id)
     .then((data) => {
       if (data.success) {
-        // Set the data after receiving it,
-        // also calculate the average rating based on the reviews
-        let total = 0;
-        data.reviews.forEach(review => {
-          total += review.rating;
-        });
+        // Set the data after receiving it
         this.setState({ 
-          reviews: data.reviews,
-          averageRating: Math.round(total / data.reviews.length)
+          reviews: data.reviews
         });
+        this.calculateAverageRating(data.reviews);
       } else {
         console.log(data);
       }
     })
+  }
+
+  // Calculates the average rating based on the reviews
+  calculateAverageRating(reviews) {
+    let total = 0;
+    reviews.forEach(review => {
+      total += review.rating;
+    });
+    this.setState({ averageRating: Math.round(total / reviews.length)});
   }
 
   // Determines whether the current map is bookmarked by the user
@@ -243,6 +247,7 @@ class MapInfoBind extends Component {
             reviewFormError:'',
             reviews
           });
+          this.calculateAverageRating(reviews);
 
         } else {
           console.log(data);
@@ -261,6 +266,7 @@ class MapInfoBind extends Component {
       return review.uid !== uid
     });
     this.setState({reviews});
+    this.calculateAverageRating(reviews);
   }
 
   // Render the component
@@ -312,7 +318,7 @@ class MapInfoBind extends Component {
               </div>
               <div className="meta-row tags">
                 {map.tags.map((tag) => (
-                  <div className="tag">{tag}</div>
+                  <div key={tag} className="tag">{tag}</div>
                 ))}
               </div>
             </div>
@@ -388,6 +394,7 @@ class MapInfoBind extends Component {
             {
               this.state.reviews.map(review => 
                 <Review
+                  key={review.uid}
                   review={review}
                   removeReview={(review) => this.removeReview(review)}/>
               )
