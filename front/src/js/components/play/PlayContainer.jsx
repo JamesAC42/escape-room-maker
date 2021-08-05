@@ -213,6 +213,16 @@ class PlayContainer extends Component {
       });
       // Close the event window
       this.closeEvent();
+
+      // If room is the ending room, win the game
+      if(room === this.props.graph.endRoom) {
+        this.setState({ 
+          gameWin: true,
+          playing: false,
+          currentRoom: undefined
+        });
+        if(this.intervalId) clearInterval(this.intervalId);
+      }
     }
   }
 
