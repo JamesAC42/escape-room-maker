@@ -78,6 +78,7 @@ class PlayContainer extends Component {
         if (remainingTime <= 0) {
           this.restart();
           this.setState({
+            playing:false,
             gameOver: true,
           });
           remainingTime = 0;
@@ -89,6 +90,7 @@ class PlayContainer extends Component {
 
   // Either resume playing from paused or initialize the first play
   play() {
+    if(this.state.gameOver || this.state.gameWin) return;
     let room = this.state.currentRoom;
     let remainingTime = this.state.remainingTime;
     let visitedRooms = this.state.visitedRooms;
@@ -119,6 +121,7 @@ class PlayContainer extends Component {
         if (remainingTime <= 0) {
           this.restart();
           this.setState({
+            playing:false,
             gameOver: true,
           });
           remainingTime = 0;
@@ -250,7 +253,7 @@ class PlayContainer extends Component {
               }
             }}
           >
-            <img src={this.state.playing ? pause : play} alt="play control" />
+            <img src={this.state.playing && !(this.state.gameOver || this.state.gameWin) ? pause : play} alt="play control" />
           </div>
           <div
             className="restart-button flex center-child"
@@ -276,7 +279,13 @@ class PlayContainer extends Component {
         {this.state.currentRoom === undefined ? (
           <div className="play-prompt">Press the play button to start!</div>
         ) : null}
-        {this.state.currentRoom !== undefined && !this.state.playing ? (
+        {
+          this.state.currentRoom !== undefined && 
+          !this.state.playing &&
+          !(
+            this.state.gameWin || 
+            this.state.gameOver
+          ) ? (
           <div className="pause-prompt flex center-child">
             <img src={pause} alt="paused" />
           </div>
