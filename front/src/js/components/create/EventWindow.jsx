@@ -329,6 +329,12 @@ class EventWindowBind extends Component {
             <input id="solve-item-desc" type="text" placeholder="Description" name="solveItemDesc" value={this.getRoomOrDoor().solveItemDesc} onChange={this.onChangeStateVal.bind(this)} style={this.getTextBoxStyle("solveItemDesc")}></input>
           </div>
         </div>
+
+        <div 
+          className="close-event-window"
+          onClick={() => {this.props.setActiveRoom(undefined)}}>
+            CLOSE
+          </div>
       </div>
     );
   }
