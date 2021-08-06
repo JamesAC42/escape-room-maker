@@ -41,7 +41,6 @@ class GridBase extends Component {
 
   // Basic method to render a cell of the grid
   drawCell(id, x, y, tile) {
-
     // Get the coordinates of the grid and render the tile there
     const { topLeftX, topLeftY } = this.topLeftFromBase(x, y);
     this.ctx.drawImage(
@@ -51,7 +50,7 @@ class GridBase extends Component {
       this.state.cellSize,
       this.state.cellSize
     );
-    
+
     // Render the outline of the grid cell
     this.ctx.strokeStyle = "#d9806c";
     this.ctx.beginPath();

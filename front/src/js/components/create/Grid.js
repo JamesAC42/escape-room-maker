@@ -87,7 +87,6 @@ class GridBind extends GridBase {
     // Get the id of the room that is being hovered over
     const room = this.getRoomFromCoordinates(cX, cY);
     if (room !== null) {
-
       // Get the coordinates of the room
       let { x, y } = this.props.graph.graph[room].coordinates;
 
@@ -128,10 +127,9 @@ class GridBind extends GridBase {
     });
   }
 
-  // Used to calculate which wall is the closest to a given 
+  // Used to calculate which wall is the closest to a given
   // set of coordinates and a relevant room
   minWallDir(cX, cY, topLeftX, topLeftY) {
-
     // Get the center coordinates of the room
     const xCenter = topLeftX + this.state.cellSize / 2;
     const yCenter = topLeftY + this.state.cellSize / 2;
@@ -148,7 +146,7 @@ class GridBind extends GridBase {
 
     // Make a list of each wall's center points
     const points = [topCenter, rightCenter, bottomCenter, leftCenter];
-    
+
     // Go through the list and determine which wall is closest to the given
     // coordinates
     let minDist = Infinity;
@@ -167,7 +165,6 @@ class GridBind extends GridBase {
   // Adds a new room to the grid, called after a user clicks the plus
   // button on a room grid cell wall
   addNewRoom() {
-
     // Get the room that the user clicked on
     let room = this.state.activeAddButton.room;
     // Make a copy of the graph to mutate
@@ -212,7 +209,6 @@ class GridBind extends GridBase {
 
   // Used by the canvas render method to draw a grid cell
   drawCell(id, x, y, tile) {
-
     // Get the canvas coordinates of the cell to be rendered
     // and draw the tile image there
     const { topLeftX, topLeftY } = this.topLeftFromBase(x, y);
@@ -306,7 +302,6 @@ class GridBind extends GridBase {
   // Called when the props or state change, detect whether to
   // Re-render the graph
   componentDidUpdate(prevProps, prevState) {
-
     // When the graph is first generated
     if (prevProps.graph === undefined && this.props.graph !== undefined) {
       this.renderGrid();
@@ -327,7 +322,6 @@ class GridBind extends GridBase {
     }
 
     if (prevProps.graph !== undefined && this.props.graph !== undefined) {
-      
       // If the amount of rooms changes
       if (
         Object.keys(prevProps.graph).length !==

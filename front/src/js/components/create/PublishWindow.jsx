@@ -42,9 +42,8 @@ class PublishWindowState {
   }
 }
 
-
 // The PublishWindow component class used for publishing a map,
-// allows user to give more information to a map including 
+// allows user to give more information to a map including
 // a title, description, and tags
 class PublishWindowBind extends Component {
   state;
@@ -82,7 +81,6 @@ class PublishWindowBind extends Component {
 
   // Method to send the map data to the server to publish the new map
   publish() {
-
     // Validate that a title and description have been given
     if (this.state.title === "" || this.state.description === "") {
       this.setState({ error: "Invalid input: Need title and description" });
@@ -105,7 +103,6 @@ class PublishWindowBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-
         // If successful, reset the data and redirect to the
         // map info page of the new map
         if (data.success) {
@@ -122,12 +119,12 @@ class PublishWindowBind extends Component {
       });
   }
 
+  // Event handler for changing the time limit of the map
   handleTimeLimit(e) {
-    this.setState({timeLimit:e.target.value});
+    this.setState({ timeLimit: e.target.value });
   }
 
   render() {
-
     // If we need to redirect after publishing, then do so here
     if (this.state.redirect !== "") {
       return <Redirect to={"/map/" + this.state.redirect} />;
@@ -162,7 +159,10 @@ class PublishWindowBind extends Component {
             </div>
             <div className="input-item">
               <label htmlFor="description">Time Limit</label>
-              <select name="timelimit" onChange={(e) => this.handleTimeLimit(e)}>
+              <select
+                name="timelimit"
+                onChange={(e) => this.handleTimeLimit(e)}
+              >
                 <option value="0">None</option>
                 <option value="1">1 Minute</option>
                 <option value="5">5 Minutes</option>

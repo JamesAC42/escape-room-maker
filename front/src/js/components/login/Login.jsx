@@ -122,9 +122,8 @@ class LoginBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-
-        // If the request went through successfully, 
-        // set the data and login. 
+        // If the request went through successfully,
+        // set the data and login.
         // Otherwise, display the error message
         if (data.success) {
           this.setData(data);
@@ -184,9 +183,8 @@ class LoginBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-
-        // If the request went through successfully, 
-        // set the data and login. 
+        // If the request went through successfully,
+        // set the data and login.
         // Otherwise, display the error message
         if (data.success) {
           this.setData(data);
@@ -204,10 +202,9 @@ class LoginBind extends Component {
         console.error("Error: " + error);
       });
   }
-  
+
   // Render the component on the page
   render() {
-
     // Redirect to the proper page if the user is alread logged in
     if (this.props.session.loggedin) {
       let params = this.props.match.params.from;

@@ -52,7 +52,7 @@ class WebRouter {
       getMyMaps(req, res, this.database);
     });
 
-    this.app.get("/api/getMapReviews", (req:any, res:any) => {
+    this.app.get("/api/getMapReviews", (req: any, res: any) => {
       getMapReviews(req, res, this.database);
     });
 
@@ -76,11 +76,11 @@ class WebRouter {
       removeFavorite(req, res, this.database);
     });
 
-    this.app.post("/api/addReview", (req:any, res:any) => {
+    this.app.post("/api/addReview", (req: any, res: any) => {
       addReview(req, res, this.database);
     });
 
-    this.app.post("/api/removeReview", (req:any, res:any) => {
+    this.app.post("/api/removeReview", (req: any, res: any) => {
       removeReview(req, res, this.database);
     });
   }

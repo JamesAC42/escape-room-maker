@@ -9,7 +9,7 @@ import bookmarkFilled from "../../../images/bookmark-filled.png";
 import { connect, ReactReduxContext } from "react-redux";
 import { userinfoActions } from "../../actions/actions";
 
-import {getData} from '../getData';
+import { getData } from "../getData";
 
 import "../../../css/mapinfo/mapinfo.scss";
 
@@ -33,15 +33,15 @@ class MapInfoState {
     this.reviews = [];
     this.showReviewForm = false;
     this.reviewForm = {
-      title: '',
-      body: '',
-      rating: 3
+      title: "",
+      body: "",
+      rating: 3,
     };
-    this.reviewFormError = '';
+    this.reviewFormError = "";
   }
 }
 
-// The MapInfo component class shows all information about a 
+// The MapInfo component class shows all information about a
 // given map
 class MapInfoBind extends Component {
   state;
@@ -52,40 +52,37 @@ class MapInfoBind extends Component {
   // After the component mounts, make a request to the API to
   // get the map's data
   componentDidMount() {
-
     // Get the map ID from the URL parameters
     const id = this.props.match.params.id;
     if (id === undefined) return;
-    getData("/api/getMap?id=" + id)
-    .then(data => {
+    getData("/api/getMap?id=" + id).then((data) => {
       if (data.success) {
         // Set the data after receiving it
         this.setState({ map: data.map });
       } else {
         console.log(data);
       }
-    })
-    getData("/api/getMapReviews?id=" + id)
-    .then((data) => {
+    });
+    getData("/api/getMapReviews?id=" + id).then((data) => {
       if (data.success) {
         // Set the data after receiving it
-        this.setState({ 
-          reviews: data.reviews
+        this.setState({
+          reviews: data.reviews,
         });
         this.calculateAverageRating(data.reviews);
       } else {
         console.log(data);
       }
-    })
+    });
   }
 
   // Calculates the average rating based on the reviews
   calculateAverageRating(reviews) {
     let total = 0;
-    reviews.forEach(review => {
+    reviews.forEach((review) => {
       total += review.rating;
     });
-    this.setState({ averageRating: Math.round(total / reviews.length)});
+    this.setState({ averageRating: Math.round(total / reviews.length) });
   }
 
   // Determines whether the current map is bookmarked by the user
@@ -100,7 +97,6 @@ class MapInfoBind extends Component {
 
   // Toggles whether the current map is bookmarked
   toggleFavorite() {
-    
     // Determine whether to remove or add it as a favorite
     let index = this.isFavorite();
     let url;
@@ -122,7 +118,6 @@ class MapInfoBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-
         // If successful, update the information client-side
         // to be in sync with the server
         if (data.success) {
@@ -166,11 +161,11 @@ class MapInfoBind extends Component {
   // Toggles whether the review form is visible
   toggleReviewForm() {
     this.setState({
-      showReviewForm: !this.state.showReviewForm
-    })
+      showReviewForm: !this.state.showReviewForm,
+    });
   }
 
-  // Event handler for setting the user input in the 
+  // Event handler for setting the user input in the
   // review form
   handleFormInput(e) {
     this.setState({
@@ -189,28 +184,28 @@ class MapInfoBind extends Component {
       ...this.state,
       reviewForm: {
         ...this.state.reviewForm,
-        rating: i + 1
-      }
-    })
+        rating: i + 1,
+      },
+    });
   }
 
-  // Gather the form data and send it to the server to add a 
+  // Gather the form data and send it to the server to add a
   // review to the current map
   submitReview() {
-    if(!this.props.session.loggedin) {
+    if (!this.props.session.loggedin) {
       return;
     }
-    if(
-      this.state.reviewForm.title === '' ||
-      this.state.reviewForm.body === ''
+    if (
+      this.state.reviewForm.title === "" ||
+      this.state.reviewForm.body === ""
     ) {
-      this.setState({reviewFormError:'Invalid input.'});
+      this.setState({ reviewFormError: "Invalid input." });
       return;
     }
 
     const reviewData = {
       ...this.state.reviewForm,
-      mapId: this.props.match.params.id
+      mapId: this.props.match.params.id,
     };
     fetch("/api/addReview/", {
       method: "POST",
@@ -221,34 +216,32 @@ class MapInfoBind extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-        if(data.success) {
-
+        if (data.success) {
           // Construct the review and add it to the
           // local list of reviews to be in sync
           let review = {
-            author:this.props.userinfo.username,
-            body:this.state.reviewForm.body,
-            rating:this.state.reviewForm.rating,
-            title:this.state.reviewForm.title,
-            uid:data.id,
-            timestamp:data.timestamp
+            author: this.props.userinfo.username,
+            body: this.state.reviewForm.body,
+            rating: this.state.reviewForm.rating,
+            title: this.state.reviewForm.title,
+            uid: data.id,
+            timestamp: data.timestamp,
           };
           let reviews = [...this.state.reviews];
           reviews.push(review);
 
           // Reset the form values
           this.setState({
-            showReviewForm:false,
-            reviewForm:{
-              title: '',
-              body: '',
-              rating: 1
+            showReviewForm: false,
+            reviewForm: {
+              title: "",
+              body: "",
+              rating: 1,
             },
-            reviewFormError:'',
-            reviews
+            reviewFormError: "",
+            reviews,
           });
           this.calculateAverageRating(reviews);
-
         } else {
           console.log(data);
         }
@@ -256,22 +249,20 @@ class MapInfoBind extends Component {
       .catch((error) => {
         console.error("Error: " + error);
       });
-
   }
 
   // Remove a review from the list of reviews
   removeReview(uid) {
     let reviews = [...this.state.reviews];
-    reviews = reviews.filter(review => {
-      return review.uid !== uid
+    reviews = reviews.filter((review) => {
+      return review.uid !== uid;
     });
-    this.setState({reviews});
+    this.setState({ reviews });
     this.calculateAverageRating(reviews);
   }
 
   // Render the component
   render() {
-
     // If the map id wasn't provided, redirect to the home page
     if (this.props.match.params.id === undefined) {
       return <Redirect to="/" />;
@@ -287,7 +278,8 @@ class MapInfoBind extends Component {
             <div className="mapinfo-col mapinfo-meta">
               <div className="meta-row">
                 <div className="mapinfo-title title">
-                  {map.title} by <span className="mapinfo-creator">{map.creator}</span>
+                  {map.title} by{" "}
+                  <span className="mapinfo-creator">{map.creator}</span>
                 </div>
                 {this.renderBookmarkIcon()}
               </div>
@@ -310,9 +302,7 @@ class MapInfoBind extends Component {
                 </div>
                 <div className="time-limit">
                   <span className="meta-info-label">Time Limit: </span>
-                  {
-                    map.timeLimit === 0 ? "None" : `${map.timeLimit} seconds`
-                  }
+                  {map.timeLimit === 0 ? "None" : `${map.timeLimit} seconds`}
                 </div>
               </div>
               <div className="meta-row">
@@ -320,7 +310,9 @@ class MapInfoBind extends Component {
               </div>
               <div className="meta-row tags">
                 {map.tags.map((tag) => (
-                  <div key={tag} className="tag">{tag}</div>
+                  <div key={tag} className="tag">
+                    {tag}
+                  </div>
                 ))}
               </div>
             </div>
@@ -339,68 +331,68 @@ class MapInfoBind extends Component {
           <div className="mapinfo-reviews">
             <div className="mapinfo-reviews-header">
               {this.state.reviews.length} review
-              {
-                this.state.reviews.length === 1 ? "" : "s"
-              }
-              {
-                this.props.session.loggedin ?
-                <div 
+              {this.state.reviews.length === 1 ? "" : "s"}
+              {this.props.session.loggedin ? (
+                <div
                   className="mapinfo-toggle-review-form"
-                  onClick={() => this.toggleReviewForm()}>
+                  onClick={() => this.toggleReviewForm()}
+                >
                   Write a Review
-                </div> : null
-              }
+                </div>
+              ) : null}
             </div>
 
-            {
-              this.state.showReviewForm && this.props.session.loggedin ?
+            {this.state.showReviewForm && this.props.session.loggedin ? (
               <div className="mapinfo-form-outer flex flex-row">
                 <div className="input-outer flex flex-col">
-                  <input 
-                    type="text" 
-                    name="title" 
+                  <input
+                    type="text"
+                    name="title"
                     placeholder="Title"
                     onChange={(e) => this.handleFormInput(e)}
-                    value={this.state.reviewForm.title}/>
-                  <textarea 
-                    name="body" 
-                    id="reviewtext" 
-                    cols="30" 
-                    rows="5" 
+                    value={this.state.reviewForm.title}
+                  />
+                  <textarea
+                    name="body"
+                    id="reviewtext"
+                    cols="30"
+                    rows="5"
                     placeholder="Review..."
                     onChange={(e) => this.handleFormInput(e)}
-                    value={this.state.reviewForm.body}>
-                    </textarea>
+                    value={this.state.reviewForm.body}
+                  ></textarea>
                 </div>
                 <div className="submit-outer flex flex-col">
                   <div className="stars-setting">
-                    <Rating stars={this.state.reviewForm.rating} onChange={(i) => this.handleStarChange(i)}/>
+                    <Rating
+                      stars={this.state.reviewForm.rating}
+                      onChange={(i) => this.handleStarChange(i)}
+                    />
                   </div>
                   <div className="submit-button-outer">
-                    <div 
+                    <div
                       className="submit-button"
-                      onClick={() => this.submitReview()}>
-                        Submit
+                      onClick={() => this.submitReview()}
+                    >
+                      Submit
                     </div>
                   </div>
                   <div className="form-error">{this.state.reviewFormError}</div>
                 </div>
-              </div> : null
-            }
-            {
-              this.state.reviews.length === 0 ?
+              </div>
+            ) : null}
+            {this.state.reviews.length === 0 ? (
               <div className="no-reviews flex center-child">
                 This map has no reviews
-              </div> : null
-            }
-            {
-              this.state.reviews.map(review => 
-                <Review
-                  key={review.uid}
-                  review={review}
-                  removeReview={(review) => this.removeReview(review)}/>
-              )
-            }
+              </div>
+            ) : null}
+            {this.state.reviews.map((review) => (
+              <Review
+                key={review.uid}
+                review={review}
+                removeReview={(review) => this.removeReview(review)}
+              />
+            ))}
           </div>
         </div>
       </div>

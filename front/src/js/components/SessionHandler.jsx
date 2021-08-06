@@ -22,8 +22,8 @@ const mapDispatchToProps = {
 };
 
 // Component that is rendered automatically when the page
-// first loads. Makes a request to the server to see if 
-// the client has an active session. If they do, then it 
+// first loads. Makes a request to the server to see if
+// the client has an active session. If they do, then it
 // logs them in and sets all of the user data
 class SessionHandlerBind extends Component {
   componentDidMount() {

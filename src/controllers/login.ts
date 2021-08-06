@@ -4,7 +4,6 @@ import userQueries from "../queries/userQueries";
 
 // API endpoint for logging in
 const login = (req: any, res: any, db: any) => {
-
   // Extract the provided email and password from the req body
   const { email, password } = req.body;
 

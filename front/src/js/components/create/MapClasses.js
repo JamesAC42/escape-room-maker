@@ -29,7 +29,7 @@ export class Room {
     this.start = false;
     this.end = false;
     this.coordinates = coordinates;
-    this.doorVals = ["N", "S", "W", "E"].map(dir => new Door(uid, dir));
+    this.doorVals = ["N", "S", "W", "E"].map((dir) => new Door(uid, dir));
     this.eventType = "No Event";
     this.requireItem = false;
     this.requireItemName = "Item";

@@ -13,7 +13,6 @@ const mapStateToProps = (state) => ({
 // Component class that renders a map review.
 // Also allows the creator of the review to delete it.
 class ReviewBind extends Component {
-
   // Makes server call to delete the review from the database
   deleteReview() {
     if (!this.canDelete()) return;
@@ -29,9 +28,9 @@ class ReviewBind extends Component {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-            this.props.removeReview(this.props.review.uid);
+          this.props.removeReview(this.props.review.uid);
         } else {
-            console.log(data);
+          console.log(data);
         }
       })
       .catch((error) => {
@@ -59,11 +58,12 @@ class ReviewBind extends Component {
         <div className="mapinfo-review-body">{this.props.review.body}</div>
         <div className="review-float flex flex-row">
           {this.canDelete() ? (
-            <img 
-                src={trash} 
-                className="delete-review" 
-                alt="Delete Rating" 
-                onClick={() => this.deleteReview()}/>
+            <img
+              src={trash}
+              className="delete-review"
+              alt="Delete Rating"
+              onClick={() => this.deleteReview()}
+            />
           ) : null}
           <Rating stars={this.props.review.rating} />
         </div>

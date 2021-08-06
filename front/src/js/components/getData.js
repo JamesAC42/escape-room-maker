@@ -10,12 +10,12 @@ export const getData = (url) => {
         withCredentials: "true",
       },
     })
-    .then((response) => response.json())
-    .then((data) => {
+      .then((response) => response.json())
+      .then((data) => {
         resolve(data);
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         console.error("Error: " + error);
-    });
+      });
   });
 };

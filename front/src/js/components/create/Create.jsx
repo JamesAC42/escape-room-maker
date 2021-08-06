@@ -61,34 +61,45 @@ class CreateBind extends Component {
       publishWindowVisible: !this.state.publishWindowVisible,
     });
   }
-  
+
   // used for checking if a map is ready for publishing
   mapErrorChecking = () => {
     let error = false;
-    if(this.props.create.graph) {
-      Object.keys(this.props.create.graph.graph).forEach(room => {
-        ["requireItemName", "eventQ", "eventA", "solveItemName", "solveItemDesc"].forEach(val => {
-          if(this.props.create.graph.graph[room][val] == "") {
+    if (this.props.create.graph) {
+      Object.keys(this.props.create.graph.graph).forEach((room) => {
+        [
+          "requireItemName",
+          "eventQ",
+          "eventA",
+          "solveItemName",
+          "solveItemDesc",
+        ].forEach((val) => {
+          if (this.props.create.graph.graph[room][val] == "") {
             error = true;
           }
-          
-          ["N", "S", "W", "E"].forEach(dir => {
-            if(this.props.create.graph.graph[room].doorVals.find(y => y.dir == dir)[val] == "") {
+
+          ["N", "S", "W", "E"].forEach((dir) => {
+            if (
+              this.props.create.graph.graph[room].doorVals.find(
+                (y) => y.dir == dir
+              )[val] == ""
+            ) {
               error = true;
             }
           });
-          
         });
       });
-      
-      if(this.props.create.graph.startRoom == this.props.create.graph.endRoom ||
+
+      if (
+        this.props.create.graph.startRoom == this.props.create.graph.endRoom ||
         this.props.create.graph.startRoom == null ||
-        this.props.create.graph.endRoom == null) {
+        this.props.create.graph.endRoom == null
+      ) {
         error = true;
       }
     }
     return error;
-  }
+  };
 
   render() {
     if (!this.props.session.loggedin) {
@@ -105,28 +116,25 @@ class CreateBind extends Component {
         <Grid
           className={gridClass}
           activeRoom={this.props.create.activeRoom}
-          graph={this.props.create.graph}/>
-          
-        {
-          (this.props.create.graph && this.props.create.activeRoom) ?
-            <EventWindow /> : null
-        }
-        
+          graph={this.props.create.graph}
+        />
+
+        {this.props.create.graph && this.props.create.activeRoom ? (
+          <EventWindow />
+        ) : null}
+
         {this.state.publishWindowVisible ? (
           <PublishWindow close={() => this.togglePublishWindow()} />
         ) : null}
-        
-        {
-          !this.mapErrorChecking() ?
-          <div 
+
+        {!this.mapErrorChecking() ? (
+          <div
             className="toggle-publish button"
-            onClick={() => this.togglePublishWindow()}>
-            { 
-              this.state.publishWindowVisible ?
-              "Back to Edit" : "Publish"
-            }
-          </div> : null
-        }
+            onClick={() => this.togglePublishWindow()}
+          >
+            {this.state.publishWindowVisible ? "Back to Edit" : "Publish"}
+          </div>
+        ) : null}
       </div>
     );
   }

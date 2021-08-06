@@ -1,4 +1,3 @@
-
 // State class for login information
 export class ILogin {
   email;

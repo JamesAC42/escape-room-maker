@@ -19,11 +19,10 @@ class PlayGrid extends GridBase {
 
   // Event handler for when a user clicks on the grid
   handleClick(e) {
-
     // Don't do anything if not currently in the playing state
     if (!this.props.playing) return;
 
-    // Get the room that the user clicked on 
+    // Get the room that the user clicked on
     const rect = e.target.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -47,10 +46,9 @@ class PlayGrid extends GridBase {
   }
 
   // Used by render to draw each grid cell.
-  // Determines whether to render. 
+  // Determines whether to render.
   // Only renders if already visited or adjacent to the current room
   drawCell(id, x, y, tile) {
-
     // Determine whether to render and how to render.
     // Adjacent non-visited rooms render but have a shadow
     let shouldRenderTile = false;

@@ -110,7 +110,6 @@ const register = (req: any, res: any, db: any, cache: any) => {
   // Execute the first query
   db.query(findQuery)
     .then((r: any) => {
-
       if (r.rows.length > 0) {
         res.send({
           success: false,
@@ -129,11 +128,9 @@ const register = (req: any, res: any, db: any, cache: any) => {
             });
             return;
           } else {
-
             // Salt and hash the password to securely store in the database
             bcrypt.genSalt(10, (err: any, salt: any) => {
               bcrypt.hash(password, salt, (err: any, hash: any) => {
-
                 // Generate all of the remaining data to be stored within the
                 // new user.
                 const uid = uuid();
@@ -167,7 +164,6 @@ const register = (req: any, res: any, db: any, cache: any) => {
                 // Execute the query
                 db.query(insertQuery)
                   .then((r: any) => {
-
                     // Log the user in and send the data back
                     req.session.key = uid;
                     res.send({
@@ -194,19 +190,19 @@ const register = (req: any, res: any, db: any, cache: any) => {
                     });
                     return;
                   });
-                });
               });
-            }
-          })
-          .catch((err: Error) => {
-            console.log("FIND EMAIL");
-            console.error(err);
-            res.send({
-              success: false,
-              error: "Error processing input",
             });
-            return;
+          }
+        })
+        .catch((err: Error) => {
+          console.log("FIND EMAIL");
+          console.error(err);
+          res.send({
+            success: false,
+            error: "Error processing input",
           });
+          return;
+        });
     })
     .catch((err: Error) => {
       console.log("FIND USER");

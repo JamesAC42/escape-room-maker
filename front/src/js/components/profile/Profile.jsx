@@ -43,7 +43,6 @@ class ProfileBind extends Component {
       });
   }
   render() {
-
     // If not logged in, then redirect to the login page
     if (!this.props.session.loggedin) {
       return <Redirect to="/login/profile" />;

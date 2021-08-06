@@ -4,7 +4,6 @@ const { v4: uuid } = require("uuid");
 
 // API endpoint for adding a review to the database
 const addReviewEndpoint = (req: any, res: any, db: any) => {
-
   // Unpack the data from the request
   const { mapId, rating, title, body } = req.body;
 
@@ -63,17 +62,17 @@ const addReviewEndpoint = (req: any, res: any, db: any) => {
     rating,
     title,
     body,
-    timestamp:new Date()
+    timestamp: new Date(),
   };
 
   // Add the review into the database
   addReview(db, review)
     .then(() => {
       // Send the id and the timestamp of the review back to the client
-      res.send({ 
-        success: true, 
-        id: reviewId, 
-        timestamp: reviewTimestamp
+      res.send({
+        success: true,
+        id: reviewId,
+        timestamp: reviewTimestamp,
       });
       return;
     })

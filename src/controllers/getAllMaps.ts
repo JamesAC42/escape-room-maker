@@ -6,7 +6,6 @@ import mapQueries from "../queries/mapQueries";
   Used by the query getAllMaps in mapQueries.ts
 */
 const getAllMaps = (req: any, res: any, db: any) => {
-
   // Construct the query
   const query = {
     name: "get-all-maps",

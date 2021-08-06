@@ -20,7 +20,7 @@ export interface IMap {
   reviews: number;
 }
 
-// The room graph stores the grid of rooms 
+// The room graph stores the grid of rooms
 // and their data and coordinates
 export interface IRoomGraph {
   startRoom: uuid;
@@ -120,7 +120,7 @@ export interface IPlayer {
 
 // A rating on a map
 export interface IReview {
-  uid:uuid;
+  uid: uuid;
   author: uuid;
   timestamp: timestamp;
   map: uuid;
@@ -131,11 +131,11 @@ export interface IReview {
 
 // Rating information stored in the table
 export interface IReviewDB {
-  uid:uuid,
-  mapId:uuid, 
-  userId:uuid,
-  timestamp:Date,
-  rating: 1 | 2 | 3 | 4 | 5,
-  title:string,
-  body:string
+  uid: uuid;
+  mapId: uuid;
+  userId: uuid;
+  timestamp: Date;
+  rating: 1 | 2 | 3 | 4 | 5;
+  title: string;
+  body: string;
 }

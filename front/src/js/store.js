@@ -32,7 +32,7 @@ let initState = {
     activeRoom: undefined,
     graph: undefined,
     map: undefined,
-  }
+  },
 };
 
 // Combines the reducers to bind them to the store

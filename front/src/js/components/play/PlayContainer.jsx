@@ -6,7 +6,7 @@ import play from "../../../images/play.png";
 import pause from "../../../images/pause.png";
 import restart from "../../../images/restart.png";
 
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 // Contains the information about the play state
 class PlayContainerState {
   constructor() {
@@ -16,11 +16,11 @@ class PlayContainerState {
     this.visitedRooms = [];
     this.currentEvent = undefined;
     this.showEventWindow = false;
-    this.eventWindowResult = '';
+    this.eventWindowResult = "";
     this.gameOver = false;
     this.gameWin = false;
 
-    this.eventResponse = '';
+    this.eventResponse = "";
 
     this.endRoom = undefined;
   }
@@ -53,10 +53,9 @@ class PlayContainer extends Component {
 
   // Restart the map
   restart() {
-
     // Get the start room in case it is null (legacy)
     let startRoom = this.props.graph.startRoom;
-    if(!startRoom) {
+    if (!startRoom) {
       startRoom = Object.keys(this.props.graph.graph)[0];
     }
     // Reset the map information
@@ -68,12 +67,12 @@ class PlayContainer extends Component {
       currentEvent: undefined,
       showEventWindow: false,
       gameOver: false,
-      gameWin:false
+      gameWin: false,
     });
 
     // Reset the timer information
-    if(this.intervalId) clearInterval(this.intervalId);
-    if(this.props.timeLimit !== 0) {
+    if (this.intervalId) clearInterval(this.intervalId);
+    if (this.props.timeLimit !== 0) {
       this.intervalId = setInterval(() => {
         let remainingTime = this.state.remainingTime - 1;
         if (remainingTime <= 0) {
@@ -114,7 +113,7 @@ class PlayContainer extends Component {
     });
 
     // Start the timer
-    if(this.props.timeLimit !== 0) {
+    if (this.props.timeLimit !== 0) {
       this.intervalId = setInterval(() => {
         let remainingTime = this.state.remainingTime - 1;
         if (remainingTime <= 0) {
@@ -140,7 +139,7 @@ class PlayContainer extends Component {
     this.setState({ currentRoom: room });
   }
 
-  // Attempt to enter a room. If the room 
+  // Attempt to enter a room. If the room
   // doesn't need an event, just go to it.
   // If it does, set the event and show the event window
   tryToVisit(room) {
@@ -148,34 +147,33 @@ class PlayContainer extends Component {
 
     // If the room has already been visited, go to it freely
     if (visitedRooms.indexOf(room) === -1) {
-
       // If the room has a question event, set the event and show
       // the event window
-      if(this.props.graph.graph[room].eventType === "Question") {
+      if (this.props.graph.graph[room].eventType === "Question") {
         this.setState({
           currentEvent: {
             type: "Question",
-            room
+            room,
           },
-          showEventWindow: true
-        })
-      } else if(this.props.graph.graph[room].eventType === "No Event") {
+          showEventWindow: true,
+        });
+      } else if (this.props.graph.graph[room].eventType === "No Event") {
         // If the room does not have an event, just go to it
         visitedRooms.push(room);
         this.setState({ visitedRooms, currentRoom: room });
         // Check if the room is the end room, show the win
         // prompt if so
-        if(room === this.props.graph.endRoom) {
-          this.setState({ 
+        if (room === this.props.graph.endRoom) {
+          this.setState({
             gameWin: true,
             playing: false,
-            currentRoom: undefined
+            currentRoom: undefined,
           });
-          if(this.intervalId) clearInterval(this.intervalId);
+          if (this.intervalId) clearInterval(this.intervalId);
         }
-      } 
+      }
     } else {
-      this.setState({ currentRoom: room })
+      this.setState({ currentRoom: room });
     }
   }
 
@@ -187,9 +185,9 @@ class PlayContainer extends Component {
   // Event handler for user typing in the event window response
   // text field
   handleEventResponse(e) {
-    this.setState({ 
-      eventResponse: e.target.value
-    })
+    this.setState({
+      eventResponse: e.target.value,
+    });
   }
 
   // Triggered when a user clicks the submit button on the
@@ -197,44 +195,44 @@ class PlayContainer extends Component {
   // answer stored in the event. If it matches, go to that room.
   // If not, then tell the user it was wrong.
   submitEvent() {
-
     let response = this.state.eventResponse;
-    let correctAnswer = this.props.graph.graph[this.state.currentEvent.room].eventA;
+    let correctAnswer =
+      this.props.graph.graph[this.state.currentEvent.room].eventA;
 
-    if(response.toLowerCase() !== correctAnswer.toLowerCase()) {
-      this.setState({eventWindowResult:'Incorrect!'});
+    if (response.toLowerCase() !== correctAnswer.toLowerCase()) {
+      this.setState({ eventWindowResult: "Incorrect!" });
     } else {
       // Answer was correct, so move player into that room
       let visitedRooms = [...this.state.visitedRooms];
       let room = this.state.currentEvent.room;
       visitedRooms.push(room);
-      this.setState({ 
+      this.setState({
         currentRoom: room,
-        visitedRooms
+        visitedRooms,
       });
       // Close the event window
       this.closeEvent();
 
       // If room is the ending room, win the game
-      if(room === this.props.graph.endRoom) {
-        this.setState({ 
+      if (room === this.props.graph.endRoom) {
+        this.setState({
           gameWin: true,
           playing: false,
-          currentRoom: undefined
+          currentRoom: undefined,
         });
-        if(this.intervalId) clearInterval(this.intervalId);
+        if (this.intervalId) clearInterval(this.intervalId);
       }
     }
   }
 
   // Resets the event information and closes the window
   closeEvent() {
-    this.setState({ 
+    this.setState({
       currentEvent: undefined,
       showEventWindow: false,
-      eventResponse:'',
-      eventWindowResult:''
-    })
+      eventResponse: "",
+      eventWindowResult: "",
+    });
   }
 
   // Render the grid and controls
@@ -260,12 +258,11 @@ class PlayContainer extends Component {
           >
             <img src={restart} alt="Restart" />
           </div>
-          {
-            this.props.timeLimit !== 0 ?
+          {this.props.timeLimit !== 0 ? (
             <div className="timer">
               {this.state.remainingTime} seconds remaining
-            </div> : null
-          }
+            </div>
+          ) : null}
         </div>
         <PlayGrid
           graph={this.props.graph}
@@ -285,55 +282,62 @@ class PlayContainer extends Component {
           </div>
         ) : null}
         {this.state.gameOver || this.state.gameWin ? (
-          <div className={`game-end flex flex-col flex-center ${this.state.gameOver ? "game-end-lose" : "game-end-win"}`}>
-            <div className="game-end-message">{this.state.gameOver ? "GAME OVER" : "YOU WIN"}</div>
+          <div
+            className={`game-end flex flex-col flex-center ${
+              this.state.gameOver ? "game-end-lose" : "game-end-win"
+            }`}
+          >
+            <div className="game-end-message">
+              {this.state.gameOver ? "GAME OVER" : "YOU WIN"}
+            </div>
             <div className="game-end-links flex flex-row">
-              {
-                !this.state.gameOver ?
+              {!this.state.gameOver ? (
                 <div className="game-end-link">
-                  <Link to={"/map/" + this.props.uid}>
-                    Rate This Map
-                  </Link>
-                </div> : null
-              }
-              <div className="game-end-link"><Link to={"/library"}>Browse More</Link></div>
+                  <Link to={"/map/" + this.props.uid}>Rate This Map</Link>
+                </div>
+              ) : null}
+              <div className="game-end-link">
+                <Link to={"/library"}>Browse More</Link>
+              </div>
             </div>
           </div>
         ) : null}
-        {
-          this.state.showEventWindow ?
+        {this.state.showEventWindow ? (
           <div className="event-window flex center-child">
-
             <div className="event-window-inner flex flex-col flex-center">
               <div className="event-question">
-              {
-                this.props.graph.graph[this.state.currentEvent.room].eventQ
-              }
+                {this.props.graph.graph[this.state.currentEvent.room].eventQ}
               </div>
               <div className="event-input">
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Response..."
                   value={this.state.eventResponse}
-                  onChange={(e) => this.handleEventResponse(e)}/>
+                  onChange={(e) => this.handleEventResponse(e)}
+                />
               </div>
               <div className="event-submit flex flex-row">
-                <div 
+                <div
                   className="event-submit-button green"
-                  onClick={() => this.submitEvent()}>GO</div>
-                <div 
+                  onClick={() => this.submitEvent()}
+                >
+                  GO
+                </div>
+                <div
                   className="event-submit-button red"
-                  onClick={() => this.closeEvent()}>CLOSE</div>
+                  onClick={() => this.closeEvent()}
+                >
+                  CLOSE
+                </div>
               </div>
-              {
-                this.state.eventWindowResult !== '' ?
+              {this.state.eventWindowResult !== "" ? (
                 <div className="event-result">
                   {this.state.eventWindowResult}
-                </div> : null
-              }
+                </div>
+              ) : null}
             </div>
-          </div> : null
-        }
+          </div>
+        ) : null}
       </div>
     );
   }

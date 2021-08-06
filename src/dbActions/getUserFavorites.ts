@@ -3,7 +3,6 @@ import userQueries from "../queries/userQueries";
 // Database action to get a user's favorite maps
 const getUserFavorites = (db: any, userid: string): Promise<Array<string>> => {
   return new Promise((resolve: any, reject: any) => {
-    
     // Construct the database query
     const query = {
       name: "get-user-favorites",

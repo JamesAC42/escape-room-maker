@@ -180,7 +180,7 @@ const domains = [
   "zipmail.com.br",
   "globo.com",
   "globomail.com",
-  "oi.com.br"
+  "oi.com.br",
 ];
 
 export default domains;

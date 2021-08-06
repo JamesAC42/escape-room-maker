@@ -3,7 +3,6 @@ import reviewQueries from "../queries/reviewQueries";
 // Removes a review from the database by UID
 const removeReview = (db: any, uid: string): Promise<any> => {
   return new Promise((resolve: any, reject: any) => {
-
     // Construct the query
     const query = {
       name: "remove-review",

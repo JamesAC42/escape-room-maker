@@ -7,7 +7,6 @@ import Rating from "./Rating";
 // Component to render a MapItem as shown in the list view on the
 // profile and library pages
 class MapItem extends Component {
-
   // Returns an "s" if the quantity is not 1
   plural(text, amt) {
     return `${text}${amt === 1 ? "" : "s"}`;

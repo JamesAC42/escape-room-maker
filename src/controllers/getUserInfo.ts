@@ -6,7 +6,6 @@ import userQueries from "../queries/userQueries";
   Used by the query getUser in userQueries.ts
  */
 const getUserInfo = (req: any, res: any, db: any) => {
-
   // Print out some diagnostic info
   console.log("Session requested...");
   console.log(`sessionID: ${req.session.id}`);

@@ -4,7 +4,6 @@
 */
 const getMapsFromIds = (db: any, ids: Array<string>): Promise<Array<any>> => {
   return new Promise((resolve: any, reject: any) => {
-
     // If there were no ids then just resolve an empty list
     if (ids.length === 0) {
       resolve([]);
@@ -41,7 +40,6 @@ const getMapsFromIds = (db: any, ids: Array<string>): Promise<Array<any>> => {
           });
           // Resolve the map data
           resolve(r.rows);
-          
         }
       })
       .catch((err: Error) => {

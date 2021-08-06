@@ -44,10 +44,11 @@ class PlayPage extends Component {
     return (
       <div className="container">
         {this.state.map !== undefined ? (
-          <PlayContainer 
+          <PlayContainer
             graph={this.state.map.graph}
             timeLimit={this.state.map.timeLimit}
-            uid={this.state.map.uid} />
+            uid={this.state.map.uid}
+          />
         ) : null}
       </div>
     );
