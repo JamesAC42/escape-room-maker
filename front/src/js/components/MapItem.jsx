@@ -27,7 +27,6 @@ class MapItem extends Component {
           <div className="map-creation-date">
             Created on: {this.props.createdOn.toLocaleString()}
           </div>
-          <Rating stars={this.props.rating} />
         </div>
         <div className="map-description">{this.props.description}</div>
         <div className="map-tags">
