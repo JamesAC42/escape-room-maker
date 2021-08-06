@@ -17,6 +17,7 @@ export interface IMap {
   explicit: boolean;
   timesCompleted: number;
   graph: IRoomGraph;
+  reviews: number;
 }
 
 // The room graph stores the grid of rooms 

@@ -29,6 +29,7 @@ const getMap = (db: any, mapid: string): Promise<any> => {
             tags: JSON.parse(r.rows[0].tags),
             description: r.rows[0].description,
             title: r.rows[0].title,
+            reviews: r.rows[0].reviews,
             explicit: r.rows[0].explicit,
             timesCompleted: r.rows[0].times_completed,
             graph: JSON.parse(r.rows[0].graph),
