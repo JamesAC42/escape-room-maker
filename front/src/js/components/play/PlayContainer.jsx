@@ -7,14 +7,11 @@ import pause from "../../../images/pause.png";
 import restart from "../../../images/restart.png";
 
 import {Link} from 'react-router-dom';
-
-const totalTime = 600;
-
 // Contains the information about the play state
 class PlayContainerState {
   constructor() {
     this.currentRoom = undefined;
-    this.remainingTime = totalTime;
+    this.remainingTime = 0;
     this.playing = false;
     this.visitedRooms = [];
     this.currentEvent = undefined;
@@ -66,7 +63,7 @@ class PlayContainer extends Component {
     this.setState({
       playing: true,
       currentRoom: startRoom,
-      remainingTime: totalTime,
+      remainingTime: this.props.timeLimit,
       visitedRooms: [startRoom],
       currentEvent: undefined,
       showEventWindow: false,
@@ -76,17 +73,19 @@ class PlayContainer extends Component {
 
     // Reset the timer information
     if(this.intervalId) clearInterval(this.intervalId);
-    this.intervalId = setInterval(() => {
-      let remainingTime = this.state.remainingTime - 1;
-      if (remainingTime <= 0) {
-        this.restart();
-        this.setState({
-          gameOver: true,
-        });
-        remainingTime = 0;
-      }
-      this.setState({ remainingTime: remainingTime });
-    }, 1000);
+    if(this.props.timeLimit !== 0) {
+      this.intervalId = setInterval(() => {
+        let remainingTime = this.state.remainingTime - 1;
+        if (remainingTime <= 0) {
+          this.restart();
+          this.setState({
+            gameOver: true,
+          });
+          remainingTime = 0;
+        }
+        this.setState({ remainingTime: remainingTime });
+      }, 1000);
+    }
   }
 
   // Either resume playing from paused or initialize the first play
@@ -101,7 +100,7 @@ class PlayContainer extends Component {
       if (!room) {
         room = Object.keys(this.props.graph.graph)[0];
       }
-      remainingTime = totalTime;
+      remainingTime = this.props.timeLimit;
       visitedRooms = [];
       visitedRooms.push(room);
     }
@@ -115,17 +114,19 @@ class PlayContainer extends Component {
     });
 
     // Start the timer
-    this.intervalId = setInterval(() => {
-      let remainingTime = this.state.remainingTime - 1;
-      if (remainingTime <= 0) {
-        this.restart();
-        this.setState({
-          gameOver: true,
-        });
-        remainingTime = 0;
-      }
-      this.setState({ remainingTime: remainingTime });
-    }, 1000);
+    if(this.props.timeLimit !== 0) {
+      this.intervalId = setInterval(() => {
+        let remainingTime = this.state.remainingTime - 1;
+        if (remainingTime <= 0) {
+          this.restart();
+          this.setState({
+            gameOver: true,
+          });
+          remainingTime = 0;
+        }
+        this.setState({ remainingTime: remainingTime });
+      }, 1000);
+    }
   }
 
   // Stop the timer and set playing to false
@@ -259,9 +260,12 @@ class PlayContainer extends Component {
           >
             <img src={restart} alt="Restart" />
           </div>
-          <div className="timer">
-            {this.state.remainingTime} seconds remaining
-          </div>
+          {
+            this.props.timeLimit !== 0 ?
+            <div className="timer">
+              {this.state.remainingTime} seconds remaining
+            </div> : null
+          }
         </div>
         <PlayGrid
           graph={this.props.graph}

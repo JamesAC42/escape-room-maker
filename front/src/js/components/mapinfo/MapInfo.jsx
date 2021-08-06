@@ -310,7 +310,9 @@ class MapInfoBind extends Component {
                 </div>
                 <div className="time-limit">
                   <span className="meta-info-label">Time Limit: </span>
-                  {map.timeLimit} seconds
+                  {
+                    map.timeLimit === 0 ? "None" : `${map.timeLimit} seconds`
+                  }
                 </div>
               </div>
               <div className="meta-row">

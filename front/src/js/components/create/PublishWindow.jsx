@@ -35,6 +35,7 @@ class PublishWindowState {
   constructor() {
     this.title = "";
     this.description = "";
+    this.timeLimit = 0;
     this.tags = [];
     this.redirect = "";
     this.error = "";
@@ -97,7 +98,7 @@ class PublishWindowBind extends Component {
         title: this.state.title,
         description: this.state.description,
         tags: this.state.tags,
-        timeLimit: 600,
+        timeLimit: parseInt(this.state.timeLimit) * 60,
         graph: this.props.create.graph,
         explicit: false,
       }),
@@ -120,6 +121,11 @@ class PublishWindowBind extends Component {
         console.error("Error: " + error);
       });
   }
+
+  handleTimeLimit(e) {
+    this.setState({timeLimit:e.target.value});
+  }
+
   render() {
 
     // If we need to redirect after publishing, then do so here
@@ -153,6 +159,20 @@ class PublishWindowBind extends Component {
                 placeholder="Description"
                 maxLength={200}
               />
+            </div>
+            <div className="input-item">
+              <label htmlFor="description">Time Limit</label>
+              <select name="timelimit" onChange={(e) => this.handleTimeLimit(e)}>
+                <option value="0">None</option>
+                <option value="1">1 Minute</option>
+                <option value="5">5 Minutes</option>
+                <option value="10">10 Minutes</option>
+                <option value="15">15 Minutes</option>
+                <option value="30">30 Minutes</option>
+                <option value="60">1 Hour</option>
+                <option value="90">1.5 Hours</option>
+                <option value="120">2 Hours</option>
+              </select>
             </div>
             <div className="input-item">
               <label className="tag-label" htmlFor="tags">
