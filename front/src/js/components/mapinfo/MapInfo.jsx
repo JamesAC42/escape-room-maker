@@ -35,7 +35,7 @@ class MapInfoState {
     this.reviewForm = {
       title: '',
       body: '',
-      rating: 1
+      rating: 3
     };
     this.reviewFormError = '';
   }
