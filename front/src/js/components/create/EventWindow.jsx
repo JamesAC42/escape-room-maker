@@ -260,6 +260,11 @@ class EventWindowBind extends Component {
       borderColor: this.getRoomOrDoor()[val] == "" ? "#d46363" : "",
     };
   };
+  
+  getCoordsText = () => {
+    let coords = this.props.create.graph.coordinates[this.props.create.activeRoom];
+    return `[${coords.x}, ${coords.y}]`;
+  }
 
   // handles error checking for empty text boxes when trying to switch rooms
   componentDidUpdate(prevProps) {
@@ -286,9 +291,9 @@ class EventWindowBind extends Component {
         }
       >
         <h1>
-          Room ID:{" "}
-          <span style={{ color: "#8ffad1" }}>
-            {this.props.create.activeRoom}
+          Room Coordinates:
+          <span style={{ color: "#8ffad1", marginRight: "200px" }}>
+            {" " + this.getCoordsText()}
           </span>
           <div style={{ float: "right" }}>
             <input
