@@ -29,6 +29,7 @@ class EventWindowState {
   constructor(pr) {
     this.props = pr;
     this.currentSelected = "Room";
+    this.emptyBox = false;
   }
 }
 
@@ -39,6 +40,23 @@ class EventWindowBind extends Component {
   }
 
   checkEmptyTextBoxes = (prevProps, props) => {
+    
+    if (this.state.currentSelected == "Room") {
+      if (props.create.graph.graph[prevProps.create.activeRoom]["eventType"] == "No Event") {
+        return false;
+      }
+    }
+    else {
+      if (
+        props.create.graph.graph[prevProps.create.activeRoom].doorVals.find(
+          (y) => y.dir == this.state.currentSelected
+        )["eventType"] == "No Event"
+      ) {
+        return false;
+      }
+    }
+    
+    
     let empty = false;
     [
       "requireItemName",
@@ -49,7 +67,10 @@ class EventWindowBind extends Component {
     ].forEach((val) => {
       if (this.state.currentSelected == "Room") {
         if (props.create.graph.graph[prevProps.create.activeRoom][val] == "") {
-          empty = true;
+          console.log(`${val} : "${val.substr(0, val.length - 4)}"`);
+          if(props.create.graph.graph[prevProps.create.activeRoom][val.substr(0, val.length - 4)] != false) {
+            empty = true;
+          }
         }
       } else {
         if (
@@ -57,7 +78,13 @@ class EventWindowBind extends Component {
             (y) => y.dir == this.state.currentSelected
           )[val] == ""
         ) {
-          empty = true;
+          if(
+            props.create.graph.graph[prevProps.create.activeRoom].doorVals.find(
+            (y) => y.dir == this.state.currentSelected
+            )[val.substr(0, val.length - 4)] != false
+          ) {
+            empty = true;
+          }
         }
       }
     });
@@ -272,9 +299,19 @@ class EventWindowBind extends Component {
       this.props.create.graph.graph[prevProps.create.activeRoom] &&
       prevProps.create.activeRoom != this.props.create.activeRoom
     ) {
-      if (this.checkEmptyTextBoxes(prevProps, this.props)) {
-        alert("You cannot leave any input fields empty.");
-        this.props.setActiveRoom(prevProps.create.activeRoom);
+      if(this.state.emptyBox == false) {
+        if (this.checkEmptyTextBoxes(prevProps, this.props)) {
+          alert("You cannot leave any input fields empty.");
+          this.setState({
+            emptyBox: true
+          });
+          this.props.setActiveRoom(prevProps.create.activeRoom);
+        }
+      }
+      else {
+        this.setState({
+          emptyBox: false
+        });
       }
     }
   }
