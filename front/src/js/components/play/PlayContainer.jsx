@@ -90,7 +90,10 @@ class PlayContainer extends Component {
 
   // Either resume playing from paused or initialize the first play
   play() {
-    if(this.state.gameOver || this.state.gameWin) return;
+    if(this.state.gameOver || this.state.gameWin) {
+      this.restart();
+      return;
+    }
     let room = this.state.currentRoom;
     let remainingTime = this.state.remainingTime;
     let visitedRooms = this.state.visitedRooms;
