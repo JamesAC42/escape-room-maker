@@ -140,6 +140,9 @@ class GridBase extends Component {
   componentDidMount() {
     this.ctx = this.canvas.current.getContext("2d");
     this.renderGrid();
+    this.tile.onload = () => {
+      this.renderGrid();
+    }
   }
 
   // Render the canvas
