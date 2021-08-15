@@ -64,6 +64,7 @@ class CreateBind extends Component {
 
   // used for checking if a map is ready for publishing
   mapErrorChecking = () => {
+    console.log("Error checking for map");
     let error = false;
     if (this.props.create.graph) {
       Object.keys(this.props.create.graph.graph).forEach((room) => {
@@ -74,17 +75,34 @@ class CreateBind extends Component {
           "solveItemName",
           "solveItemDesc",
         ].forEach((val) => {
-          if (this.props.create.graph.graph[room][val] == "") {
-            error = true;
+          if(this.props.create.graph.graph[room]["eventType"] != "No Event") {
+            if (this.props.create.graph.graph[room][val] == "") {
+              if(this.props.create.graph.graph[room][val.substr(0, val.length - 4)] != false) {
+                error = true;
+                console.log("Found error:", room, + " ", val);
+              }
+            }
           }
-
           ["N", "S", "W", "E"].forEach((dir) => {
             if (
               this.props.create.graph.graph[room].doorVals.find(
-                (y) => y.dir == dir
-              )[val] == ""
+              (y) => y.dir == dir
+              )["eventType"] != "No Event"
             ) {
-              error = true;
+              if (
+                this.props.create.graph.graph[room].doorVals.find(
+                  (y) => y.dir == dir
+                )[val] == ""
+              ) {
+                if(
+                  this.props.create.graph.graph[room].doorVals.find(
+                  (y) => y.dir == dir
+                  )[val.substr(0, val.length - 4)] != false
+                ) {
+                  error = true;
+                  console.log("Found door error:", room, + " ", val);
+                }
+              }
             }
           });
         });

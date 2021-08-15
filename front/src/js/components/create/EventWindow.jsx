@@ -67,7 +67,6 @@ class EventWindowBind extends Component {
     ].forEach((val) => {
       if (this.state.currentSelected == "Room") {
         if (props.create.graph.graph[prevProps.create.activeRoom][val] == "") {
-          console.log(`${val} : "${val.substr(0, val.length - 4)}"`);
           if(props.create.graph.graph[prevProps.create.activeRoom][val.substr(0, val.length - 4)] != false) {
             empty = true;
           }
