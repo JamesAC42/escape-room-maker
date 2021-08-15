@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import { createPageActions } from "../../actions/actions";
 
+import Tag from '../Tag';
+
 const mapStateToProps = (state, props) => ({
   create: state.create,
 });
@@ -180,12 +182,11 @@ class PublishWindowBind extends Component {
               </label>
               <div className="tags-container flex flex-row">
                 {_tags.map((tag) => (
-                  <div
-                    className={this.tagClass(tag)}
+                  <Tag
                     onClick={() => this.toggleTag(tag)}
-                  >
-                    {tag}
-                  </div>
+                    name={tag}
+                    key={tag}
+                    active={this.state.tags.indexOf(tag) !== -1} />
                 ))}
               </div>
             </div>

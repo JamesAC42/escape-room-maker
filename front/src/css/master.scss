@@ -83,3 +83,28 @@
     box-shadow: 0px 10px 21px -12px rgba(0,0,0,0.75);
     border:2px solid rgba(139, 107, 255, 0.719);
 }
+
+
+.tag-link {
+    $tag-color: rgb(57, 235, 137);
+    $tag-color: rgb(59, 192, 119);
+    margin-top: 10px;
+    margin-right: 10px;
+    padding: 5px 15px;
+    border: 1px solid $tag-color;
+    border-radius: 20px;
+    color:$tag-color;
+    cursor:pointer;
+    &:hover, &.tag-link-active {
+        background-color: $tag-color;
+        color:#fff;
+    }
+    &.tag-link-pressed {
+        transform:translateY(3px);
+    }
+    &.tag-link-active {
+        &:hover {
+            outline: 2px solid rgb(13, 104, 36);
+        }
+    }
+}

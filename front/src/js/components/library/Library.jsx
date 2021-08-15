@@ -5,6 +5,8 @@ import tagData from "../../tagData";
 
 import search from "../../../images/search.svg";
 
+import Tag from '../Tag';
+
 // Stores the state data for the Library page,
 // including the total list of maps, the visible maps,
 // the current search value, and the list of active tags
@@ -134,13 +136,11 @@ class Library extends Component {
           <h1 className="tag-header">Tags</h1>
           <div className="tag-section card">
             {tagData.tags.map((x) => (
-              <span
+              <Tag
+                name={x}
                 key={x}
-                className={"tag-link" + (this.isActive(x) ? " active" : "")}
-                onClick={() => this.toggleActiveTag(x)}
-              >
-                {x}
-              </span>
+                active={this.isActive(x)}
+                onClick={() => this.toggleActiveTag(x)} />
             ))}
           </div>
         </div>

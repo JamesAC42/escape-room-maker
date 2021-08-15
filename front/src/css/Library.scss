@@ -30,22 +30,6 @@
     justify-content:center;
 }
 
-.tag-link {
-    $tag-color: rgb(57, 235, 137);
-    $tag-color: rgb(59, 192, 119);
-    margin-top: 10px;
-    margin-right: 10px;
-    padding: 5px 15px;
-    border: 1px solid $tag-color;
-    border-radius: 20px;
-    color:$tag-color;
-    cursor:pointer;
-    &:hover, &.active {
-        background-color: $tag-color;
-        color:#fff;
-    }
-}
-
 .whole-map-section {
     flex:1;
     padding:2rem;
